@@ -231,6 +231,24 @@
     .breadcrumb a:hover { color: var(--brass-bright); }
     .breadcrumb-sep { color: var(--text-light); }
 
+    /* CITY HERO MOTIF — localized decorative skyline + routes line */
+    .city-hero { position: relative; padding-top: 120px; padding-bottom: 3rem; overflow: hidden; }
+    .city-hero-inner { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: center; position: relative; z-index: 2; }
+    @media(min-width: 900px) { .city-hero-inner { grid-template-columns: 1.4fr 1fr; gap: 2.5rem; } }
+    .city-hero-breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .city-hero-breadcrumb a { color: var(--brass); }
+    .city-hero-breadcrumb a:hover { color: var(--brass-bright); }
+    .city-hero-breadcrumb-sep { color: var(--text-light); }
+    .city-hero-h1 { font-family: 'Outfit', sans-serif; font-size: 2.4rem; font-weight: 700; line-height: 1.15; color: var(--forest); letter-spacing: -0.01em; }
+    .city-hero-h1 .accent { color: var(--brass-dark); }
+    .city-hero-routes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+    .city-route-chip { font-size: 0.72rem; font-weight: 600; color: var(--forest); background: var(--brass-muted); border: 1px solid var(--brass-border); padding: 0.3rem 0.7rem; border-radius: 3px; letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 0.35rem; }
+    .city-route-chip::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--brass); flex-shrink: 0; }
+    .city-hero-motif { position: relative; min-height: 150px; }
+    .city-hero-motif svg { display: block; width: 100%; height: auto; max-height: 200px; color: var(--forest-light); }
+    @media(max-width: 899px) { .city-hero-motif { display: none; } }
+    .city-hero-glow { position: absolute; top: -40px; right: -60px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, var(--brass-muted) 0%, transparent 65%); z-index: 1; pointer-events: none; }
+
     .section-dark { background: var(--forest); color: var(--ivory); padding: 5rem 0; }
     .section-dark h2 { color: var(--ivory); margin-bottom: 1.5rem; }
     .section-dark p { color: rgba(250,249,246,0.7); font-size: 1.05rem; line-height: 1.8; max-width: 780px; }
@@ -326,9 +344,48 @@
       </div>
     </div>
   </header>
-  <div class="page-top"><div class="container">
-    <div class="breadcrumb"><a href="index.html">Home</a> <span class="breadcrumb-sep">/</span> <a href="sitemap.html">Locations</a> <span class="breadcrumb-sep">/</span> <span>Same Day Courier Leeds</span></div>
-    <h1>Same Day Courier Leeds &mdash; Urgent Collection in 60 Minutes</h1>
+  <div class="city-hero"><div class="city-hero-glow" aria-hidden="true"></div><div class="container">
+    <div class="city-hero-inner">
+      <div>
+        <div class="city-hero-breadcrumb"><a href="index.html">Home</a> <span class="city-hero-breadcrumb-sep">/</span> <a href="sitemap.html">Locations</a> <span class="city-hero-breadcrumb-sep">/</span> <span>Same Day Courier Leeds</span></div>
+        <h1 class="city-hero-h1">Same Day Courier Leeds &mdash; <span class="accent">Collection in 60 Minutes</span></h1>
+        <div class="city-hero-routes" aria-label="Key routes and access corridors served in and around West Yorkshire">
+          <span class="city-route-chip">M62 east-west corridor</span>
+          <span class="city-route-chip">M1 / A1(M) link</span>
+          <span class="city-route-chip">Leeds Bradford Airport (LBA)</span>
+          <span class="city-route-chip">M62 to Manchester &amp; Hull</span>
+          <span class="city-route-chip">City Centre &amp; Railway Station</span>
+        </div>
+      </div>
+      <div class="city-hero-motif" aria-hidden="true">
+        <svg viewBox="0 0 320 180" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Leeds-Liverpool Canal -->
+          <path d="M0 150 Q90 138 180 148 Q250 156 320 144" stroke-width="2.5" opacity="0.5"/>
+          <!-- Bridgewater Place (tallest) -->
+          <path d="M48 36 L48 148 L70 148 L70 48 Z"/>
+          <line x1="48" y1="70" x2="70" y2="70" opacity="0.4"/>
+          <line x1="48" y1="100" x2="70" y2="100" opacity="0.4"/>
+          <line x1="48" y1="128" x2="70" y2="128" opacity="0.4"/>
+          <!-- Bower House / office towers -->
+          <rect x="86" y="60" width="18" height="88"/>
+          <rect x="110" y="50" width="20" height="98"/>
+          <!-- Leeds Civic Hall (columns) -->
+          <rect x="146" y="74" width="48" height="74"/>
+          <line x1="156" y1="74" x2="156" y2="148" opacity="0.4"/>
+          <line x1="166" y1="74" x2="166" y2="148" opacity="0.4"/>
+          <line x1="174" y1="74" x2="174" y2="148" opacity="0.4"/>
+          <line x1="184" y1="74" x2="184" y2="148" opacity="0.4"/>
+          <!-- Clock tower -->
+          <rect x="206" y="44" width="20" height="104"/>
+          <path d="M206 44 L216 30 L226 44"/>
+          <circle cx="216" cy="58" r="5"/>
+          <!-- Railway line hint -->
+          <path d="M248 130 L312 116" stroke-dasharray="4 3" opacity="0.4"/>
+          <rect x="262" y="98" width="14" height="34"/>
+          <rect x="288" y="92" width="14" height="42"/>
+        </svg>
+      </div>
+    </div>
   </div></div>
 
   <section class="section-dark">

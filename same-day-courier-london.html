@@ -231,6 +231,24 @@
     .breadcrumb a:hover { color: var(--brass-bright); }
     .breadcrumb-sep { color: var(--text-light); }
 
+    /* CITY HERO MOTIF — localized decorative skyline + routes line */
+    .city-hero { position: relative; padding-top: 120px; padding-bottom: 3rem; overflow: hidden; }
+    .city-hero-inner { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: center; position: relative; z-index: 2; }
+    @media(min-width: 900px) { .city-hero-inner { grid-template-columns: 1.4fr 1fr; gap: 2.5rem; } }
+    .city-hero-breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .city-hero-breadcrumb a { color: var(--brass); }
+    .city-hero-breadcrumb a:hover { color: var(--brass-bright); }
+    .city-hero-breadcrumb-sep { color: var(--text-light); }
+    .city-hero-h1 { font-family: 'Outfit', sans-serif; font-size: 2.4rem; font-weight: 700; line-height: 1.15; color: var(--forest); letter-spacing: -0.01em; }
+    .city-hero-h1 .accent { color: var(--brass-dark); }
+    .city-hero-routes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+    .city-route-chip { font-size: 0.72rem; font-weight: 600; color: var(--forest); background: var(--brass-muted); border: 1px solid var(--brass-border); padding: 0.3rem 0.7rem; border-radius: 3px; letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 0.35rem; }
+    .city-route-chip::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--brass); flex-shrink: 0; }
+    .city-hero-motif { position: relative; min-height: 150px; }
+    .city-hero-motif svg { display: block; width: 100%; height: auto; max-height: 200px; color: var(--forest-light); }
+    @media(max-width: 899px) { .city-hero-motif { display: none; } }
+    .city-hero-glow { position: absolute; top: -40px; right: -60px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, var(--brass-muted) 0%, transparent 65%); z-index: 1; pointer-events: none; }
+
     .section-dark { background: var(--forest); color: var(--ivory); padding: 5rem 0; }
     .section-dark h2 { color: var(--ivory); margin-bottom: 1.5rem; }
     .section-dark p { color: rgba(250,249,246,0.7); font-size: 1.05rem; line-height: 1.8; max-width: 780px; }
@@ -326,9 +344,45 @@
       </div>
     </div>
   </header>
-  <div class="page-top"><div class="container">
-    <div class="breadcrumb"><a href="index.html">Home</a> <span class="breadcrumb-sep">/</span> <a href="sitemap.html">Locations</a> <span class="breadcrumb-sep">/</span> <span>Same Day Courier London</span></div>
-    <h1>Same Day Courier London &mdash; Urgent Collection in 60 Minutes</h1>
+  <div class="city-hero"><div class="city-hero-glow" aria-hidden="true"></div><div class="container">
+    <div class="city-hero-inner">
+      <div>
+        <div class="city-hero-breadcrumb"><a href="index.html">Home</a> <span class="city-hero-breadcrumb-sep">/</span> <a href="sitemap.html">Locations</a> <span class="city-hero-breadcrumb-sep">/</span> <span>Same Day Courier London</span></div>
+        <h1 class="city-hero-h1">Same Day Courier London &mdash; <span class="accent">Collection in 60 Minutes</span></h1>
+        <div class="city-hero-routes" aria-label="Key routes and access corridors served in and around London">
+          <span class="city-route-chip">M25 orbital</span>
+          <span class="city-route-chip">M1 / M40 northbound</span>
+          <span class="city-route-chip">Heathrow (TW6)</span>
+          <span class="city-route-chip">Congestion &amp; ULEZ aware</span>
+          <span class="city-route-chip">Blackwall &amp; Dartford crossings</span>
+        </div>
+      </div>
+      <div class="city-hero-motif" aria-hidden="true">
+        <svg viewBox="0 0 320 180" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M0 140 Q60 120 110 138 Q180 156 240 132 Q290 118 320 130" stroke-width="2.5" opacity="0.6"/>
+          <path d="M0 150 Q60 132 110 148 Q180 164 240 142 Q290 128 320 140" stroke-width="1.5" opacity="0.3"/>
+          <rect x="20" y="70" width="20" height="68"/>
+          <rect x="48" y="55" width="16" height="83"/>
+          <rect x="72" y="80" width="14" height="58"/>
+          <path d="M100 130 Q108 60 116 130 Z"/>
+          <line x1="104" y1="100" x2="112" y2="100" opacity="0.5"/>
+          <line x1="103" y1="115" x2="113" y2="115" opacity="0.5"/>
+          <path d="M132 130 L140 30 L148 130 Z"/>
+          <line x1="140" y1="50" x2="140" y2="130" opacity="0.4"/>
+          <rect x="166" y="78" width="18" height="52"/>
+          <path d="M166 78 L175 62 L184 78"/>
+          <rect x="170" y="88" width="10" height="10"/>
+          <circle cx="214" cy="92" r="22"/>
+          <line x1="214" y1="114" x2="214" y2="130"/>
+          <line x1="214" y1="92" x2="236" y2="92" opacity="0.4"/>
+          <line x1="214" y1="92" x2="192" y2="92" opacity="0.4"/>
+          <line x1="214" y1="92" x2="214" y2="70" opacity="0.4"/>
+          <rect x="256" y="58" width="14" height="80"/>
+          <rect x="274" y="68" width="12" height="70"/>
+          <rect x="290" y="74" width="12" height="64"/>
+        </svg>
+      </div>
+    </div>
   </div></div>
 
   <section class="section-dark">

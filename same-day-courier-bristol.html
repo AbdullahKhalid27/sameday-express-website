@@ -231,6 +231,24 @@
     .breadcrumb a:hover { color: var(--brass-bright); }
     .breadcrumb-sep { color: var(--text-light); }
 
+    /* CITY HERO MOTIF — localized decorative skyline + routes line */
+    .city-hero { position: relative; padding-top: 120px; padding-bottom: 3rem; overflow: hidden; }
+    .city-hero-inner { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: center; position: relative; z-index: 2; }
+    @media(min-width: 900px) { .city-hero-inner { grid-template-columns: 1.4fr 1fr; gap: 2.5rem; } }
+    .city-hero-breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .city-hero-breadcrumb a { color: var(--brass); }
+    .city-hero-breadcrumb a:hover { color: var(--brass-bright); }
+    .city-hero-breadcrumb-sep { color: var(--text-light); }
+    .city-hero-h1 { font-family: 'Outfit', sans-serif; font-size: 2.4rem; font-weight: 700; line-height: 1.15; color: var(--forest); letter-spacing: -0.01em; }
+    .city-hero-h1 .accent { color: var(--brass-dark); }
+    .city-hero-routes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+    .city-route-chip { font-size: 0.72rem; font-weight: 600; color: var(--forest); background: var(--brass-muted); border: 1px solid var(--brass-border); padding: 0.3rem 0.7rem; border-radius: 3px; letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 0.35rem; }
+    .city-route-chip::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--brass); flex-shrink: 0; }
+    .city-hero-motif { position: relative; min-height: 150px; }
+    .city-hero-motif svg { display: block; width: 100%; height: auto; max-height: 200px; color: var(--forest-light); }
+    @media(max-width: 899px) { .city-hero-motif { display: none; } }
+    .city-hero-glow { position: absolute; top: -40px; right: -60px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, var(--brass-muted) 0%, transparent 65%); z-index: 1; pointer-events: none; }
+
     .section-dark { background: var(--forest); color: var(--ivory); padding: 5rem 0; }
     .section-dark h2 { color: var(--ivory); margin-bottom: 1.5rem; }
     .section-dark p { color: rgba(250,249,246,0.7); font-size: 1.05rem; line-height: 1.8; max-width: 780px; }
@@ -326,9 +344,48 @@
       </div>
     </div>
   </header>
-  <div class="page-top"><div class="container">
-    <div class="breadcrumb"><a href="index.html">Home</a> <span class="breadcrumb-sep">/</span> <a href="sitemap.html">Locations</a> <span class="breadcrumb-sep">/</span> <span>Same Day Courier Bristol</span></div>
-    <h1>Same Day Courier Bristol &mdash; Urgent Collection in 60 Minutes</h1>
+  <div class="city-hero"><div class="city-hero-glow" aria-hidden="true"></div><div class="container">
+    <div class="city-hero-inner">
+      <div>
+        <div class="city-hero-breadcrumb"><a href="index.html">Home</a> <span class="city-hero-breadcrumb-sep">/</span> <a href="sitemap.html">Locations</a> <span class="city-hero-breadcrumb-sep">/</span> <span>Same Day Courier Bristol</span></div>
+        <h1 class="city-hero-h1">Same Day Courier Bristol &mdash; <span class="accent">Collection in 60 Minutes</span></h1>
+        <div class="city-hero-routes" aria-label="Key routes and access corridors served in and around the West of England">
+          <span class="city-route-chip">M4 / M5 interchange</span>
+          <span class="city-route-chip">M4 corridor to London</span>
+          <span class="city-route-chip">Bristol Airport (BRS)</span>
+          <span class="city-route-chip">Filton &amp; aerospace</span>
+          <span class="city-route-chip">Port of Bristol</span>
+        </div>
+      </div>
+      <div class="city-hero-motif" aria-hidden="true">
+        <svg viewBox="0 0 320 180" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Avon Gorge with Clifton Suspension Bridge -->
+          <path d="M0 150 L70 96 L120 150 Z" opacity="0.5"/>
+          <path d="M250 150 L200 96 L300 150 Z" opacity="0.4"/>
+          <!-- Suspension bridge deck -->
+          <line x1="70" y1="96" x2="250" y2="96" stroke-width="2.5"/>
+          <path d="M70 96 Q160 40 250 96" stroke-width="1.5" opacity="0.6"/>
+          <path d="M70 96 Q160 150 250 96" stroke-width="1" opacity="0.3"/>
+          <!-- Suspension cables (verticals) -->
+          <line x1="100" y1="76" x2="100" y2="96" opacity="0.4"/>
+          <line x1="130" y1="64" x2="130" y2="96" opacity="0.4"/>
+          <line x1="160" y1="58" x2="160" y2="96" opacity="0.4"/>
+          <line x1="190" y1="64" x2="190" y2="96" opacity="0.4"/>
+          <line x1="220" y1="76" x2="220" y2="96" opacity="0.4"/>
+          <!-- Bridge pylons -->
+          <rect x="66" y="80" width="8" height="24"/>
+          <rect x="246" y="80" width="8" height="24"/>
+          <!-- Harbour water -->
+          <path d="M0 158 Q80 150 160 156 Q240 162 320 152" stroke-width="2" opacity="0.4"/>
+          <!-- Harbour-side warehouses -->
+          <rect x="14" y="120" width="22" height="34"/>
+          <rect x="40" y="112" width="18" height="42"/>
+          <!-- SS Great Britain hull hint -->
+          <path d="M278 140 Q290 150 302 140" opacity="0.5"/>
+          <line x1="276" y1="140" x2="304" y2="140"/>
+        </svg>
+      </div>
+    </div>
   </div></div>
 
   <section class="section-dark">

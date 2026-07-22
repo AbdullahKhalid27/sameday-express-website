@@ -231,6 +231,24 @@
     .breadcrumb a:hover { color: var(--brass-bright); }
     .breadcrumb-sep { color: var(--text-light); }
 
+    /* CITY HERO MOTIF — localized decorative skyline + routes line */
+    .city-hero { position: relative; padding-top: 120px; padding-bottom: 3rem; overflow: hidden; }
+    .city-hero-inner { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: center; position: relative; z-index: 2; }
+    @media(min-width: 900px) { .city-hero-inner { grid-template-columns: 1.4fr 1fr; gap: 2.5rem; } }
+    .city-hero-breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .city-hero-breadcrumb a { color: var(--brass); }
+    .city-hero-breadcrumb a:hover { color: var(--brass-bright); }
+    .city-hero-breadcrumb-sep { color: var(--text-light); }
+    .city-hero-h1 { font-family: 'Outfit', sans-serif; font-size: 2.4rem; font-weight: 700; line-height: 1.15; color: var(--forest); letter-spacing: -0.01em; }
+    .city-hero-h1 .accent { color: var(--brass-dark); }
+    .city-hero-routes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+    .city-route-chip { font-size: 0.72rem; font-weight: 600; color: var(--forest); background: var(--brass-muted); border: 1px solid var(--brass-border); padding: 0.3rem 0.7rem; border-radius: 3px; letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 0.35rem; }
+    .city-route-chip::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--brass); flex-shrink: 0; }
+    .city-hero-motif { position: relative; min-height: 150px; }
+    .city-hero-motif svg { display: block; width: 100%; height: auto; max-height: 200px; color: var(--forest-light); }
+    @media(max-width: 899px) { .city-hero-motif { display: none; } }
+    .city-hero-glow { position: absolute; top: -40px; right: -60px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, var(--brass-muted) 0%, transparent 65%); z-index: 1; pointer-events: none; }
+
     .section-dark { background: var(--forest); color: var(--ivory); padding: 5rem 0; }
     .section-dark h2 { color: var(--ivory); margin-bottom: 1.5rem; }
     .section-dark p { color: rgba(250,249,246,0.7); font-size: 1.05rem; line-height: 1.8; max-width: 780px; }
@@ -326,9 +344,44 @@
       </div>
     </div>
   </header>
-  <div class="page-top"><div class="container">
-    <div class="breadcrumb"><a href="index.html">Home</a> <span class="breadcrumb-sep">/</span> <a href="sitemap.html">Locations</a> <span class="breadcrumb-sep">/</span> <span>Same Day Courier Manchester</span></div>
-    <h1>Same Day Courier Manchester &mdash; Urgent Collection in 60 Minutes</h1>
+  <div class="city-hero"><div class="city-hero-glow" aria-hidden="true"></div><div class="container">
+    <div class="city-hero-inner">
+      <div>
+        <div class="city-hero-breadcrumb"><a href="index.html">Home</a> <span class="city-hero-breadcrumb-sep">/</span> <a href="sitemap.html">Locations</a> <span class="city-hero-breadcrumb-sep">/</span> <span>Same Day Courier Manchester</span></div>
+        <h1 class="city-hero-h1">Same Day Courier Manchester &mdash; <span class="accent">Collection in 60 Minutes</span></h1>
+        <div class="city-hero-routes" aria-label="Key routes and access corridors served in and around Greater Manchester">
+          <span class="city-route-chip">M60 ring road</span>
+          <span class="city-route-chip">M62 trans-Pennine</span>
+          <span class="city-route-chip">M56 to Manchester Airport</span>
+          <span class="city-route-chip">Salford Quays &amp; MediaCityUK</span>
+          <span class="city-route-chip">Trafford Park</span>
+        </div>
+      </div>
+      <div class="city-hero-motif" aria-hidden="true">
+        <svg viewBox="0 0 320 180" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M0 150 Q80 140 160 148 Q240 156 320 144" stroke-width="2.5" opacity="0.5"/>
+          <rect x="22" y="62" width="26" height="86"/>
+          <rect x="22" y="44" width="10" height="20"/>
+          <rect x="52" y="74" width="22" height="74"/>
+          <rect x="52" y="58" width="8" height="18"/>
+          <rect x="92" y="28" width="16" height="120"/>
+          <line x1="92" y1="70" x2="108" y2="70" opacity="0.4"/>
+          <line x1="92" y1="100" x2="108" y2="100" opacity="0.4"/>
+          <rect x="120" y="70" width="20" height="78"/>
+          <rect x="146" y="58" width="18" height="90"/>
+          <rect x="174" y="52" width="40" height="96"/>
+          <line x1="187" y1="52" x2="187" y2="148" opacity="0.4"/>
+          <line x1="201" y1="52" x2="201" y2="148" opacity="0.4"/>
+          <line x1="174" y1="76" x2="214" y2="76" opacity="0.4"/>
+          <line x1="174" y1="100" x2="214" y2="100" opacity="0.4"/>
+          <line x1="174" y1="124" x2="214" y2="124" opacity="0.4"/>
+          <rect x="232" y="86" width="24" height="62"/>
+          <rect x="262" y="74" width="20" height="74"/>
+          <rect x="288" y="92" width="22" height="56"/>
+          <path d="M0 36 L320 36" opacity="0.25" stroke-dasharray="3 4"/>
+        </svg>
+      </div>
+    </div>
   </div></div>
 
   <section class="section-dark">

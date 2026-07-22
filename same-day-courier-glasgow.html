@@ -231,6 +231,24 @@
     .breadcrumb a:hover { color: var(--brass-bright); }
     .breadcrumb-sep { color: var(--text-light); }
 
+    /* CITY HERO MOTIF — localized decorative skyline + routes line */
+    .city-hero { position: relative; padding-top: 120px; padding-bottom: 3rem; overflow: hidden; }
+    .city-hero-inner { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: center; position: relative; z-index: 2; }
+    @media(min-width: 900px) { .city-hero-inner { grid-template-columns: 1.4fr 1fr; gap: 2.5rem; } }
+    .city-hero-breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .city-hero-breadcrumb a { color: var(--brass); }
+    .city-hero-breadcrumb a:hover { color: var(--brass-bright); }
+    .city-hero-breadcrumb-sep { color: var(--text-light); }
+    .city-hero-h1 { font-family: 'Outfit', sans-serif; font-size: 2.4rem; font-weight: 700; line-height: 1.15; color: var(--forest); letter-spacing: -0.01em; }
+    .city-hero-h1 .accent { color: var(--brass-dark); }
+    .city-hero-routes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+    .city-route-chip { font-size: 0.72rem; font-weight: 600; color: var(--forest); background: var(--brass-muted); border: 1px solid var(--brass-border); padding: 0.3rem 0.7rem; border-radius: 3px; letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 0.35rem; }
+    .city-route-chip::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--brass); flex-shrink: 0; }
+    .city-hero-motif { position: relative; min-height: 150px; }
+    .city-hero-motif svg { display: block; width: 100%; height: auto; max-height: 200px; color: var(--forest-light); }
+    @media(max-width: 899px) { .city-hero-motif { display: none; } }
+    .city-hero-glow { position: absolute; top: -40px; right: -60px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, var(--brass-muted) 0%, transparent 65%); z-index: 1; pointer-events: none; }
+
     .section-dark { background: var(--forest); color: var(--ivory); padding: 5rem 0; }
     .section-dark h2 { color: var(--ivory); margin-bottom: 1.5rem; }
     .section-dark p { color: rgba(250,249,246,0.7); font-size: 1.05rem; line-height: 1.8; max-width: 780px; }
@@ -326,9 +344,49 @@
       </div>
     </div>
   </header>
-  <div class="page-top"><div class="container">
-    <div class="breadcrumb"><a href="index.html">Home</a> <span class="breadcrumb-sep">/</span> <a href="sitemap.html">Locations</a> <span class="breadcrumb-sep">/</span> <span>Same Day Courier Glasgow</span></div>
-    <h1>Same Day Courier Glasgow &mdash; Urgent Collection in 60 Minutes</h1>
+  <div class="city-hero"><div class="city-hero-glow" aria-hidden="true"></div><div class="container">
+    <div class="city-hero-inner">
+      <div>
+        <div class="city-hero-breadcrumb"><a href="index.html">Home</a> <span class="city-hero-breadcrumb-sep">/</span> <a href="sitemap.html">Locations</a> <span class="city-hero-breadcrumb-sep">/</span> <span>Same Day Courier Glasgow</span></div>
+        <h1 class="city-hero-h1">Same Day Courier Glasgow &mdash; <span class="accent">Collection in 60 Minutes</span></h1>
+        <div class="city-hero-routes" aria-label="Key routes and access corridors served in and around the west of Scotland">
+          <span class="city-route-chip">M8 Edinburgh-Glasgow</span>
+          <span class="city-route-chip">M74 southbound</span>
+          <span class="city-route-chip">Glasgow Airport (GLA)</span>
+          <span class="city-route-chip">Clyde Gateway</span>
+          <span class="city-route-chip">LEZ compliant fleet</span>
+        </div>
+      </div>
+      <div class="city-hero-motif" aria-hidden="true">
+        <svg viewBox="0 0 320 180" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- River Clyde -->
+          <path d="M0 150 Q70 140 150 152 Q230 162 320 148" stroke-width="3" opacity="0.5"/>
+          <path d="M0 160 Q70 152 150 162 Q230 170 320 158" stroke-width="1.5" opacity="0.3"/>
+          <!-- Glasgow University main building (gothic) -->
+          <rect x="22" y="58" width="40" height="90"/>
+          <path d="M22 58 L42 40 L62 58"/>
+          <rect x="34" y="30" width="16" height="20"/>
+          <path d="M34 30 L42 18 L50 30"/>
+          <line x1="22" y1="86" x2="62" y2="86" opacity="0.4"/>
+          <line x1="22" y1="110" x2="62" y2="110" opacity="0.4"/>
+          <!-- Mid towers -->
+          <rect x="76" y="72" width="18" height="76"/>
+          <rect x="100" y="62" width="20" height="86"/>
+          <!-- SSE Hydro (dome) -->
+          <path d="M132 150 Q160 70 188 150 Z"/>
+          <line x1="132" y1="150" x2="188" y2="150"/>
+          <!-- Armadillo (SEC - segmented curves) -->
+          <path d="M206 150 Q214 104 228 100 Q242 104 250 150 Z"/>
+          <path d="M224 150 Q228 116 232 112 Q236 116 240 150 Z" opacity="0.5"/>
+          <!-- Squinty Bridge (curved cable-stayed) -->
+          <line x1="258" y1="132" x2="312" y2="120" stroke-width="2.5"/>
+          <path d="M258 132 Q285 100 312 120" stroke-width="1.2" opacity="0.5"/>
+          <line x1="270" y1="116" x2="270" y2="128" opacity="0.4"/>
+          <line x1="285" y1="108" x2="285" y2="124" opacity="0.4"/>
+          <line x1="300" y1="112" x2="300" y2="122" opacity="0.4"/>
+        </svg>
+      </div>
+    </div>
   </div></div>
 
   <section class="section-dark">
