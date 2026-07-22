@@ -1,5 +1,20 @@
+# All crawlers
 User-agent: *
 Allow: /
 Disallow: /thank-you.html
+
+# Allow key AI crawlers (brand mentions correlate 3x more with AI
+# visibility than backlinks — Ahrefs). Keep these explicitly allowed.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
 
 Sitemap: https://samedayexpresscouriers.co.uk/sitemap.xml
