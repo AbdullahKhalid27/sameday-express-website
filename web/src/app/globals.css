@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/*
+  ═══════════════════════════════════════════════════════════════════
+  SDX DESIGN SYSTEM — Tailwind v4 CSS-first theme
+  ═══════════════════════════════════════════════════════════════════
+
+  Accessibility note on the brass tokens:
+    --color-brass        #9c805c  -> 3.53:1 on ivory  -> FAILS AA for text
+    --color-brass-dark   #7d6547  -> 5.21:1 on ivory  -> PASSES AA (text-brass)
+    --color-brass-bright #bda685  -> decorative only (use on dark surfaces)
+  Rule: NEVER use --color-brass / --color-brass-bright for body text.
+        Text in a brass tone MUST use --color-brass-dark.
+*/
+
+@theme {
+  /* ── Backgrounds ── */
+  --color-ivory: #faf9f6;
+  --color-ivory-deep: #eeebe3;
+  --color-warm-stone: #e0dacd;
+
+  /* ── Text / dark surfaces ── */
+  --color-forest: #1c2821;
+  --color-forest-dark: #121c17;
+  --color-forest-light: #2d3d34;
+
+  /* ── Accents ── */
+  --color-brass: #9c805c; /* decorative: fills, borders, icons ONLY */
+  --color-brass-dark: #7d6547; /* AA-pass text-brass */
+  --color-brass-bright: #bda685; /* decorative, dark-surface accent */
+
+  /* ── Semantic ── */
+  --color-success: #227845;
+  --color-danger: #b33939;
+
+  /* ── Fonts (vars supplied by next/font in layout.tsx) ──
+     Full fallback stack prevents FOUT — system font renders instantly
+     before the self-hosted font file arrives, then swaps. */
+  --font-heading: var(--font-outfit), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-body: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* ── Breakpoints ──
+     md/lg/xl (768/1024/1280) ship with Tailwind by default.
+     We add xs so small-mobile (360) can be targeted explicitly. */
+  --breakpoint-xs: 360px;
+}
+
+/* ─────────────────────────────────────────────
+   Base layer
+   ───────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-ivory);
+    color: var(--color-forest);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    color: var(--color-forest);
+    font-weight: 600;
+    line-height: 1.15;
+  }
+  /* Headings inside a dark section render in ivory automatically. */
+  .bg-forest h1, .bg-forest h2, .bg-forest h3, .bg-forest h4, .bg-forest h5, .bg-forest h6,
+  .bg-forest-dark h1, .bg-forest-dark h2, .bg-forest-dark h3, .bg-forest-dark h4, .bg-forest-dark h5, .bg-forest-dark h6 {
+    color: var(--color-ivory);
+  }
+
+  /* Visible keyboard focus everywhere.
+     brass-dark #7d6547 = 5.21:1 on ivory; ivory = 14.5:1 on forest-dark
+     so the ring stays 3:1+ on every surface we use. */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-brass-dark);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  .bg-forest-dark :where(a, button, input, select, textarea, [tabindex]):focus-visible,
+  .bg-forest :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline-color: var(--color-brass-bright);
+  }
+
+  ::selection {
+    background: var(--color-brass);
+    color: var(--color-ivory);
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Utilities
+   ───────────────────────────────────────────── */
+@layer utilities {
+  /* Skip-link: visually hidden until focused */
+  .skip-link {
+    position: absolute;
+    left: 0.5rem;
+    top: -100%;
+    z-index: 100;
+    background: var(--color-forest-dark);
+    color: var(--color-ivory);
+    padding: 0.625rem 1rem;
+    border-radius: 0 0 6px 6px;
+    transition: top 0.15s ease;
+  }
+  .skip-link:focus-visible {
+    top: 0;
+  }
+}
