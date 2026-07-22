@@ -547,6 +547,8 @@
     .quote-summary { margin-top: 1rem; border-top: 1px solid var(--border-subtle); padding-top: 1rem; }
     .quote-summary-item { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.85rem; }
     .quote-summary-item.total { font-weight: 700; font-size: 1.15rem; color: var(--forest); border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; margin-top: 0.5rem; }
+    .quote-summary-item.quote-carbon strong { color: var(--success); font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem; }
+    .quote-summary-item.quote-carbon strong::before { content: ""; width: 0; height: 0; border-style: solid; border-width: 0 4px 7px 4px; border-color: transparent transparent var(--success) transparent; display: inline-block; }
     .quote-reveal-ctas { display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin-top: 1.5rem; }
     @media(min-width: 640px) { .quote-reveal-ctas { grid-template-columns: 1fr 1fr; } }
     
@@ -647,6 +649,32 @@
     }
     @keyframes route-dash { to { stroke-dashoffset: -220; } }
     @keyframes courier-glow { 0%,100% { opacity: 0.45; } 50% { opacity: 1; } }
+
+    /* ═══════════════════════════════════════════════════════
+       HOW IT WORKS — scroll-drawn 4-step timeline
+       Reinforces the 60-minute promise. Line draws on scroll.
+       ═══════════════════════════════════════════════════════ */
+    .how-it-works { background: var(--ivory-deep); padding: 4rem 0; }
+    .how-it-works-header { text-align: center; margin-bottom: 3rem; }
+    .how-it-works-eyebrow { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.25em; color: var(--brass-dark); margin-bottom: 0.6rem; display: block; }
+    .how-it-works-title { font-family: 'Outfit', sans-serif; font-size: 1.9rem; font-weight: 700; color: var(--forest); }
+    .how-it-works-title .accent { color: var(--brass-dark); }
+    .timeline { position: relative; max-width: 960px; margin: 0 auto; }
+    .timeline-line { position: absolute; top: 28px; left: 6%; right: 6%; height: 2px; background: var(--warm-stone); z-index: 0; }
+    .timeline-line-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0; background: var(--brass); transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+    .timeline.is-visible .timeline-line-fill { width: 100%; }
+    .timeline-steps { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    @media(max-width: 720px) { .timeline-steps { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem; } .timeline-line { display: none; } }
+    .timeline-step { text-align: center; }
+    .timeline-node { width: 56px; height: 56px; border-radius: 50%; background: var(--ivory); border: 2px solid var(--brass); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--brass-dark); opacity: 0.45; transform: scale(0.85); transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    .timeline.is-visible .timeline-node { opacity: 1; transform: scale(1); }
+    .timeline.is-visible .timeline-step:nth-child(1) .timeline-node { transition-delay: 0.1s; }
+    .timeline.is-visible .timeline-step:nth-child(2) .timeline-node { transition-delay: 0.35s; }
+    .timeline.is-visible .timeline-step:nth-child(3) .timeline-node { transition-delay: 0.6s; }
+    .timeline.is-visible .timeline-step:nth-child(4) .timeline-node { transition-delay: 0.85s; }
+    .timeline-node-active { background: var(--brass); color: var(--ivory); border-color: var(--brass); }
+    .timeline-step h3 { font-size: 0.95rem; font-weight: 700; color: var(--forest); margin-bottom: 0.3rem; }
+    .timeline-step p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; padding: 0 0.3rem; }
 
     /* ═══════════════════════════════════════════════════════
        TRUST BAR
@@ -1149,6 +1177,10 @@
                   <span>Selected Asset:</span>
                   <strong id="summary-asset">-</strong>
                 </div>
+                <div class="quote-summary-item quote-carbon">
+                  <span>Est. Carbon Footprint:</span>
+                  <strong id="summary-co2">-</strong>
+                </div>
                 <div class="quote-summary-item">
                   <span>Transit Insurance:</span>
                   <strong style="color:var(--success)">£20,000 Included</strong>
@@ -1333,6 +1365,41 @@
     </div>
   </section>
 
+  <!-- ═════════════════ HOW IT WORKS — 4-STEP TIMELINE ═════════════════ -->
+  <section class="how-it-works" aria-label="How same-day courier booking works in four steps">
+    <div class="container">
+      <div class="how-it-works-header">
+        <span class="how-it-works-eyebrow">From call to delivery</span>
+        <h2 class="how-it-works-title">Booked in minutes. <span class="accent">Collected in 60.</span></h2>
+      </div>
+      <div class="timeline" data-reveal>
+        <div class="timeline-line"><div class="timeline-line-fill"></div></div>
+        <div class="timeline-steps">
+          <div class="timeline-step">
+            <div class="timeline-node">01</div>
+            <h3>Book or Call</h3>
+            <p>Use the quote wizard above or ring our 24/7 dispatch desk with your route and cargo.</p>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-node">02</div>
+            <h3>Driver Dispatched</h3>
+            <p>A dedicated vehicle is allocated from the nearest hub &mdash; no waiting on a shared route.</p>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-node">03</div>
+            <h3>Live GPS Tracking</h3>
+            <p>Watch your consignment travel direct, loading to signature, with real-time updates.</p>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-node timeline-node-active">04</div>
+            <h3>Delivered &amp; Signed</h3>
+            <p>Digital proof of delivery on completion. Fully insured and chain-of-custody verified.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ═════════════════ TRUST BAR ═════════════════ -->
   <div class="trust-bar">
     <div class="container">
@@ -1390,10 +1457,18 @@
         
         <!-- Motorcycle -->
         <div class="fleet-card">
-          <div class="fleet-card-visual">
-            <!-- Outlined Motorcycle Icon -->
-            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+          <div class="fleet-card-visual" aria-hidden="true">
+            <!-- Motorcycle courier silhouette -->
+            <svg fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 64 40">
+              <circle cx="14" cy="29" r="6.5"/>
+              <circle cx="50" cy="29" r="6.5"/>
+              <circle cx="14" cy="29" r="2"/>
+              <circle cx="50" cy="29" r="2"/>
+              <path d="M14 29 L26 17 L40 17 L50 29"/>
+              <path d="M26 17 L22 12 L16 12"/>
+              <path d="M40 17 L44 9 L52 9"/>
+              <path d="M30 17 L34 9"/>
+              <path d="M44 23 L56 23 L50 29"/>
             </svg>
           </div>
           <h3 class="fleet-card-title">Motorcycle Courier</h3>
@@ -1409,9 +1484,16 @@
 
         <!-- Small Van -->
         <div class="fleet-card">
-          <div class="fleet-card-visual">
-            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.75A1.125 1.125 0 012.625 17.625V4.625A1.125 1.125 0 013.75 3.5h7.5A1.125 1.125 0 0112.375 4.625v1.5m-9 12.625h12.75A1.125 1.125 0 0017.25 17.625v-9.75a1.125 1.125 0 00-1.125-1.125H12.375m-1.5 1.5h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H17.25m3 3h.008v.008H20.25V9.75zm0 3h.008v.008H20.25v-.008zm0 3h.008v.008H20.25v-.008z" />
+          <div class="fleet-card-visual" aria-hidden="true">
+            <!-- Small van silhouette (car-derived) -->
+            <svg fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 64 40">
+              <circle cx="16" cy="31" r="5"/>
+              <circle cx="48" cy="31" r="5"/>
+              <path d="M9 27 L11 18 L20 14 L44 14 L54 18 L55 27 L55 32 L9 32 Z"/>
+              <path d="M20 14 L24 21 L40 21 L44 14"/>
+              <path d="M22 21 L22 18 L40 18 L40 21"/>
+              <circle cx="16" cy="31" r="1.6"/>
+              <circle cx="48" cy="31" r="1.6"/>
             </svg>
           </div>
           <h3 class="fleet-card-title">Small Van</h3>
@@ -1427,9 +1509,17 @@
 
         <!-- Medium Van -->
         <div class="fleet-card">
-          <div class="fleet-card-visual">
-            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.75A1.125 1.125 0 012.625 17.625V4.625A1.125 1.125 0 013.75 3.5h7.5A1.125 1.125 0 0112.375 4.625v1.5m-9 12.625h12.75A1.125 1.125 0 0017.25 17.625v-9.75a1.125 1.125 0 00-1.125-1.125H12.375m-1.5 1.5h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H17.25" />
+          <div class="fleet-card-visual" aria-hidden="true">
+            <!-- Medium panel van silhouette -->
+            <svg fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 64 40">
+              <circle cx="16" cy="31" r="5"/>
+              <circle cx="48" cy="31" r="5"/>
+              <path d="M8 27 L8 12 L42 12 L55 20 L55 32 L8 32 Z"/>
+              <path d="M30 12 L30 27"/>
+              <path d="M42 12 L55 20 L48 20 L48 12"/>
+              <path d="M12 16 L26 16"/>
+              <circle cx="16" cy="31" r="1.6"/>
+              <circle cx="48" cy="31" r="1.6"/>
             </svg>
           </div>
           <h3 class="fleet-card-title">Medium Van</h3>
@@ -1445,9 +1535,19 @@
 
         <!-- Large Van -->
         <div class="fleet-card">
-          <div class="fleet-card-visual">
-            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15m0 0l3-3m-3 3l3 3" />
+          <div class="fleet-card-visual" aria-hidden="true">
+            <!-- Large LWB van silhouette -->
+            <svg fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 64 40">
+              <circle cx="14" cy="31" r="5"/>
+              <circle cx="50" cy="31" r="5"/>
+              <path d="M6 27 L6 9 L44 9 L58 17 L58 32 L6 32 Z"/>
+              <path d="M20 9 L20 27"/>
+              <path d="M44 9 L58 17 L50 17 L50 9"/>
+              <path d="M9 13 L16 13"/>
+              <path d="M9 18 L16 18"/>
+              <path d="M9 23 L16 23"/>
+              <circle cx="14" cy="31" r="1.6"/>
+              <circle cx="50" cy="31" r="1.6"/>
             </svg>
           </div>
           <h3 class="fleet-card-title">Large Van (LWB)</h3>
@@ -1463,9 +1563,21 @@
 
         <!-- Luton Van -->
         <div class="fleet-card">
-          <div class="fleet-card-visual">
-            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+          <div class="fleet-card-visual" aria-hidden="true">
+            <!-- Luton van with box body + tail lift silhouette -->
+            <svg fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 64 40">
+              <circle cx="14" cy="31" r="5"/>
+              <circle cx="50" cy="31" r="5"/>
+              <path d="M4 27 L4 7 L42 7 L42 27 Z"/>
+              <path d="M42 11 L58 17 L58 27 L42 27"/>
+              <path d="M46 27 L52 27 L52 21"/>
+              <path d="M58 24 L62 26 L58 27"/>
+              <path d="M8 11 L38 11"/>
+              <path d="M8 15 L38 15"/>
+              <path d="M8 19 L38 19"/>
+              <path d="M8 23 L38 23"/>
+              <circle cx="14" cy="31" r="1.6"/>
+              <circle cx="50" cy="31" r="1.6"/>
             </svg>
           </div>
           <h3 class="fleet-card-title">Luton Van + Tail Lift</h3>
@@ -1885,6 +1997,7 @@
         maxWeight: 20, // KG
         basePrice: 25.00,
         perMile: 1.00,
+        co2PerMile: 0.06, // kg CO2 per mile
         desc: "Ideal for documents, keys, passports, and small parcels up to 20kg."
       },
       small_van: {
@@ -1892,6 +2005,7 @@
         maxWeight: 600, // KG
         basePrice: 35.00,
         perMile: 1.20,
+        co2PerMile: 0.25, // kg CO2 per mile
         desc: "Suitable for cartons, small pallets, or business materials up to 600kg."
       },
       medium_van: {
@@ -1899,6 +2013,7 @@
         maxWeight: 900, // KG
         basePrice: 45.00,
         perMile: 1.40,
+        co2PerMile: 0.30, // kg CO2 per mile
         desc: "Perfect for single standard pallets or large office supplies up to 900kg."
       },
       large_van: {
@@ -1906,6 +2021,7 @@
         maxWeight: 1200, // KG
         basePrice: 55.00,
         perMile: 1.65,
+        co2PerMile: 0.38, // kg CO2 per mile
         desc: "Best for heavy cargo, multiple standard pallets, or bulky equipment up to 1.2 tonnes."
       },
       luton_van: {
@@ -1913,6 +2029,7 @@
         maxWeight: 1000, // KG
         basePrice: 75.00,
         perMile: 2.10,
+        co2PerMile: 0.42, // kg CO2 per mile
         desc: "Features a motorized tail lift for palletized freight or bulky exhibitions up to 1 tonne."
       }
     };
@@ -2530,6 +2647,10 @@
       document.getElementById("summary-time").textContent = formattedDuration;
       document.getElementById("summary-asset").textContent = vehicle.name;
       document.getElementById("summary-price").textContent = `£${quoteState.calculatedPrice}`;
+
+      // Carbon estimate — dedicated direct route (no hub/multi-drop detours)
+      const estimatedCO2 = (roadDistance * vehicle.co2PerMile).toFixed(1);
+      document.getElementById("summary-co2").textContent = `≈ ${estimatedCO2} kg CO\u2082`;
 
       // Dynamically formulate WhatsApp deep link with all parameters pre-populated
       const whatsappMsg = encodeURIComponent(
