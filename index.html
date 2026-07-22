@@ -264,8 +264,8 @@
        ═══════════════════════════════════════════════════════ */
     .navbar {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: rgba(250, 249, 246, 0.95); backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border-subtle); transition: var(--transition);
+      background: rgba(250, 249, 246, 0.97);
+      border-bottom: 1px solid var(--border-subtle); transition: box-shadow 0.25s ease, border-color 0.25s ease;
     }
     .navbar.scrolled { box-shadow: var(--shadow-sm); }
     
@@ -488,7 +488,7 @@
       border: 1px solid var(--border-medium); border-top: none; border-radius: 0 0 4px 4px;
       box-shadow: var(--shadow-md); z-index: 50; max-height: 200px; overflow-y: auto; display: none;
     }
-    .autocomplete-item { padding: 0.6rem 1rem; cursor: pointer; font-size: 0.85rem; border-bottom: 1px solid var(--border-subtle); transition: var(--transition); }
+    .autocomplete-item { padding: 0.6rem 1rem; cursor: pointer; font-size: 0.85rem; border-bottom: 1px solid var(--border-subtle); transition: box-shadow 0.25s ease, border-color 0.25s ease; }
     .autocomplete-item:hover { background: var(--forest-muted); color: var(--forest); }
     
     .validation-feedback { display: none; font-size: 0.75rem; font-weight: 600; margin-top: 0.35rem; align-items: center; gap: 0.25rem; }
@@ -623,32 +623,33 @@
     .dispatch-map-svg { display: block; width: 100%; height: auto; }
     .dispatch-map-svg .uk-land { fill: var(--forest-light); stroke: rgba(156,128,92,0.25); stroke-width: 0.6; }
     .dispatch-map-svg .route-arc {
-      fill: none; stroke: var(--brass); stroke-width: 0.8; stroke-linecap: round;
-      stroke-dasharray: 6 5; opacity: 0.35;
-      animation: route-dash 18s linear infinite;
+      fill: none; stroke: var(--brass); stroke-width: 0.7; stroke-linecap: round;
+      stroke-dasharray: 5 6; opacity: 0.22;
+      animation: route-dash 30s linear infinite;
+    }
+    .dispatch-map-svg .hub-secondary circle { fill: rgba(189,166,133,0.45); }
+    .dispatch-map-svg .hub-secondary text {
+      fill: rgba(250,249,246,0.45); font-family: 'DM Sans', sans-serif; font-size: 5.4px;
+      font-weight: 600; letter-spacing: 0.08em;
     }
     .dispatch-map-svg .hub-pulse {
       fill: none; stroke: var(--success); stroke-width: 1; transform-origin: center; transform-box: fill-box;
-      animation: hub-pulse 2.6s ease-out infinite;
+      animation: hub-pulse 3.8s ease-out infinite;
     }
-    .dispatch-map-svg .hub-pulse.delay-1 { animation-delay: 0.6s; }
-    .dispatch-map-svg .hub-pulse.delay-2 { animation-delay: 1.2s; }
-    .dispatch-map-svg .hub-pulse.delay-3 { animation-delay: 1.8s; }
+    .dispatch-map-svg .hub-pulse.delay-1 { animation-delay: 0.8s; }
+    .dispatch-map-svg .hub-pulse.delay-2 { animation-delay: 1.6s; }
+    .dispatch-map-svg .hub-pulse.delay-3 { animation-delay: 2.4s; }
     .dispatch-map-svg .hub-dot { fill: var(--brass-bright); }
     .dispatch-map-svg .hub-core { fill: var(--ivory); }
     .dispatch-map-svg .hub-label {
       fill: rgba(250,249,246,0.72); font-family: 'DM Sans', sans-serif; font-size: 6.2px;
       font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
     }
-    .dispatch-map-svg .moving-courier {
-      fill: var(--brass-bright); animation: courier-glow 1.8s ease-in-out infinite;
-    }
     @keyframes hub-pulse {
       0%   { r: 3; opacity: 0.8; }
       100% { r: 9; opacity: 0; }
     }
     @keyframes route-dash { to { stroke-dashoffset: -220; } }
-    @keyframes courier-glow { 0%,100% { opacity: 0.45; } 50% { opacity: 1; } }
 
     /* ═══════════════════════════════════════════════════════
        HOW IT WORKS — scroll-drawn 4-step timeline
@@ -1290,33 +1291,38 @@
           <h2 class="dispatch-map-title">Drivers positioned across the UK, <span class="accent">right now.</span></h2>
           <p class="dispatch-map-lead">A dedicated vehicle isn't dispatched from a single depot &mdash; our drivers are already positioned in major hubs nationwide, which is how we collect within 60 minutes. The map shows the coverage backbone that powers every same-day run.</p>
           <div class="dispatch-map-legend">
-            <span class="dispatch-map-legend-item"><span class="dispatch-map-legend-dot" style="background:var(--brass-bright);"></span>Driver hub</span>
-            <span class="dispatch-map-legend-item"><span class="dispatch-map-legend-dot" style="background:var(--success);"></span>Active collection</span>
-            <span class="dispatch-map-legend-item"><span class="dispatch-map-legend-dot" style="background:var(--brass);opacity:0.5;"></span>Typical route corridor</span>
+            <span class="dispatch-map-legend-item"><span class="dispatch-map-legend-dot" style="background:var(--brass-bright);"></span>Primary hub</span>
+            <span class="dispatch-map-legend-item"><span class="dispatch-map-legend-dot" style="background:rgba(189,166,133,0.45);"></span>Regular coverage</span>
+            <span class="dispatch-map-legend-item"><span class="dispatch-map-legend-dot" style="background:var(--brass);opacity:0.4;"></span>On-demand nationwide</span>
           </div>
         </div>
         <div class="dispatch-map-stage">
-          <svg class="dispatch-map-svg" viewBox="0 0 260 360" role="img" aria-label="Stylized map of the United Kingdom showing same-day courier hubs in Glasgow, Leeds, Manchester, Birmingham, Bristol and London">
+          <svg class="dispatch-map-svg" viewBox="0 0 260 360" role="img" aria-label="Stylized map of the United Kingdom showing same-day courier coverage hubs nationwide">
             <!-- Stylized GB landmass (simplified, decorative) -->
             <path class="uk-land" d="M150 18 C172 20 186 36 184 56 C196 58 204 72 200 88 C212 92 214 110 206 122 C216 132 212 150 200 156 C206 170 200 186 188 190 L182 214 C186 230 178 246 164 248 C160 262 166 278 156 290 C150 306 134 312 124 304 C116 316 100 314 96 300 C84 302 74 292 78 280 C66 278 60 264 68 252 C56 246 52 230 62 220 C54 208 58 192 70 188 C62 172 68 156 82 152 C74 136 82 120 96 118 C90 100 98 84 112 82 C104 64 116 46 132 44 C134 28 142 18 150 18 Z"/>
             <!-- Northern Ireland accent -->
             <path class="uk-land" d="M40 196 C52 192 64 200 62 214 C58 226 44 230 34 222 C28 212 32 200 40 196 Z" opacity="0.7"/>
 
-            <!-- Route corridors (animated dashes) -->
-            <path class="route-arc" d="M110 70 Q150 120 196 252"/>
-            <path class="route-arc" d="M150 108 Q175 175 196 252"/>
-            <path class="route-arc" d="M150 108 Q130 130 110 70"/>
-            <path class="route-arc" d="M150 108 Q170 150 196 252"/>
-            <path class="route-arc" d="M150 200 Q180 225 196 252"/>
+            <!-- Route corridors (calm, slow dashes) -->
+            <path class="route-arc" d="M110 70 Q150 150 196 252"/>
+            <path class="route-arc" d="M150 108 Q175 180 196 252"/>
+            <path class="route-arc" d="M150 108 Q130 90 110 70"/>
+            <path class="route-arc" d="M150 200 Q175 225 196 252"/>
+            <path class="route-arc" d="M130 232 Q165 245 196 252"/>
+            <path class="route-arc" d="M172 112 Q190 120 200 88"/>
 
-            <!-- Moving courier markers along corridors (animated glow) -->
-            <circle class="moving-courier" r="2.4" cy="70" cx="110">
-              <animateMotion dur="7s" repeatCount="indefinite" path="M0 0 Q40 50 86 182"/>
-            </circle>
-            <circle class="moving-courier" r="2.4" cx="150" cy="108">
-              <animateMotion dur="6.5s" repeatCount="indefinite" path="M0 0 Q25 67 46 144"/>
-            </circle>
+            <!-- Secondary coverage points (muted, static — no pulse, lighter) -->
+            <g class="hub-secondary">
+              <circle cx="138" cy="58" r="2.2"/><text x="138" y="50" text-anchor="middle">Edinburgh</text>
+              <circle cx="128" cy="120" r="2.2"/><text x="120" y="122" text-anchor="end">Liverpool</text>
+              <circle cx="170" cy="80" r="2.2"/><text x="170" y="72" text-anchor="middle">Newcastle</text>
+              <circle cx="170" cy="150" r="2.2"/><text x="178" y="152">Nottingham</text>
+              <circle cx="108" cy="258" r="2.2"/><text x="100" y="260" text-anchor="end">Cardiff</text>
+              <circle cx="156" cy="278" r="2.2"/><text x="156" y="290" text-anchor="middle">Southampton</text>
+              <circle cx="176" cy="232" r="2.2"/><text x="184" y="234">Reading</text>
+            </g>
 
+            <!-- Primary hubs (bright, pulsing) -->
             <!-- Hub: Glasgow -->
             <g>
               <circle class="hub-pulse" cx="110" cy="70" r="3"/>
@@ -2079,15 +2085,18 @@
       document.getElementById("contact-phone").addEventListener("input", validateStep3);
       document.getElementById("contact-email").addEventListener("input", validateStep3);
 
-      // Sticky Scroll Header shadow
+      // Sticky Scroll Header shadow (throttled + passive for scroll performance)
+      const _navEl = document.getElementById("navbar");
+      let _navTicking = false;
       window.addEventListener("scroll", () => {
-        const nav = document.getElementById("navbar");
-        if (window.scrollY > 20) {
-          nav.classList.add("scrolled");
-        } else {
-          nav.classList.remove("scrolled");
+        if (!_navTicking) {
+          requestAnimationFrame(() => {
+            if (window.scrollY > 20) { _navEl.classList.add("scrolled"); } else { _navEl.classList.remove("scrolled"); }
+            _navTicking = false;
+          });
+          _navTicking = true;
         }
-      });
+      }, { passive: true });
 
       // Mobile Menu Toggle
       const toggle = document.getElementById("menuToggle");

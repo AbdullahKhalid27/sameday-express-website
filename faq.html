@@ -279,8 +279,8 @@
     /* NAVBAR */
     .navbar {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: rgba(250, 249, 246, 0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border-subtle); transition: var(--transition);
+      background: rgba(250, 249, 246, 0.97);
+      border-bottom: 1px solid var(--border-subtle); transition: box-shadow 0.25s ease, border-color 0.25s ease;
     }
     .navbar.scrolled { box-shadow: var(--shadow-md); }
     .navbar-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
@@ -1018,9 +1018,13 @@
   <script>
     // Navbar scroll effect
     const navbar = document.getElementById('navbar');
+    let _navTicking = false;
     window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 10);
-    });
+      if (!_navTicking) {
+        requestAnimationFrame(() => { navbar.classList.toggle('scrolled', window.scrollY > 10); _navTicking = false; });
+        _navTicking = true;
+      }
+    }, { passive: true });
     // Mobile menu toggle
     const menuToggle = document.getElementById('menuToggle');
     const navMenu = document.querySelector('.nav-menu');
