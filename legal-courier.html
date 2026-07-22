@@ -106,11 +106,28 @@
       --shadow-lg: 0 16px 40px rgba(28, 40, 33, 0.12);
       --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    /* ═══════════════════════════════════════════════════════
+       ACCESSIBILITY — focus states + reduced motion
+       ═══════════════════════════════════════════════════════ */
+    :focus-visible { outline: 2px solid var(--brass-dark); outline-offset: 2px; border-radius: 2px; }
+    .navbar a:focus-visible, .footer a:focus-visible, .mobile-sticky-bar a:focus-visible,
+    .cta-banner a:focus-visible, .phone-cta:focus-visible, .btn-quote-header:focus-visible,
+    .menu-toggle:focus-visible, .shimmer-btn:focus-visible, .cta-btn-primary:focus-visible,
+    .cta-btn-secondary:focus-visible, button:focus-visible, input:focus-visible,
+    textarea:focus-visible, select:focus-visible { outline: 2px solid var(--brass-dark); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
     body { font-family: 'DM Sans', sans-serif; color: var(--text-main); background: var(--ivory); line-height: 1.7; }
     .noise-bg { background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); }
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
     img { max-width: 100%; display: block; }
     a { color: var(--brass); text-decoration: none; transition: var(--transition); }
     a:hover { color: var(--brass-bright); }

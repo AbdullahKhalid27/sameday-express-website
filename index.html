@@ -140,6 +140,23 @@
     }
 
     /* Reset & Base */
+    /* ═══════════════════════════════════════════════════════
+       ACCESSIBILITY — focus states + reduced motion
+       ═══════════════════════════════════════════════════════ */
+    :focus-visible { outline: 2px solid var(--brass-dark); outline-offset: 2px; border-radius: 2px; }
+    .navbar a:focus-visible, .footer a:focus-visible, .mobile-sticky-bar a:focus-visible,
+    .cta-banner a:focus-visible, .phone-cta:focus-visible, .btn-quote-header:focus-visible,
+    .menu-toggle:focus-visible, .shimmer-btn:focus-visible, .cta-btn-primary:focus-visible,
+    .cta-btn-secondary:focus-visible, button:focus-visible, input:focus-visible,
+    textarea:focus-visible, select:focus-visible { outline: 2px solid var(--brass-dark); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
     body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--ivory); color: var(--text-main); line-height: 1.6; }
@@ -626,6 +643,7 @@
     @media(min-width: 768px) { .industries-grid { grid-template-columns: repeat(4, 1fr); } }
     
     .industry-card {
+      display: block; width: 100%; text-align: left; font: inherit; color: inherit;
       background: var(--forest-light); border: 1px solid rgba(250, 249, 246, 0.08);
       border-radius: 4px; padding: 1.5rem; transition: var(--transition); cursor: pointer;
     }
@@ -1389,34 +1407,34 @@
       </div>
 
       <div class="industries-grid">
-        <div class="industry-card" onclick="preFillSector('Aviation')">
-          <span class="industry-icon">
+        <button type="button" class="industry-card" onclick="preFillSector('Aviation')" aria-label="Aviation and AOG sector — pre-fill quote">
+          <span class="industry-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
           </span>
-          <h3 class="industry-title">Aviation &amp; AOG</h3>
-          <p class="industry-desc">Emergency parts, flight line tools, airside clearance logistics.</p>
-        </div>
-        <div class="industry-card" onclick="preFillSector('Legal')">
-          <span class="industry-icon">
+          <span class="industry-title">Aviation &amp; AOG</span>
+          <span class="industry-desc">Emergency parts, flight line tools, airside clearance logistics.</span>
+        </button>
+        <button type="button" class="industry-card" onclick="preFillSector('Legal')" aria-label="Legal and law firms sector — pre-fill quote">
+          <span class="industry-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 009 11V5a2 2 0 00-2-2H4a2 2 0 00-2 2v6c0 4.29 2.5 8 6 9.571M12 11c1.744 2.772 2.753 6.054 2.753 9.571m1.44-2.041l-.054-.09A13.916 13.916 0 0115 11V5a2 2 0 012-2h3a2 2 0 012 2v6c0 4.29-2.5 8-6 9.571"/></svg>
           </span>
-          <h3 class="industry-title">Legal &amp; Law Firms</h3>
-          <p class="industry-desc">Confidential document filing, contracts, deed transfer runs.</p>
-        </div>
-        <div class="industry-card" onclick="preFillSector('Medical')">
-          <span class="industry-icon">
+          <span class="industry-title">Legal &amp; Law Firms</span>
+          <span class="industry-desc">Confidential document filing, contracts, deed transfer runs.</span>
+        </button>
+        <button type="button" class="industry-card" onclick="preFillSector('Medical')" aria-label="Medical and pharma sector — pre-fill quote">
+          <span class="industry-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </span>
-          <h3 class="industry-title">Medical &amp; Pharma</h3>
-          <p class="industry-desc">Specimens, cold-chain components, secure deliveries.</p>
-        </div>
-        <div class="industry-card" onclick="preFillSector('Manufacturing')">
-          <span class="industry-icon">
+          <span class="industry-title">Medical &amp; Pharma</span>
+          <span class="industry-desc">Specimens, cold-chain components, secure deliveries.</span>
+        </button>
+        <button type="button" class="industry-card" onclick="preFillSector('Manufacturing')" aria-label="Manufacturing sector — pre-fill quote">
+          <span class="industry-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
           </span>
-          <h3 class="industry-title">Manufacturing</h3>
-          <p class="industry-desc">Direct assembly supply line components, logistics downtime support.</p>
-        </div>
+          <span class="industry-title">Manufacturing</span>
+          <span class="industry-desc">Direct assembly supply line components, logistics downtime support.</span>
+        </button>
       </div>
     </div>
   </section>
