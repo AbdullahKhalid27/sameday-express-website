@@ -167,6 +167,35 @@
         scroll-behavior: auto !important;
       }
     }
+
+    /* ═══════════════════════════════════════════════════════
+       MOTION SYSTEM — scroll reveals, count-up, magnetic buttons
+       Duration tiers: 150ms micro / 300ms standard / 500ms emphasis.
+       Named easings reused everywhere. All killed by reduced-motion above.
+       ═══════════════════════════════════════════════════════ */
+    [data-reveal] { opacity: 0; transform: translateY(22px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
+    [data-reveal].is-visible { opacity: 1; transform: none; }
+    [data-reveal-stagger] > * { opacity: 0; transform: translateY(18px); transition: opacity 0.45s ease-out, transform 0.45s ease-out; }
+    [data-reveal-stagger].is-visible > * { opacity: 1; transform: none; }
+    [data-reveal-stagger].is-visible > *:nth-child(1) { transition-delay: 0ms; }
+    [data-reveal-stagger].is-visible > *:nth-child(2) { transition-delay: 60ms; }
+    [data-reveal-stagger].is-visible > *:nth-child(3) { transition-delay: 120ms; }
+    [data-reveal-stagger].is-visible > *:nth-child(4) { transition-delay: 180ms; }
+    [data-reveal-stagger].is-visible > *:nth-child(5) { transition-delay: 240ms; }
+    [data-reveal-stagger].is-visible > *:nth-child(6) { transition-delay: 300ms; }
+
+    /* Magnetic + glow buttons: CSS vars (--mx/--my) set by JS on hover */
+    .magnetic-btn {
+      position: relative; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .magnetic-btn::after {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+      background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(189,166,133,0.35), transparent 60%);
+      opacity: 0; transition: opacity 0.25s ease-out;
+    }
+    .magnetic-btn:hover::after { opacity: 1; }
+    @media (hover: none) { .magnetic-btn::after { display: none; } } /* touch devices */
+
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
     body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--ivory); color: var(--text-main); line-height: 1.6; }
@@ -564,6 +593,62 @@
     }
 
     /* ═══════════════════════════════════════════════════════
+       LIVE DISPATCH NETWORK MAP
+       Stylized UK SVG — animated hub pulse + route arcs.
+       Differentiator: competitors show tracking AFTER booking;
+       we show the live network in the marketing surface.
+       ═══════════════════════════════════════════════════════ */
+    .dispatch-map { background: var(--forest-dark); padding: 3rem 0 3.5rem; overflow: hidden; }
+    .dispatch-map-inner { display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: center; }
+    @media(min-width: 1024px) { .dispatch-map-inner { grid-template-columns: 0.9fr 1.1fr; gap: 3rem; } }
+    .dispatch-map-copy { color: var(--ivory); }
+    .dispatch-map-eyebrow {
+      font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.25em;
+      color: var(--brass-bright); display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;
+    }
+    .dispatch-map-eyebrow::before {
+      content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--success);
+      box-shadow: 0 0 0 0 rgba(34,120,69,0.7); animation: pulse-live 2s infinite;
+    }
+    .dispatch-map-title { font-family: 'Outfit', sans-serif; font-size: 1.9rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.85rem; }
+    .dispatch-map-title .accent { color: var(--brass-bright); }
+    .dispatch-map-lead { font-size: 0.98rem; color: rgba(250,249,246,0.62); line-height: 1.65; margin-bottom: 1.4rem; }
+    .dispatch-map-legend { display: flex; flex-wrap: wrap; gap: 1rem 1.75rem; }
+    .dispatch-map-legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: rgba(250,249,246,0.7); }
+    .dispatch-map-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    .dispatch-map-stage { position: relative; width: 100%; }
+    .dispatch-map-svg { display: block; width: 100%; height: auto; }
+    .dispatch-map-svg .uk-land { fill: var(--forest-light); stroke: rgba(156,128,92,0.25); stroke-width: 0.6; }
+    .dispatch-map-svg .route-arc {
+      fill: none; stroke: var(--brass); stroke-width: 0.8; stroke-linecap: round;
+      stroke-dasharray: 6 5; opacity: 0.35;
+      animation: route-dash 18s linear infinite;
+    }
+    .dispatch-map-svg .hub-pulse {
+      fill: none; stroke: var(--success); stroke-width: 1; transform-origin: center; transform-box: fill-box;
+      animation: hub-pulse 2.6s ease-out infinite;
+    }
+    .dispatch-map-svg .hub-pulse.delay-1 { animation-delay: 0.6s; }
+    .dispatch-map-svg .hub-pulse.delay-2 { animation-delay: 1.2s; }
+    .dispatch-map-svg .hub-pulse.delay-3 { animation-delay: 1.8s; }
+    .dispatch-map-svg .hub-dot { fill: var(--brass-bright); }
+    .dispatch-map-svg .hub-core { fill: var(--ivory); }
+    .dispatch-map-svg .hub-label {
+      fill: rgba(250,249,246,0.72); font-family: 'DM Sans', sans-serif; font-size: 6.2px;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+    }
+    .dispatch-map-svg .moving-courier {
+      fill: var(--brass-bright); animation: courier-glow 1.8s ease-in-out infinite;
+    }
+    @keyframes hub-pulse {
+      0%   { r: 3; opacity: 0.8; }
+      100% { r: 9; opacity: 0; }
+    }
+    @keyframes route-dash { to { stroke-dashoffset: -220; } }
+    @keyframes courier-glow { 0%,100% { opacity: 0.45; } 50% { opacity: 1; } }
+
+    /* ═══════════════════════════════════════════════════════
        TRUST BAR
        ═══════════════════════════════════════════════════════ */
     .trust-bar { background: #ffffff; border-bottom: 1px solid var(--border-subtle); padding: 2rem 0; }
@@ -870,7 +955,7 @@
             <svg width="14" height="14" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             <span>020 4568 4675</span>
           </a>
-          <a href="#quote-container" class="btn-quote-header shimmer-btn">Book Online</a>
+          <a href="#quote-container" class="btn-quote-header shimmer-btn magnetic-btn">Book Online</a>
           <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation">
             <span></span>
             <span></span>
@@ -908,13 +993,13 @@
           <h1>Same-Day Dedicated Delivery. <span class="highlight">Collect in 60 Mins.</span></h1>
           <p class="hero-lead">UK's premier urgent transport network. Direct vehicle dispatch, vetted drivers, and full GPS monitoring from loading to signature. No hubs, no multi-drop delays.</p>
           
-          <div class="hero-stats">
+          <div class="hero-stats" data-reveal-stagger>
             <div class="stat-box">
-              <div class="stat-number">60<span>m</span></div>
+              <div class="stat-number" data-count-to="60" data-count-suffix="m">0</div>
               <div class="stat-label">Response Time</div>
             </div>
             <div class="stat-box">
-              <div class="stat-number">£20<span>k</span></div>
+              <div class="stat-number" data-count-to="20" data-count-prefix="£" data-count-suffix="k">0</div>
               <div class="stat-label">GIT Insurance</div>
             </div>
             <div class="stat-box">
@@ -922,7 +1007,7 @@
               <div class="stat-label">Live Dispatch</div>
             </div>
             <div class="stat-box">
-              <div class="stat-number">100<span>%</span></div>
+              <div class="stat-number" data-count-to="100" data-count-suffix="%">0</div>
               <div class="stat-label">Direct Fleet</div>
             </div>
           </div>
@@ -1164,6 +1249,90 @@
     </div>
   </div>
 
+  <!-- ═════════════════ LIVE DISPATCH NETWORK MAP ═════════════════ -->
+  <section class="dispatch-map" aria-label="Live same-day courier network coverage across the UK">
+    <div class="container">
+      <div class="dispatch-map-inner">
+        <div class="dispatch-map-copy">
+          <span class="dispatch-map-eyebrow">Live Network</span>
+          <h2 class="dispatch-map-title">Drivers positioned across the UK, <span class="accent">right now.</span></h2>
+          <p class="dispatch-map-lead">A dedicated vehicle isn't dispatched from a single depot &mdash; our drivers are already positioned in major hubs nationwide, which is how we collect within 60 minutes. The map shows the coverage backbone that powers every same-day run.</p>
+          <div class="dispatch-map-legend">
+            <span class="dispatch-map-legend-item"><span class="dispatch-map-legend-dot" style="background:var(--brass-bright);"></span>Driver hub</span>
+            <span class="dispatch-map-legend-item"><span class="dispatch-map-legend-dot" style="background:var(--success);"></span>Active collection</span>
+            <span class="dispatch-map-legend-item"><span class="dispatch-map-legend-dot" style="background:var(--brass);opacity:0.5;"></span>Typical route corridor</span>
+          </div>
+        </div>
+        <div class="dispatch-map-stage">
+          <svg class="dispatch-map-svg" viewBox="0 0 260 360" role="img" aria-label="Stylized map of the United Kingdom showing same-day courier hubs in Glasgow, Leeds, Manchester, Birmingham, Bristol and London">
+            <!-- Stylized GB landmass (simplified, decorative) -->
+            <path class="uk-land" d="M150 18 C172 20 186 36 184 56 C196 58 204 72 200 88 C212 92 214 110 206 122 C216 132 212 150 200 156 C206 170 200 186 188 190 L182 214 C186 230 178 246 164 248 C160 262 166 278 156 290 C150 306 134 312 124 304 C116 316 100 314 96 300 C84 302 74 292 78 280 C66 278 60 264 68 252 C56 246 52 230 62 220 C54 208 58 192 70 188 C62 172 68 156 82 152 C74 136 82 120 96 118 C90 100 98 84 112 82 C104 64 116 46 132 44 C134 28 142 18 150 18 Z"/>
+            <!-- Northern Ireland accent -->
+            <path class="uk-land" d="M40 196 C52 192 64 200 62 214 C58 226 44 230 34 222 C28 212 32 200 40 196 Z" opacity="0.7"/>
+
+            <!-- Route corridors (animated dashes) -->
+            <path class="route-arc" d="M110 70 Q150 120 196 252"/>
+            <path class="route-arc" d="M150 108 Q175 175 196 252"/>
+            <path class="route-arc" d="M150 108 Q130 130 110 70"/>
+            <path class="route-arc" d="M150 108 Q170 150 196 252"/>
+            <path class="route-arc" d="M150 200 Q180 225 196 252"/>
+
+            <!-- Moving courier markers along corridors (animated glow) -->
+            <circle class="moving-courier" r="2.4" cy="70" cx="110">
+              <animateMotion dur="7s" repeatCount="indefinite" path="M0 0 Q40 50 86 182"/>
+            </circle>
+            <circle class="moving-courier" r="2.4" cx="150" cy="108">
+              <animateMotion dur="6.5s" repeatCount="indefinite" path="M0 0 Q25 67 46 144"/>
+            </circle>
+
+            <!-- Hub: Glasgow -->
+            <g>
+              <circle class="hub-pulse" cx="110" cy="70" r="3"/>
+              <circle class="hub-dot" cx="110" cy="70" r="3.2"/>
+              <circle class="hub-core" cx="110" cy="70" r="1.4"/>
+              <text class="hub-label" x="110" y="60" text-anchor="middle">Glasgow</text>
+            </g>
+            <!-- Hub: Manchester -->
+            <g>
+              <circle class="hub-pulse delay-1" cx="150" cy="108" r="3"/>
+              <circle class="hub-dot" cx="150" cy="108" r="3.2"/>
+              <circle class="hub-core" cx="150" cy="108" r="1.4"/>
+              <text class="hub-label" x="150" y="98" text-anchor="middle">Manchester</text>
+            </g>
+            <!-- Hub: Leeds -->
+            <g>
+              <circle class="hub-pulse delay-2" cx="172" cy="112" r="3"/>
+              <circle class="hub-dot" cx="172" cy="112" r="2.6"/>
+              <circle class="hub-core" cx="172" cy="112" r="1.2"/>
+              <text class="hub-label" x="188" y="114">Leeds</text>
+            </g>
+            <!-- Hub: Birmingham -->
+            <g>
+              <circle class="hub-pulse delay-3" cx="150" cy="200" r="3"/>
+              <circle class="hub-dot" cx="150" cy="200" r="3.2"/>
+              <circle class="hub-core" cx="150" cy="200" r="1.4"/>
+              <text class="hub-label" x="150" y="214" text-anchor="middle">Birmingham</text>
+            </g>
+            <!-- Hub: Bristol -->
+            <g>
+              <circle class="hub-pulse delay-1" cx="130" cy="232" r="3"/>
+              <circle class="hub-dot" cx="130" cy="232" r="2.6"/>
+              <circle class="hub-core" cx="130" cy="232" r="1.2"/>
+              <text class="hub-label" x="130" y="246" text-anchor="middle">Bristol</text>
+            </g>
+            <!-- Hub: London (flagship) -->
+            <g>
+              <circle class="hub-pulse" cx="196" cy="252" r="3"/>
+              <circle class="hub-dot" cx="196" cy="252" r="3.6"/>
+              <circle class="hub-core" cx="196" cy="252" r="1.6"/>
+              <text class="hub-label" x="196" y="242" text-anchor="middle">London</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ═════════════════ TRUST BAR ═════════════════ -->
   <div class="trust-bar">
     <div class="container">
@@ -1217,7 +1386,7 @@
         <p class="section-desc">Fully operational, secure, and direct courier vehicles positioned nationwide to handle any payload size or urgency.</p>
       </div>
 
-      <div class="fleet-grid">
+      <div class="fleet-grid" data-reveal-stagger>
         
         <!-- Motorcycle -->
         <div class="fleet-card">
@@ -1323,7 +1492,7 @@
         <p class="section-desc">Our operational network is customized to meet strict deadline constraints, secure chain of custody, and fragile cargo demands.</p>
       </div>
 
-      <div class="services-grid">
+      <div class="services-grid" data-reveal-stagger>
         
         <!-- Service 1 -->
         <div class="service-card">
@@ -1416,7 +1585,7 @@
         <p class="section-desc" style="color: rgba(250,249,246,0.6);">Different commercial fields have precise rules. Our drivers are fully trained, verified, and equipped to support special regulatory frameworks.</p>
       </div>
 
-      <div class="industries-grid">
+      <div class="industries-grid" data-reveal-stagger>
         <button type="button" class="industry-card" onclick="preFillSector('Aviation')" aria-label="Aviation and AOG sector — pre-fill quote">
           <span class="industry-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
@@ -1466,7 +1635,7 @@
         </div>
       </div>
 
-      <div class="reviews-grid">
+      <div class="reviews-grid" data-reveal-stagger>
         <div class="review-card">
           <div class="review-stars">★ ★ ★ ★ ★</div>
           <p class="review-text">"Our legal firm had a critical court closing filing to deliver to Birmingham from London within 3 hours. Same Day Express booked a motorcycle within 5 mins, and documents were signed at court 1.5 hours ahead of schedule. Exceptional service!"</p>
@@ -1595,7 +1764,7 @@
       <h2>Need a Driver Dispatched Immediately?</h2>
       <p>Do not wait for emails or slow online portals. Call our national booking desk now for direct driver allocation in under 15 minutes.</p>
       <div class="cta-btns">
-        <a href="tel:+442045684675" class="btn-cta-primary shimmer-btn">Call Desk: 020 4568 4675</a>
+        <a href="tel:+442045684675" class="btn-cta-primary shimmer-btn magnetic-btn">Call Desk: 020 4568 4675</a>
         <a href="#quote-container" class="btn-cta-secondary">Calculate Quote Route</a>
       </div>
     </div>
@@ -2620,6 +2789,89 @@
       document.querySelector(".newsletter-form button").style.display = "none";
       document.getElementById("newsletter-success-msg").style.display = "block";
     }
+
+    /* ═══════════════════════════════════════════════════════
+       MOTION SYSTEM — scroll reveals, count-up, magnetic buttons
+       Vanilla JS, no dependencies. Respects prefers-reduced-motion.
+       ═══════════════════════════════════════════════════════ */
+    (function () {
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // 1. Reveal-on-scroll for [data-reveal] and [data-reveal-stagger]
+      if ("IntersectionObserver" in window && !reduceMotion) {
+        var revealObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+        document.querySelectorAll("[data-reveal], [data-reveal-stagger]").forEach(function (el) {
+          revealObserver.observe(el);
+        });
+      } else {
+        // No IO or reduced motion: show everything immediately
+        document.querySelectorAll("[data-reveal], [data-reveal-stagger]").forEach(function (el) {
+          el.classList.add("is-visible");
+        });
+      }
+
+      // 2. Count-up for [data-count-to] — triggered once on first view
+      function animateCount(el) {
+        var target = parseInt(el.getAttribute("data-count-to"), 10);
+        var prefix = el.getAttribute("data-count-prefix") || "";
+        var suffix = el.getAttribute("data-count-suffix") || "";
+        if (isNaN(target)) return;
+        if (reduceMotion) { el.textContent = prefix + target + suffix; return; }
+        var start = 0, duration = 1400, startTime = null;
+        function frame(ts) {
+          if (!startTime) startTime = ts;
+          var progress = Math.min((ts - startTime) / duration, 1);
+          // easeOutCubic
+          var eased = 1 - Math.pow(1 - progress, 3);
+          var value = Math.round(start + (target - start) * eased);
+          el.textContent = prefix + value + suffix;
+          if (progress < 1) requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      }
+      if ("IntersectionObserver" in window) {
+        var countObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              animateCount(entry.target);
+              countObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.5 });
+        document.querySelectorAll("[data-count-to]").forEach(function (el) {
+          countObserver.observe(el);
+        });
+      } else {
+        document.querySelectorAll("[data-count-to]").forEach(animateCount);
+      }
+
+      // 3. Magnetic + glow buttons — follow cursor with radial highlight
+      if (!reduceMotion && window.matchMedia("(hover: hover)").matches) {
+        document.querySelectorAll(".magnetic-btn").forEach(function (btn) {
+          btn.addEventListener("mousemove", function (e) {
+            var rect = btn.getBoundingClientRect();
+            var mx = ((e.clientX - rect.left) / rect.width) * 100;
+            var my = ((e.clientY - rect.top) / rect.height) * 100;
+            btn.style.setProperty("--mx", mx + "%");
+            btn.style.setProperty("--my", my + "%");
+            // subtle magnetic pull toward cursor (max 4px)
+            var pullX = ((e.clientX - (rect.left + rect.width / 2)) / rect.width) * 4;
+            var pullY = ((e.clientY - (rect.top + rect.height / 2)) / rect.height) * 4;
+            btn.style.transform = "translate(" + pullX.toFixed(1) + "px, " + pullY.toFixed(1) + "px)";
+          });
+          btn.addEventListener("mouseleave", function () {
+            btn.style.transform = "";
+          });
+        });
+      }
+    })();
   </script>
 </body>
 </html>
