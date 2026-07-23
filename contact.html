@@ -443,6 +443,19 @@
     }
     .map-placeholder iframe { width: 100%; height: 100%; border: 0; }
 
+    /* COVERAGE MINI MAP */
+    .coverage-mini { display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: center; background: var(--forest-dark); border-radius: 12px; padding: 2.5rem; margin-bottom: 2rem; }
+    @media(min-width: 900px) { .coverage-mini { grid-template-columns: 1fr 1fr; } }
+    .coverage-mini-copy { color: var(--ivory); }
+    .coverage-mini-eyebrow { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.25em; color: var(--brass-bright); display: block; margin-bottom: 0.75rem; }
+    .coverage-mini-copy h2 { color: var(--ivory); font-size: 1.6rem; margin-bottom: 0.85rem; }
+    .coverage-mini-copy p { color: rgba(250,249,246,0.65); font-size: 0.95rem; line-height: 1.65; margin-bottom: 1.25rem; }
+    .coverage-mini-hubs { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .coverage-mini-hubs a { font-size: 0.78rem; font-weight: 600; color: var(--brass-bright); background: rgba(156,128,92,0.12); border: 1px solid rgba(156,128,92,0.25); padding: 0.35rem 0.75rem; border-radius: 4px; text-decoration: none; transition: background 0.2s ease; }
+    .coverage-mini-hubs a:hover { background: rgba(156,128,92,0.25); }
+    .coverage-mini-map { display: flex; justify-content: center; }
+    .coverage-mini-svg { width: 100%; max-width: 280px; height: auto; }
+
     /* FAQ TEASE */
     .faq-tease { margin-bottom: 3rem; }
     .faq-tease h2 { margin-bottom: 1.5rem; }
@@ -657,11 +670,49 @@
     </div>
   </section>
 
-  <!-- Section 3: Coverage Map -->
+  <!-- Section 3: Nationwide Coverage Map -->
   <section class="section-ivory" style="padding-top: 0;">
     <div class="container">
-      <div class="map-placeholder">
-        <iframe src="https://www.google.com/maps?q=London,+UK&output=embed" title="Same Day Express Couriers — nationwide UK coverage" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div class="coverage-mini">
+        <div class="coverage-mini-copy">
+          <span class="coverage-mini-eyebrow">Nationwide Coverage</span>
+          <h2>No single depot. Drivers everywhere.</h2>
+          <p>Same Day Express Couriers doesn't run from one warehouse &mdash; drivers are positioned across the UK, which is how we collect within 60 minutes from almost anywhere. Call your nearest hub or book online.</p>
+          <div class="coverage-mini-hubs">
+            <a href="same-day-courier-london.html">London</a>
+            <a href="same-day-courier-manchester.html">Manchester</a>
+            <a href="same-day-courier-birmingham.html">Birmingham</a>
+            <a href="same-day-courier-bristol.html">Bristol</a>
+            <a href="same-day-courier-leeds.html">Leeds</a>
+            <a href="same-day-courier-glasgow.html">Glasgow</a>
+          </div>
+        </div>
+        <div class="coverage-mini-map" aria-hidden="true">
+          <svg viewBox="0 0 260 360" class="coverage-mini-svg">
+            <path fill="#2d3d34" stroke="rgba(156,128,92,0.25)" stroke-width="0.6" d="M150 18 C172 20 186 36 184 56 C196 58 204 72 200 88 C212 92 214 110 206 122 C216 132 212 150 200 156 C206 170 200 186 188 190 L182 214 C186 230 178 246 164 248 C160 262 166 278 156 290 C150 306 134 312 124 304 C116 316 100 314 96 300 C84 302 74 292 78 280 C66 278 60 264 68 252 C56 246 52 230 62 220 C54 208 58 192 70 188 C62 172 68 156 82 152 C74 136 82 120 96 118 C90 100 98 84 112 82 C104 64 116 46 132 44 C134 28 142 18 150 18 Z"/>
+            <path fill="#2d3d34" stroke="rgba(156,128,92,0.25)" stroke-width="0.6" opacity="0.7" d="M40 196 C52 192 64 200 62 214 C58 226 44 230 34 222 C28 212 32 200 40 196 Z"/>
+            <path fill="none" stroke="#9c805c" stroke-width="0.7" stroke-dasharray="5 6" opacity="0.22" d="M110 70 Q150 150 196 252"/>
+            <path fill="none" stroke="#9c805c" stroke-width="0.7" stroke-dasharray="5 6" opacity="0.22" d="M150 108 Q175 180 196 252"/>
+            <path fill="none" stroke="#9c805c" stroke-width="0.7" stroke-dasharray="5 6" opacity="0.22" d="M150 108 Q130 90 110 70"/>
+            <path fill="none" stroke="#9c805c" stroke-width="0.7" stroke-dasharray="5 6" opacity="0.22" d="M130 232 Q165 245 196 252"/>
+            <g fill="rgba(189,166,133,0.4)" font-family="DM Sans" font-size="5.4" font-weight="600">
+              <circle cx="138" cy="58" r="2.2"/><text x="138" y="50" text-anchor="middle" fill="rgba(28,40,33,0.4)">Edinburgh</text>
+              <circle cx="128" cy="120" r="2.2"/><text x="120" y="122" text-anchor="end" fill="rgba(28,40,33,0.4)">Liverpool</text>
+              <circle cx="170" cy="80" r="2.2"/><text x="170" y="72" text-anchor="middle" fill="rgba(28,40,33,0.4)">Newcastle</text>
+              <circle cx="170" cy="150" r="2.2"/><text x="178" y="152" fill="rgba(28,40,33,0.4)">Nottingham</text>
+              <circle cx="108" cy="258" r="2.2"/><text x="100" y="260" text-anchor="end" fill="rgba(28,40,33,0.4)">Cardiff</text>
+              <circle cx="156" cy="278" r="2.2"/><text x="156" y="290" text-anchor="middle" fill="rgba(28,40,33,0.4)">Southampton</text>
+            </g>
+            <g>
+              <circle fill="#9c805c" cx="110" cy="70" r="3.2"/><text x="110" y="60" text-anchor="middle" fill="#1c2821" font-family="DM Sans" font-size="6.2" font-weight="700">Glasgow</text>
+              <circle fill="#9c805c" cx="150" cy="108" r="3.2"/><text x="150" y="98" text-anchor="middle" fill="#1c2821" font-family="DM Sans" font-size="6.2" font-weight="700">Manchester</text>
+              <circle fill="#9c805c" cx="172" cy="112" r="2.6"/><text x="188" y="114" fill="#1c2821" font-family="DM Sans" font-size="6.2" font-weight="700">Leeds</text>
+              <circle fill="#9c805c" cx="150" cy="200" r="3.2"/><text x="150" y="214" text-anchor="middle" fill="#1c2821" font-family="DM Sans" font-size="6.2" font-weight="700">Birmingham</text>
+              <circle fill="#9c805c" cx="130" cy="232" r="2.6"/><text x="130" y="246" text-anchor="middle" fill="#1c2821" font-family="DM Sans" font-size="6.2" font-weight="700">Bristol</text>
+              <circle fill="#9c805c" cx="196" cy="252" r="3.6"/><text x="196" y="242" text-anchor="middle" fill="#1c2821" font-family="DM Sans" font-size="6.2" font-weight="700">London</text>
+            </g>
+          </svg>
+        </div>
       </div>
     </div>
   </section>
