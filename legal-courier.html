@@ -105,7 +105,7 @@
       --brass: #9c805c; --brass-dark: #7d6547; --brass-bright: #bda685;
       --brass-muted: rgba(156, 128, 92, 0.08); --brass-border: rgba(156, 128, 92, 0.2);
       --ivory: #faf9f6; --ivory-deep: #eeebe3; --warm-stone: #e0dacd;
-      --text-main: #1c2821; --text-muted: #64736b; --text-light: #a4b2aa;
+      --text-main: #1c2821; --text-muted: #52625a; --text-light: #a4b2aa;
       --border-subtle: rgba(28, 40, 33, 0.08); --border-medium: rgba(28, 40, 33, 0.15);
       --success: #227845; --success-muted: rgba(34, 120, 69, 0.08);
       --danger: #b33939; --danger-muted: rgba(179, 57, 57, 0.08); --info: #2980b9;
@@ -133,7 +133,7 @@
     }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    body { font-family: 'DM Sans', sans-serif; color: var(--text-main); background: var(--ivory); line-height: 1.7; }
+    body { font-family: 'DM Sans', sans-serif; color: var(--text-main); background: var(--ivory); font-size: 17px; line-height: 1.7; }
     .noise-bg { background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); }
     .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
     img { max-width: 100%; display: block; }
@@ -279,7 +279,7 @@
     .steps-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
     @media(max-width: 768px) { .steps-row { grid-template-columns: 1fr; } }
     .step-item { text-align: center; padding: 2rem 1.5rem; }
-    .step-number { font-family: 'Outfit', sans-serif; font-size: 3rem; font-weight: 800; color: var(--brass-border); line-height: 1; margin-bottom: 0.5rem; }
+    .step-number { font-family: 'Outfit', sans-serif; font-size: 3rem; font-weight: 800; color: var(--brass-bright); line-height: 1; margin-bottom: 0.5rem; }
     .step-item h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
     .step-item p { font-size: 0.9rem; color: var(--text-muted); }
 
@@ -317,7 +317,7 @@
     .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s ease; }
     .faq-item.open .faq-answer { max-height: 500px; }
     .faq-answer-inner { padding: 0 1.5rem 1.25rem; }
-    .faq-answer-inner p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+    .faq-answer-inner p { font-size: 1rem; color: var(--text-muted); line-height: 1.7; }
 
     /* TRADE FORM (for trade-accounts.html) */
     .trade-form-card { background: #ffffff; border: 1px solid var(--border-medium); border-radius: 8px; box-shadow: var(--shadow-md); padding: 2rem; position: relative; }
