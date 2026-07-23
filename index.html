@@ -771,17 +771,19 @@
     @media(min-width: 768px) { .industries-grid { grid-template-columns: repeat(4, 1fr); } }
     
     .industry-card {
-      display: block; width: 100%; text-align: left; font: inherit; color: inherit;
+      display: block; width: 100%; text-align: left; font: inherit; color: inherit; text-decoration: none;
       background: var(--forest-light); border: 1px solid rgba(250, 249, 246, 0.08);
-      border-radius: 4px; padding: 1.5rem; transition: var(--transition); cursor: pointer;
+      border-radius: 4px; padding: 1.5rem; transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
     }
     .industry-card:hover { background: var(--brass-muted); border-color: var(--brass); transform: translateY(-2px); }
-    
+
     .industry-icon { color: var(--brass-bright); margin-bottom: 1rem; display: block; }
     .industry-icon svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 2; }
-    
-    .industry-title { font-size: 1.05rem; font-weight: 600; color: var(--ivory); margin-bottom: 0.5rem; }
-    .industry-desc { font-size: 0.8rem; color: rgba(250, 249, 246, 0.6); line-height: 1.5; }
+
+    .industry-title { display: block; font-size: 1.05rem; font-weight: 600; color: var(--ivory); margin-bottom: 0.5rem; }
+    .industry-desc { display: block; font-size: 0.8rem; color: rgba(250, 249, 246, 0.6); line-height: 1.5; margin-bottom: 0.85rem; }
+    .industry-link { display: block; font-size: 0.75rem; font-weight: 700; color: var(--brass-bright); text-transform: uppercase; letter-spacing: 0.06em; transition: color 0.2s ease; }
+    .industry-card:hover .industry-link { color: var(--ivory); }
 
     /* ═══════════════════════════════════════════════════════
        REVIEWS & CUSTOMER PROOF
@@ -1615,7 +1617,7 @@
   <section class="section bg-stone" id="services">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Direct Deliveries</span>
+        <span class="section-tag">What We Do</span>
         <h2 class="section-title">Specialist Courier Services</h2>
         <p class="section-desc">Our operational network is customized to meet strict deadline constraints, secure chain of custody, and fragile cargo demands.</p>
       </div>
@@ -1704,44 +1706,48 @@
     </div>
   </section>
 
-  <!-- ═════════════════ SECTORS SECTION ═════════════════ -->
+  <!-- ═════════════════ SERVICES — Who We Serve (sub-block) ═════════════════ -->
   <section class="section bg-dark noise-bg" id="industries">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag" style="color: var(--brass-bright);">Sectors We Serve</span>
+        <span class="section-tag" style="color: var(--brass-bright);">Who We Serve</span>
         <h2 class="section-title">Built for Complex UK Industry Demands</h2>
-        <p class="section-desc" style="color: rgba(250,249,246,0.6);">Different commercial fields have precise rules. Our drivers are fully trained, verified, and equipped to support special regulatory frameworks.</p>
+        <p class="section-desc" style="color: rgba(250,249,246,0.6);">Different commercial fields have precise rules. Our drivers are fully trained, verified, and equipped to support special regulatory frameworks. Explore each sector in depth.</p>
       </div>
 
       <div class="industries-grid" data-reveal-stagger>
-        <button type="button" class="industry-card" onclick="preFillSector('Aviation')" aria-label="Aviation and AOG sector — pre-fill quote">
+        <a href="aog-aviation-courier.html" class="industry-card">
           <span class="industry-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
           </span>
           <span class="industry-title">Aviation &amp; AOG</span>
           <span class="industry-desc">Emergency parts, flight line tools, airside clearance logistics.</span>
-        </button>
-        <button type="button" class="industry-card" onclick="preFillSector('Legal')" aria-label="Legal and law firms sector — pre-fill quote">
+          <span class="industry-link">Explore aviation &rarr;</span>
+        </a>
+        <a href="legal-courier.html" class="industry-card">
           <span class="industry-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 009 11V5a2 2 0 00-2-2H4a2 2 0 00-2 2v6c0 4.29 2.5 8 6 9.571M12 11c1.744 2.772 2.753 6.054 2.753 9.571m1.44-2.041l-.054-.09A13.916 13.916 0 0115 11V5a2 2 0 012-2h3a2 2 0 012 2v6c0 4.29-2.5 8-6 9.571"/></svg>
           </span>
           <span class="industry-title">Legal &amp; Law Firms</span>
           <span class="industry-desc">Confidential document filing, contracts, deed transfer runs.</span>
-        </button>
-        <button type="button" class="industry-card" onclick="preFillSector('Medical')" aria-label="Medical and pharma sector — pre-fill quote">
+          <span class="industry-link">Explore legal &rarr;</span>
+        </a>
+        <a href="medical-courier.html" class="industry-card">
           <span class="industry-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </span>
           <span class="industry-title">Medical &amp; Pharma</span>
           <span class="industry-desc">Specimens, cold-chain components, secure deliveries.</span>
-        </button>
-        <button type="button" class="industry-card" onclick="preFillSector('Manufacturing')" aria-label="Manufacturing sector — pre-fill quote">
+          <span class="industry-link">Explore medical &rarr;</span>
+        </a>
+        <a href="same-day-courier.html#freight" class="industry-card">
           <span class="industry-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
           </span>
           <span class="industry-title">Manufacturing</span>
           <span class="industry-desc">Direct assembly supply line components, logistics downtime support.</span>
-        </button>
+          <span class="industry-link">Explore freight &rarr;</span>
+        </a>
       </div>
     </div>
   </section>
