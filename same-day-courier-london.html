@@ -302,6 +302,13 @@
 
     /* POSTCODE TAGS */
     .postcode-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    .postcode-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    @media(min-width: 768px) { .postcode-groups { grid-template-columns: repeat(3, 1fr); } }
+    .postcode-group { background: #fff; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 0.85rem 1rem; }
+    .postcode-group-label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--forest); margin-bottom: 0.25rem; }
+    .postcode-group-codes { font-size: 0.78rem; color: var(--text-muted); }
+
     .postcode-tag { background: var(--brass-muted); color: var(--forest); font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 0.85rem; padding: 0.4rem 1rem; border-radius: 6px; border: 1px solid var(--brass-border); }
 
     /* CTA */
@@ -415,207 +422,42 @@
   <section class="section-dark">
     <div class="container">
       <h2>Same Day Courier Service in London</h2>
-      <p>London is the beating heart of UK business, and when deadlines are tight, the capital's traffic and logistics complexity demand a courier that knows every route, every shortcut, and every access restriction. <span class="accent">Same Day Express Couriers operates across all London postcodes</span> &mdash; from the City of London and Canary Wharf financial districts to the West End, Westminster, and beyond. Whether you need a motorcycle courier threading through EC1 traffic to deliver court papers to the Royal Courts of Justice, or a large van collecting aviation components from a Heathrow warehouse for AOG delivery, we dispatch a dedicated vehicle within 60 minutes of your call. Our DBS-vetted drivers understand central London's ultra-low emission zone, congestion charge area, and timed delivery restrictions, ensuring your goods arrive on time without access delays.</p>
+      <p><span class="accent">Your parcel leaves London within 60 minutes and goes direct</span> &mdash; no hub, no multi-drop sorting. You get a named driver, ULEZ and Congestion-aware routing, and a signed proof of delivery. From a motorcycle threading EC1 traffic to a Luton van out of Heathrow, the right vehicle is already nearby.</p>
     </div>
   </section>
 
   <section class="section-ivory">
     <div class="container">
       <div class="section-header"><h2>Postcodes We Cover in London</h2><p>We collect and deliver across central, inner, and outer London postcode districts.</p></div>
-      <div class="postcode-grid">
-        <span class="postcode-tag">EC1</span>
-        <span class="postcode-tag">EC2</span>
-        <span class="postcode-tag">EC3</span>
-        <span class="postcode-tag">EC4</span>
-        <span class="postcode-tag">WC1</span>
-        <span class="postcode-tag">WC2</span>
-        <span class="postcode-tag">SW1</span>
-        <span class="postcode-tag">SW2</span>
-        <span class="postcode-tag">SW3</span>
-        <span class="postcode-tag">SW4</span>
-        <span class="postcode-tag">SW5</span>
-        <span class="postcode-tag">SW6</span>
-        <span class="postcode-tag">SW7</span>
-        <span class="postcode-tag">SW8</span>
-        <span class="postcode-tag">SW9</span>
-        <span class="postcode-tag">SW10</span>
-        <span class="postcode-tag">SW11</span>
-        <span class="postcode-tag">SW12</span>
-        <span class="postcode-tag">SW13</span>
-        <span class="postcode-tag">SW14</span>
-        <span class="postcode-tag">SW15</span>
-        <span class="postcode-tag">SW16</span>
-        <span class="postcode-tag">SW17</span>
-        <span class="postcode-tag">SW18</span>
-        <span class="postcode-tag">SW19</span>
-        <span class="postcode-tag">SE1</span>
-        <span class="postcode-tag">SE2</span>
-        <span class="postcode-tag">SE3</span>
-        <span class="postcode-tag">SE4</span>
-        <span class="postcode-tag">SE5</span>
-        <span class="postcode-tag">SE6</span>
-        <span class="postcode-tag">SE7</span>
-        <span class="postcode-tag">SE8</span>
-        <span class="postcode-tag">SE9</span>
-        <span class="postcode-tag">SE10</span>
-        <span class="postcode-tag">SE11</span>
-        <span class="postcode-tag">SE12</span>
-        <span class="postcode-tag">SE13</span>
-        <span class="postcode-tag">SE14</span>
-        <span class="postcode-tag">SE15</span>
-        <span class="postcode-tag">SE16</span>
-        <span class="postcode-tag">SE17</span>
-        <span class="postcode-tag">SE18</span>
-        <span class="postcode-tag">SE19</span>
-        <span class="postcode-tag">SE20</span>
-        <span class="postcode-tag">SE21</span>
-        <span class="postcode-tag">SE22</span>
-        <span class="postcode-tag">SE23</span>
-        <span class="postcode-tag">SE24</span>
-        <span class="postcode-tag">SE25</span>
-        <span class="postcode-tag">SE26</span>
-        <span class="postcode-tag">SE27</span>
-        <span class="postcode-tag">SE28</span>
-        <span class="postcode-tag">E1</span>
-        <span class="postcode-tag">E2</span>
-        <span class="postcode-tag">E3</span>
-        <span class="postcode-tag">E4</span>
-        <span class="postcode-tag">E5</span>
-        <span class="postcode-tag">E6</span>
-        <span class="postcode-tag">E7</span>
-        <span class="postcode-tag">E8</span>
-        <span class="postcode-tag">E9</span>
-        <span class="postcode-tag">E10</span>
-        <span class="postcode-tag">E11</span>
-        <span class="postcode-tag">E12</span>
-        <span class="postcode-tag">E13</span>
-        <span class="postcode-tag">E14</span>
-        <span class="postcode-tag">E15</span>
-        <span class="postcode-tag">E16</span>
-        <span class="postcode-tag">E17</span>
-        <span class="postcode-tag">E18</span>
-        <span class="postcode-tag">E20</span>
-        <span class="postcode-tag">N1</span>
-        <span class="postcode-tag">N2</span>
-        <span class="postcode-tag">N3</span>
-        <span class="postcode-tag">N4</span>
-        <span class="postcode-tag">N5</span>
-        <span class="postcode-tag">N6</span>
-        <span class="postcode-tag">N7</span>
-        <span class="postcode-tag">N8</span>
-        <span class="postcode-tag">N9</span>
-        <span class="postcode-tag">N10</span>
-        <span class="postcode-tag">N11</span>
-        <span class="postcode-tag">N12</span>
-        <span class="postcode-tag">N13</span>
-        <span class="postcode-tag">N14</span>
-        <span class="postcode-tag">N15</span>
-        <span class="postcode-tag">N16</span>
-        <span class="postcode-tag">N17</span>
-        <span class="postcode-tag">N18</span>
-        <span class="postcode-tag">N19</span>
-        <span class="postcode-tag">N20</span>
-        <span class="postcode-tag">N21</span>
-        <span class="postcode-tag">N22</span>
-        <span class="postcode-tag">NW1</span>
-        <span class="postcode-tag">NW2</span>
-        <span class="postcode-tag">NW3</span>
-        <span class="postcode-tag">NW4</span>
-        <span class="postcode-tag">NW5</span>
-        <span class="postcode-tag">NW6</span>
-        <span class="postcode-tag">NW7</span>
-        <span class="postcode-tag">NW8</span>
-        <span class="postcode-tag">NW9</span>
-        <span class="postcode-tag">NW10</span>
-        <span class="postcode-tag">NW11</span>
-        <span class="postcode-tag">W1</span>
-        <span class="postcode-tag">W2</span>
-        <span class="postcode-tag">W3</span>
-        <span class="postcode-tag">W4</span>
-        <span class="postcode-tag">W5</span>
-        <span class="postcode-tag">W6</span>
-        <span class="postcode-tag">W7</span>
-        <span class="postcode-tag">W8</span>
-        <span class="postcode-tag">W9</span>
-        <span class="postcode-tag">W10</span>
-        <span class="postcode-tag">W11</span>
-        <span class="postcode-tag">W12</span>
-        <span class="postcode-tag">W13</span>
-        <span class="postcode-tag">W14</span>
-        <span class="postcode-tag">TW6 (Heathrow)</span>
-      </div>
+      <div class="postcode-groups"><div class="postcode-group"><span class="postcode-group-label">Central (EC, WC)</span><span class="postcode-group-codes">EC1-4, WC1-2</span></div><div class="postcode-group"><span class="postcode-group-label">West (W)</span><span class="postcode-group-codes">W1-14</span></div><div class="postcode-group"><span class="postcode-group-label">South West (SW)</span><span class="postcode-group-codes">SW1-19</span></div><div class="postcode-group"><span class="postcode-group-label">South East (SE)</span><span class="postcode-group-codes">SE1-28</span></div><div class="postcode-group"><span class="postcode-group-label">East (E)</span><span class="postcode-group-codes">E1-20</span></div><div class="postcode-group"><span class="postcode-group-label">North (N)</span><span class="postcode-group-codes">N1-22</span></div><div class="postcode-group"><span class="postcode-group-label">North West (NW)</span><span class="postcode-group-codes">NW1-11</span></div><div class="postcode-group"><span class="postcode-group-label">Heathrow</span><span class="postcode-group-codes">TW6</span></div></div>
     </div>
   </section>
 
   <section class="section-dark" style="padding: 4rem 0;">
     <div class="container">
-      <div class="section-header"><h2 style="color:var(--ivory);">Services Available in London</h2><p style="color:rgba(250,249,246,0.5);">Every service we offer is available for London collection and delivery.</p></div>
+      <div class="section-header"><h2>Who We Work With in London</h2><p>Local businesses that rely on a same-day courier who actually knows the city.</p></div>
       <div class="card-grid-3">
         <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-          <h3><a href="same-day-courier.html">Same Day Courier</a></h3>
-          <p>Dedicated vehicle, direct route, no hub delays. 60-minute collection.</p>
+          <h3>City &amp; Canary Wharf</h3>
+          <p>Urgent contract packs, compliance documents, and hardware for banks and insurers in the Square Mile and Canary Wharf.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-          <h3><a href="medical-courier.html">Medical Courier</a></h3>
-          <p>Specimen transport, pharma delivery, NHS supply chain. DBS vetted.</p>
+          <h3>Royal Courts &amp; Legal</h3>
+          <p>Same-day court filing delivery to the Royal Courts of Justice and chambers across WC1 and WC2 &mdash; sealed, direct-hand.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></div>
-          <h3><a href="legal-courier.html">Legal Document Courier</a></h3>
-          <p>Court filings, contracts, deed transfers. Direct hand delivery.</p>
+          <h3>Harley Street &amp; NHS</h3>
+          <p>Specimens, diagnostics, and pharma for Harley Street clinics and hospitals, moved under strict chain of custody.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg></div>
-          <h3><a href="aog-aviation-courier.html">AOG Aviation Courier</a></h3>
-          <p>Emergency aircraft parts to all major UK airports. Immediate dispatch.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-          <h3><a href="trade-accounts.html">Custom</a></h3>
-          <p>Priority dispatch, 30-day invoicing, volume pricing for regular shippers.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-          <h3><a href="same-day-courier.html#freight">Commercial Freight</a></h3>
-          <p>Heavy and oversized loads, pallet delivery, Luton vans with tail lifts.</p>
+          <h3>Heathrow (LHR)</h3>
+          <p>AOG parts and aviation components to Heathrow, with airside-ready coordination and no hub delays.</p>
         </div>
       </div>
     </div>
   </section>
 
   <section class="section-ivory">
-    <div class="container">
-      <div class="section-header"><h2>Who Uses Us in London</h2><p>Local businesses that depend on our same day courier service.</p></div>
-      <div class="card-grid-3">
-        <div class="feature-card">
-          <h3>City of London Legal District</h3>
-          <p>Time-critical document delivery between the Square Mile, the Inns of Court, and court-adjacent legal offices that need sealed, direct-hand delivery.</p>
-        </div>
-        <div class="feature-card">
-          <h3>Harley Street Medical</h3>
-          <p>Medical specimens, diagnostics, and pharmaceuticals for Harley Street clinics, private hospitals, and research practices that need careful chain of custody.</p>
-        </div>
-        <div class="feature-card">
-          <h3>Canary Wharf Finance</h3>
-          <p>Urgent contract packs, cards, hardware, and compliance documents for banks, insurers, and financial services teams in Canary Wharf.</p>
-        </div>
-        <div class="feature-card">
-          <h3>Royal Courts &amp; Chambers</h3>
-          <p>Same-day court filing delivery to the Royal Courts of Justice, Central London County Court, and chambers across WC1 and WC2.</p>
-        </div>
-        <div class="feature-card">
-          <h3>Heathrow Airport (LHR)</h3>
-          <p>AOG parts delivery to Heathrow and surrounding aviation businesses with direct airport runs, airside-ready coordination, and no hub delays.</p>
-        </div>
-        <div class="feature-card">
-          <h3>West End &amp; Creative</h3>
-          <p>Urgent stock transfers, samples, and equipment moves for West End retailers, media firms, and creative agencies in W1, W2, and W8.</p>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <section class="section-dark" style="padding: 4rem 0;">
     <div class="container">

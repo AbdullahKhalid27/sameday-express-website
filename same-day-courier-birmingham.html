@@ -302,6 +302,13 @@
 
     /* POSTCODE TAGS */
     .postcode-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    .postcode-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    @media(min-width: 768px) { .postcode-groups { grid-template-columns: repeat(3, 1fr); } }
+    .postcode-group { background: #fff; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 0.85rem 1rem; }
+    .postcode-group-label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--forest); margin-bottom: 0.25rem; }
+    .postcode-group-codes { font-size: 0.78rem; color: var(--text-muted); }
+
     .postcode-tag { background: var(--brass-muted); color: var(--forest); font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 0.85rem; padding: 0.4rem 1rem; border-radius: 6px; border: 1px solid var(--brass-border); }
 
     /* CTA */
@@ -423,93 +430,14 @@
   <section class="section-dark">
     <div class="container">
       <h2>Same Day Courier Service in Birmingham</h2>
-      <p>Birmingham is the UK's second city and a powerhouse of legal, manufacturing, and commercial activity. From the Jewellery Quarter's specialist workshops to the NEC exhibition centre and Birmingham Airport, the city demands a courier service that can move fast across the West Midlands conurbation. <span class="accent">Same Day Express Couriers covers every Birmingham postcode</span> with dedicated vehicles that collect within 60 minutes and drive direct &mdash; no hub stops, no sorting delays. Whether it is a legal filing for Birmingham Civil Justice Centre, automotive parts for a manufacturer in the Black Country, or exhibition materials for the NEC, our DBS-vetted drivers deliver with digital proof of delivery on every single job.</p>
+      <p><span class="accent">Your parcel leaves Birmingham within 60 minutes and goes direct</span> &mdash; no hub, no multi-drop. You get a named driver who knows Spaghetti Junction, the Jewellery Quarter, and the NEC, plus a signed proof of delivery. Clean Air Zone-compliant vehicles, 24/7.</p>
     </div>
   </section>
 
   <section class="section-ivory">
     <div class="container">
       <div class="section-header"><h2>Postcodes We Cover in Birmingham</h2><p>We collect and deliver across all Birmingham postcode areas.</p></div>
-      <div class="postcode-grid">
-        <span class="postcode-tag">B1</span>
-        <span class="postcode-tag">B2</span>
-        <span class="postcode-tag">B3</span>
-        <span class="postcode-tag">B4</span>
-        <span class="postcode-tag">B5</span>
-        <span class="postcode-tag">B6</span>
-        <span class="postcode-tag">B7</span>
-        <span class="postcode-tag">B8</span>
-        <span class="postcode-tag">B9</span>
-        <span class="postcode-tag">B10</span>
-        <span class="postcode-tag">B11</span>
-        <span class="postcode-tag">B12</span>
-        <span class="postcode-tag">B13</span>
-        <span class="postcode-tag">B14</span>
-        <span class="postcode-tag">B15</span>
-        <span class="postcode-tag">B16</span>
-        <span class="postcode-tag">B17</span>
-        <span class="postcode-tag">B18</span>
-        <span class="postcode-tag">B19</span>
-        <span class="postcode-tag">B20</span>
-        <span class="postcode-tag">B21</span>
-        <span class="postcode-tag">B23</span>
-        <span class="postcode-tag">B24</span>
-        <span class="postcode-tag">B25</span>
-        <span class="postcode-tag">B26</span>
-        <span class="postcode-tag">B27</span>
-        <span class="postcode-tag">B28</span>
-        <span class="postcode-tag">B29</span>
-        <span class="postcode-tag">B30</span>
-        <span class="postcode-tag">B31</span>
-        <span class="postcode-tag">B32</span>
-        <span class="postcode-tag">B33</span>
-        <span class="postcode-tag">B34</span>
-        <span class="postcode-tag">B36</span>
-        <span class="postcode-tag">B37</span>
-        <span class="postcode-tag">B40</span>
-        <span class="postcode-tag">B42</span>
-        <span class="postcode-tag">B43</span>
-        <span class="postcode-tag">B44</span>
-        <span class="postcode-tag">B45</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="section-dark" style="padding: 4rem 0;">
-    <div class="container">
-      <div class="section-header"><h2 style="color:var(--ivory);">Services Available in Birmingham</h2><p style="color:rgba(250,249,246,0.5);">Every service we offer is available for Birmingham collection and delivery.</p></div>
-      <div class="card-grid-3">
-        <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-          <h3><a href="same-day-courier.html">Same Day Courier</a></h3>
-          <p>Dedicated vehicle, direct route, no hub delays. 60-minute collection.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-          <h3><a href="medical-courier.html">Medical Courier</a></h3>
-          <p>Specimen transport, pharma delivery, NHS supply chain. DBS vetted.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></div>
-          <h3><a href="legal-courier.html">Legal Document Courier</a></h3>
-          <p>Court filings, contracts, deed transfers. Direct hand delivery.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg></div>
-          <h3><a href="aog-aviation-courier.html">AOG Aviation Courier</a></h3>
-          <p>Emergency aircraft parts to all major UK airports. Immediate dispatch.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-          <h3><a href="trade-accounts.html">Custom</a></h3>
-          <p>Priority dispatch, 30-day invoicing, volume pricing for regular shippers.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-          <h3><a href="same-day-courier.html#freight">Commercial Freight</a></h3>
-          <p>Heavy and oversized loads, pallet delivery, Luton vans with tail lifts.</p>
-        </div>
-      </div>
+      <div class="postcode-groups"><div class="postcode-group"><span class="postcode-group-label">City Centre</span><span class="postcode-group-codes">B1-B5</span></div><div class="postcode-group"><span class="postcode-group-label">Jewellery Quarter</span><span class="postcode-group-codes">B1, B18</span></div><div class="postcode-group"><span class="postcode-group-label">South Birmingham</span><span class="postcode-group-codes">B13-15, B28-30</span></div><div class="postcode-group"><span class="postcode-group-label">Solihull & NEC</span><span class="postcode-group-codes">B91-94</span></div><div class="postcode-group"><span class="postcode-group-label">Black Country</span><span class="postcode-group-codes">DY, WV</span></div><div class="postcode-group"><span class="postcode-group-label">Airport (BHX)</span><span class="postcode-group-codes">B26</span></div></div>
     </div>
   </section>
 

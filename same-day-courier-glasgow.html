@@ -302,6 +302,13 @@
 
     /* POSTCODE TAGS */
     .postcode-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    .postcode-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    @media(min-width: 768px) { .postcode-groups { grid-template-columns: repeat(3, 1fr); } }
+    .postcode-group { background: #fff; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 0.85rem 1rem; }
+    .postcode-group-label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--forest); margin-bottom: 0.25rem; }
+    .postcode-group-codes { font-size: 0.78rem; color: var(--text-muted); }
+
     .postcode-tag { background: var(--brass-muted); color: var(--forest); font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 0.85rem; padding: 0.4rem 1rem; border-radius: 6px; border: 1px solid var(--brass-border); }
 
     /* CTA */
@@ -419,106 +426,14 @@
   <section class="section-dark">
     <div class="container">
       <h2>Same Day Courier Service in Glasgow</h2>
-      <p>Glasgow is Scotland's largest city and the engine of its economy, home to NHS Greater Glasgow &mdash; the UK's largest health board &mdash; a thriving financial services sector, and the Clyde industrial corridor. <span class="accent">Same Day Express Couriers covers every Glasgow postcode</span> with dedicated vehicles that collect within 60 minutes and drive direct. From medical specimens between NHS hospitals to legal filings at Glasgow Sheriff Court, from financial documents in the International Financial Services District to industrial components along the Clyde, our DBS-vetted drivers deliver with &pound;20,000 goods-in-transit insurance and digital proof of delivery. Glasgow Airport is also within our coverage for time-critical aviation deliveries to the west of Scotland.</p>
+      <p><span class="accent">Your parcel leaves Glasgow within 60 minutes and goes direct</span> &mdash; no hub, no sorting. You get a named driver who knows the IFSD, the Clyde corridor, and the hospitals, plus a signed proof of delivery. LEZ-compliant vehicles, 24/7.</p>
     </div>
   </section>
 
   <section class="section-ivory">
     <div class="container">
       <div class="section-header"><h2>Postcodes We Cover in Glasgow</h2><p>We collect and deliver across all Glasgow postcode areas.</p></div>
-      <div class="postcode-grid">
-        <span class="postcode-tag">G1</span>
-        <span class="postcode-tag">G2</span>
-        <span class="postcode-tag">G3</span>
-        <span class="postcode-tag">G4</span>
-        <span class="postcode-tag">G5</span>
-        <span class="postcode-tag">G11</span>
-        <span class="postcode-tag">G12</span>
-        <span class="postcode-tag">G13</span>
-        <span class="postcode-tag">G14</span>
-        <span class="postcode-tag">G15</span>
-        <span class="postcode-tag">G20</span>
-        <span class="postcode-tag">G21</span>
-        <span class="postcode-tag">G22</span>
-        <span class="postcode-tag">G23</span>
-        <span class="postcode-tag">G31</span>
-        <span class="postcode-tag">G32</span>
-        <span class="postcode-tag">G33</span>
-        <span class="postcode-tag">G34</span>
-        <span class="postcode-tag">G40</span>
-        <span class="postcode-tag">G41</span>
-        <span class="postcode-tag">G42</span>
-        <span class="postcode-tag">G43</span>
-        <span class="postcode-tag">G44</span>
-        <span class="postcode-tag">G45</span>
-        <span class="postcode-tag">G46</span>
-        <span class="postcode-tag">G51</span>
-        <span class="postcode-tag">G52</span>
-        <span class="postcode-tag">G53</span>
-        <span class="postcode-tag">G58</span>
-        <span class="postcode-tag">G60</span>
-        <span class="postcode-tag">G61</span>
-        <span class="postcode-tag">G62</span>
-        <span class="postcode-tag">G64</span>
-        <span class="postcode-tag">G65</span>
-        <span class="postcode-tag">G66</span>
-        <span class="postcode-tag">G67</span>
-        <span class="postcode-tag">G68</span>
-        <span class="postcode-tag">G71</span>
-        <span class="postcode-tag">G72</span>
-        <span class="postcode-tag">G73</span>
-        <span class="postcode-tag">G74</span>
-        <span class="postcode-tag">G75</span>
-        <span class="postcode-tag">G76</span>
-        <span class="postcode-tag">G77</span>
-        <span class="postcode-tag">G78</span>
-        <span class="postcode-tag">G81</span>
-        <span class="postcode-tag">G82</span>
-        <span class="postcode-tag">G83</span>
-        <span class="postcode-tag">G84</span>
-        <span class="postcode-tag">PA2</span>
-        <span class="postcode-tag">PA3</span>
-        <span class="postcode-tag">PA4</span>
-        <span class="postcode-tag">PA5</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="section-dark" style="padding: 4rem 0;">
-    <div class="container">
-      <div class="section-header"><h2 style="color:var(--ivory);">Services Available in Glasgow</h2><p style="color:rgba(250,249,246,0.5);">Every service we offer is available for Glasgow collection and delivery.</p></div>
-      <div class="card-grid-3">
-        <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-          <h3><a href="same-day-courier.html">Same Day Courier</a></h3>
-          <p>Dedicated vehicle, direct route, no hub delays. 60-minute collection.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-          <h3><a href="medical-courier.html">Medical Courier</a></h3>
-          <p>Specimen transport, pharma delivery, NHS supply chain. DBS vetted.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></div>
-          <h3><a href="legal-courier.html">Legal Document Courier</a></h3>
-          <p>Court filings, contracts, deed transfers. Direct hand delivery.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg></div>
-          <h3><a href="aog-aviation-courier.html">AOG Aviation Courier</a></h3>
-          <p>Emergency aircraft parts to all major UK airports. Immediate dispatch.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-          <h3><a href="trade-accounts.html">Custom</a></h3>
-          <p>Priority dispatch, 30-day invoicing, volume pricing for regular shippers.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-card-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-          <h3><a href="same-day-courier.html#freight">Commercial Freight</a></h3>
-          <p>Heavy and oversized loads, pallet delivery, Luton vans with tail lifts.</p>
-        </div>
-      </div>
+      <div class="postcode-groups"><div class="postcode-group"><span class="postcode-group-label">City Centre</span><span class="postcode-group-codes">G1-G5</span></div><div class="postcode-group"><span class="postcode-group-label">West End</span><span class="postcode-group-codes">G11-12, G3</span></div><div class="postcode-group"><span class="postcode-group-label">South Side</span><span class="postcode-group-codes">G41-46</span></div><div class="postcode-group"><span class="postcode-group-label">East End</span><span class="postcode-group-codes">G31-34, G40</span></div><div class="postcode-group"><span class="postcode-group-label">North</span><span class="postcode-group-codes">G20-22, G4</span></div><div class="postcode-group"><span class="postcode-group-label">Airport (GLA)</span><span class="postcode-group-codes">PA1-12</span></div></div>
     </div>
   </section>
 
