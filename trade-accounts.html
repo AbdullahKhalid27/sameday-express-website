@@ -104,37 +104,54 @@
     h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; }
     h3 { font-size: 1.25rem; font-weight: 600; }
 
-    /* NAVBAR */
-    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(250, 249, 246, 0.97); border-bottom: 1px solid var(--border-subtle); transition: box-shadow 0.25s ease, border-color 0.25s ease; }
-    .navbar.scrolled { box-shadow: var(--shadow-md); }
-    .navbar-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
-    .logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
-    .logo-mark { width: 40px; height: 40px; background: var(--forest); color: var(--brass); border-radius: 8px; display: grid; place-items: center; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1rem; letter-spacing: -0.02em; }
+    /* NAVBAR (unified premium minimal — matches homepage) */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(250, 249, 246, 0.97);
+      border-bottom: 1px solid var(--border-subtle); transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .navbar.scrolled { box-shadow: var(--shadow-sm); }
+    .navbar-inner { height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+    .logo { display: flex; align-items: center; gap: 0.7rem; flex-shrink: 0; text-decoration: none; }
+    .logo-mark {
+      width: 38px; height: 38px; background: var(--forest); color: var(--ivory);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.05rem;
+      border-radius: 5px; border: 1px solid var(--brass); transition: border-color 0.25s ease;
+    }
+    .logo:hover .logo-mark { border-color: var(--brass-bright); }
     .logo-text { display: flex; flex-direction: column; line-height: 1.1; }
-    .logo-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem; color: var(--forest); }
-    .logo-subtitle { font-family: 'Outfit', sans-serif; font-weight: 400; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
-    .nav-menu { display: flex; list-style: none; gap: 2rem; }
-    .nav-link { font-size: 0.875rem; font-weight: 500; color: var(--text-main); text-decoration: none; position: relative; padding: 0.25rem 0; }
-    .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--brass); transition: width 0.3s ease; }
+    .logo-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem; color: var(--forest); text-transform: uppercase; letter-spacing: 0.06em; }
+    .logo-subtitle { font-size: 0.62rem; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; color: var(--brass-dark); margin-top: 3px; }
+    .nav-menu { display: none; align-items: center; gap: 2rem; list-style: none; margin: 0 auto; }
+    @media(min-width: 1024px) { .nav-menu { display: flex; } }
+    .nav-link { font-size: 0.82rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); text-decoration: none; position: relative; padding: 0.6rem 0; transition: color 0.2s ease; }
+    .nav-link:hover, .nav-link.active { color: var(--forest); }
+    .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--brass); transition: width 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); }
     .nav-link:hover::after, .nav-link.active::after { width: 100%; }
-    .nav-link:hover { color: var(--brass); }
-    .nav-actions { display: flex; align-items: center; gap: 1rem; }
-    .phone-cta { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 700; color: var(--success); text-decoration: none; }
-    .phone-cta svg { fill: var(--success); }
-    .phone-cta-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; }
-    .animate-live { animation: livePulse 2s ease-in-out infinite; }
-    @keyframes livePulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.5); } }
-    .btn-quote-header { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: var(--brass); color: var(--forest); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.875rem; border-radius: 8px; text-decoration: none; transition: var(--transition); border: none; cursor: pointer; }
-    .btn-quote-header:hover { background: var(--brass-bright); color: var(--forest); transform: translateY(-1px); }
-    .shimmer-btn { position: relative; overflow: hidden; }
-    .shimmer-btn::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); }
-    .shimmer-btn:hover::after { animation: shimmer 0.8s ease forwards; }
-    @keyframes shimmer { 0% { left: -100%; } 100% { left: 100%; } }
-    .menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
-    .menu-toggle span { width: 24px; height: 2px; background: var(--forest); border-radius: 2px; transition: var(--transition); }
+    .nav-actions { display: flex; align-items: center; gap: 1.25rem; flex-shrink: 0; }
+    .phone-cta { display: flex; align-items: center; gap: 0.45rem; color: var(--success); font-weight: 700; font-size: 0.9rem; text-decoration: none; transition: color 0.2s ease; }
+    .phone-cta:hover { color: var(--forest); }
+    .phone-cta svg { width: 15px; height: 15px; fill: currentColor; }
+    .phone-cta-text { white-space: nowrap; }
+    .phone-cta-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; animation: pulse-live 2s ease-in-out infinite; }
+    @keyframes pulse-live { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.4); } }
+    .btn-quote-header {
+      background: var(--forest); color: var(--ivory); padding: 0.65rem 1.4rem;
+      border-radius: 6px; font-family: 'Outfit', sans-serif; font-weight: 700; text-transform: uppercase;
+      font-size: 0.78rem; letter-spacing: 0.08em; border: 1px solid var(--brass); text-decoration: none;
+      transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+    }
+    .btn-quote-header:hover { background: var(--forest-light); color: var(--ivory); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    .menu-toggle { display: flex; flex-direction: column; gap: 5px; width: 26px; height: 26px; background: none; border: none; cursor: pointer; padding: 4px; justify-content: center; }
+    @media(min-width: 1024px) { .menu-toggle { display: none; } }
+    .menu-toggle span { display: block; width: 100%; height: 2px; background: var(--forest); transition: transform 0.25s ease, opacity 0.2s ease; }
     .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
     .menu-toggle.active span:nth-child(2) { opacity: 0; }
     .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    .nav-menu.open { display: flex; position: absolute; top: 72px; left: 0; right: 0; background: var(--ivory); flex-direction: column; padding: 1.5rem; gap: 1rem; box-shadow: var(--shadow-md); border-top: 1px solid var(--border-subtle); }
+    @media(max-width: 1023px) { .navbar-inner { height: 64px; } .logo-mark { width: 34px; height: 34px; font-size: 0.95rem; } .logo-title { font-size: 0.95rem; } .logo-subtitle { display: none; } }
+    @media(max-width: 768px) { .phone-cta-text { display: none; } .nav-actions .btn-quote-header { display: none; } }
     @media(max-width: 768px) {
       .nav-menu { display: none; position: absolute; top: 72px; left: 0; right: 0; background: var(--ivory); flex-direction: column; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-subtle); box-shadow: var(--shadow-md); gap: 0; }
       .nav-menu.open { display: flex; }
@@ -309,25 +326,18 @@
           </div>
         </a>
         <nav>
-          <ul class="nav-menu">
+          <ul class="nav-menu" id="navMenu">
             <li><a href="index.html" class="nav-link">Home</a></li>
             <li><a href="index.html#fleet" class="nav-link">Our Fleet</a></li>
             <li><a href="index.html#services" class="nav-link">Services</a></li>
-            <li><a href="index.html#industries" class="nav-link">Sectors</a></li>
-            <li><a href="index.html#reviews" class="nav-link">Trust</a></li>
             <li><a href="index.html#trade" class="nav-link">Trade Accounts</a></li>
             <li><a href="about.html" class="nav-link">About</a></li>
             <li><a href="faq.html" class="nav-link">FAQ</a></li>
-            <li><a href="blog/index.html" class="nav-link">Blog</a></li>
             <li><a href="contact.html" class="nav-link">Contact</a></li>
           </ul>
         </nav>
         <div class="nav-actions">
-          <a href="tel:+442045684675" class="phone-cta">
-            <span class="phone-cta-dot animate-live"></span>
-            <svg width="14" height="14" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.58 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            <span>020 4568 4675</span>
-          </a>
+          <a href="tel:+442045684675" class="phone-cta"><span class="phone-cta-dot"></span><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.58 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="phone-cta-text">020 4568 4675</span></a>
           <a href="index.html#quote-container" class="btn-quote-header shimmer-btn">Book Online</a>
           <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation"><span></span><span></span><span></span></button>
         </div>

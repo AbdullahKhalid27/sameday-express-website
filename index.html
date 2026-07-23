@@ -268,67 +268,69 @@
       border-bottom: 1px solid var(--border-subtle); transition: box-shadow 0.25s ease, border-color 0.25s ease;
     }
     .navbar.scrolled { box-shadow: var(--shadow-sm); }
-    
+
     .navbar-inner {
-      height: 72px; display: flex; align-items: center; justify-content: space-between;
+      height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 2rem;
     }
-    
-    .logo { display: flex; align-items: center; gap: 0.75rem; }
+
+    .logo { display: flex; align-items: center; gap: 0.7rem; flex-shrink: 0; }
     .logo-mark {
-      width: 36px; height: 36px; background: var(--forest); color: var(--ivory);
+      width: 38px; height: 38px; background: var(--forest); color: var(--ivory);
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.1rem;
-      border-radius: 4px; border: 1px solid var(--brass);
+      font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.05rem;
+      border-radius: 5px; border: 1px solid var(--brass); transition: border-color 0.25s ease;
     }
+    .logo:hover .logo-mark { border-color: var(--brass-bright); }
     .logo-text { display: flex; flex-direction: column; }
     .logo-title {
-      font-size: 1.05rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.08em; line-height: 1.1; color: var(--forest);
+      font-size: 1rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; line-height: 1.1; color: var(--forest);
     }
     .logo-subtitle {
-      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.3em;
-      text-transform: uppercase; color: var(--text-muted); line-height: 1; margin-top: 2px;
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--brass-dark); line-height: 1; margin-top: 3px;
     }
-    
-    .nav-menu { display: none; align-items: center; gap: 2rem; list-style: none; }
+
+    .nav-menu { display: none; align-items: center; gap: 2rem; list-style: none; margin: 0 auto; }
     @media(min-width: 1024px) { .nav-menu { display: flex; } }
-    
+
     .nav-link {
-      font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.1em; color: var(--text-muted); position: relative; padding: 0.5rem 0;
+      font-size: 0.82rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--text-muted); position: relative; padding: 0.6rem 0;
+      transition: color 0.2s ease;
     }
     .nav-link:hover, .nav-link.active { color: var(--forest); }
     .nav-link::after {
       content: ""; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
-      background: var(--brass); transition: var(--transition);
+      background: var(--brass); transition: width 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
     .nav-link:hover::after, .nav-link.active::after { width: 100%; }
 
-    .nav-actions { display: flex; align-items: center; gap: 1rem; }
-    
+    .nav-actions { display: flex; align-items: center; gap: 1.25rem; flex-shrink: 0; }
+
     .phone-cta {
-      display: flex; align-items: center; gap: 0.5rem; font-weight: 700;
-      color: var(--success); font-size: 0.95rem; background: var(--success-muted);
-      padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid rgba(34, 120, 69, 0.1);
+      display: flex; align-items: center; gap: 0.45rem;
+      color: var(--success); font-weight: 700; font-size: 0.9rem; transition: color 0.2s ease;
     }
-    .phone-cta:hover { background: var(--success); color: var(--ivory); transform: translateY(-1px); }
-    .phone-cta svg { fill: currentColor; }
-    .phone-cta-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
-    .phone-cta:hover .phone-cta-dot { background: var(--ivory); }
-    
+    .phone-cta:hover { color: var(--forest); }
+    .phone-cta svg { width: 15px; height: 15px; fill: currentColor; }
+    .phone-cta-text { white-space: nowrap; }
+    .phone-cta-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; animation: pulse-live 2s ease-in-out infinite; }
+
     .btn-quote-header {
-      background: var(--forest); color: var(--ivory); padding: 0.6rem 1.2rem;
-      border-radius: 4px; font-weight: 700; text-transform: uppercase;
-      font-size: 0.8rem; letter-spacing: 0.1em; border: 1px solid var(--brass);
+      background: var(--forest); color: var(--ivory); padding: 0.65rem 1.4rem;
+      border-radius: 6px; font-weight: 700; text-transform: uppercase;
+      font-size: 0.78rem; letter-spacing: 0.08em; border: 1px solid var(--brass);
+      transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
     }
-    .btn-quote-header:hover { background: var(--forest-light); transform: translateY(-1px); }
-    
+    .btn-quote-header:hover { background: var(--forest-light); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
     .menu-toggle {
-      display: flex; flex-direction: column; gap: 5px; width: 24px; height: 24px;
-      justify-content: center; z-index: 110;
+      display: flex; flex-direction: column; gap: 5px; width: 26px; height: 26px;
+      justify-content: center; z-index: 110; background: none; border: none; cursor: pointer; padding: 4px;
     }
     @media(min-width: 1024px) { .menu-toggle { display: none; } }
-    .menu-toggle span { display: block; width: 100%; height: 2px; background: var(--forest); transition: var(--transition); }
+    .menu-toggle span { display: block; width: 100%; height: 2px; background: var(--forest); transition: transform 0.25s ease, opacity 0.2s ease; }
     .menu-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
     .menu-toggle.open span:nth-child(2) { opacity: 0; }
     .menu-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
@@ -336,22 +338,24 @@
     .mobile-nav {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--ivory);
       z-index: 90; display: flex; flex-direction: column; justify-content: center;
-      align-items: center; gap: 2rem; transform: translateX(100%); transition: var(--transition);
-      padding: 2rem;
+      align-items: flex-start; gap: 1.5rem; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 2rem 2.5rem;
     }
     .mobile-nav.open { transform: translateX(0); }
-    .mobile-nav-link { font-size: 1.5rem; font-weight: 700; color: var(--forest); text-transform: uppercase; letter-spacing: 0.05em; }
+    .mobile-nav-link { font-size: 1.4rem; font-weight: 700; color: var(--forest); text-transform: uppercase; letter-spacing: 0.03em; transition: color 0.2s ease; }
     .mobile-nav-link:hover { color: var(--brass); }
-    
-    @media(max-width: 1024px) {
+    .mobile-nav-cta { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; width: 100%; max-width: 280px; }
+    .mobile-nav-cta .phone-cta { font-size: 1.1rem; }
+    .mobile-nav-cta .btn-quote-header { display: block; padding: 0.9rem 1.5rem; font-size: 0.9rem; text-align: center; }
+
+    @media(max-width: 1023px) {
       .navbar-inner { height: 64px; }
-      .logo-mark { width: 32px; height: 32px; font-size: 1rem; }
+      .logo-mark { width: 34px; height: 34px; font-size: 0.95rem; }
       .logo-title { font-size: 0.95rem; }
       .logo-subtitle { display: none; }
-      .nav-actions { gap: 0.5rem; }
     }
     @media(max-width: 768px) {
-      .nav-actions .phone-cta,
+      .phone-cta-text { display: none; }
       .nav-actions .btn-quote-header { display: none; }
     }
 
@@ -973,18 +977,19 @@
             <li><a href="#home" class="nav-link active">Home</a></li>
             <li><a href="#fleet" class="nav-link">Our Fleet</a></li>
             <li><a href="#services" class="nav-link">Services</a></li>
-            <li><a href="#industries" class="nav-link">Sectors</a></li>
-            <li><a href="#reviews" class="nav-link">Trust</a></li>
             <li><a href="#trade" class="nav-link">Trade Accounts</a></li>
+            <li><a href="about.html" class="nav-link">About</a></li>
+            <li><a href="faq.html" class="nav-link">FAQ</a></li>
+            <li><a href="contact.html" class="nav-link">Contact</a></li>
           </ul>
         </nav>
         <div class="nav-actions">
           <a href="tel:+442045684675" class="phone-cta">
-            <span class="phone-cta-dot animate-live"></span>
-            <svg width="14" height="14" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            <span>020 4568 4675</span>
+            <span class="phone-cta-dot"></span>
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.58 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span class="phone-cta-text">020 4568 4675</span>
           </a>
-          <a href="#quote-container" class="btn-quote-header shimmer-btn magnetic-btn">Book Online</a>
+          <a href="#quote-container" class="btn-quote-header">Book Online</a>
           <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation">
             <span></span>
             <span></span>
@@ -1000,13 +1005,18 @@
     <a href="#home" class="mobile-nav-link" onclick="toggleMobileNav()">Home</a>
     <a href="#fleet" class="mobile-nav-link" onclick="toggleMobileNav()">Our Fleet</a>
     <a href="#services" class="mobile-nav-link" onclick="toggleMobileNav()">Services</a>
-    <a href="#industries" class="mobile-nav-link" onclick="toggleMobileNav()">Sectors</a>
-    <a href="#reviews" class="mobile-nav-link" onclick="toggleMobileNav()">Trust</a>
     <a href="#trade" class="mobile-nav-link" onclick="toggleMobileNav()">Trade Accounts</a>
-    <a href="tel:+442045684675" class="phone-cta" style="font-size:1.2rem; padding: 0.8rem 1.5rem;">
-      <span class="phone-cta-dot animate-live"></span>
-      <span>020 4568 4675</span>
-    </a>
+    <a href="about.html" class="mobile-nav-link" onclick="toggleMobileNav()">About</a>
+    <a href="faq.html" class="mobile-nav-link" onclick="toggleMobileNav()">FAQ</a>
+    <a href="contact.html" class="mobile-nav-link" onclick="toggleMobileNav()">Contact</a>
+    <div class="mobile-nav-cta">
+      <a href="tel:+442045684675" class="phone-cta">
+        <span class="phone-cta-dot"></span>
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.58 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>020 4568 4675</span>
+      </a>
+      <a href="#quote-container" class="btn-quote-header" onclick="toggleMobileNav()">Book Online</a>
+    </div>
   </div>
 
   <!-- ═════════════════ HERO SECTION ═════════════════ -->
