@@ -572,30 +572,36 @@
     .btn-phone-booking:hover { background: var(--forest-light); transform: translateY(-1px); }
 
     /* ═══════════════════════════════════════════════════════
-       LIVE DISPATCH TICKER
+       TRUST STRIP + NEWSLETTER (replaces fake dispatch ticker)
        ═══════════════════════════════════════════════════════ */
-    .dispatch-ticker {
-      background: var(--forest); border-bottom: 2px solid var(--brass); padding: 0.75rem 0; overflow: hidden;
-      font-size: 0.8rem; color: var(--ivory); position: relative; z-index: 10;
+    .trust-strip { background: var(--forest); border-bottom: 1px solid var(--brass-border); position: relative; z-index: 10; }
+    .trust-strip-inner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 0.7rem 0; flex-wrap: wrap; }
+    .trust-strip-props { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+    .trust-prop { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; font-weight: 600; color: rgba(250,249,246,0.85); letter-spacing: 0.01em; }
+    .trust-prop svg { width: 15px; height: 15px; color: var(--brass-bright); flex-shrink: 0; }
+    .trust-strip-news { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+    .trust-strip-news-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--brass-bright); white-space: nowrap; }
+    .trust-strip-news-row { display: flex; gap: 0.4rem; }
+    .trust-strip-news-input {
+      background: rgba(250,249,246,0.08); border: 1px solid rgba(189,166,133,0.25); color: var(--ivory);
+      font-size: 0.78rem; padding: 0.4rem 0.7rem; border-radius: 4px; width: 180px; font-family: inherit;
     }
-    .dispatch-ticker-container { display: flex; align-items: center; justify-content: flex-start; position: relative; }
-    .dispatch-ticker-label {
-      background: var(--brass); color: var(--forest); font-weight: 800; text-transform: uppercase;
-      letter-spacing: 0.1em; padding: 0.25rem 0.75rem; border-radius: 2px; font-size: 0.7rem;
-      margin-right: 1.5rem; flex-shrink: 0; display: flex; align-items: center; gap: 0.35rem;
+    .trust-strip-news-input::placeholder { color: rgba(250,249,246,0.4); }
+    .trust-strip-news-input:focus { outline: none; border-color: var(--brass); }
+    .trust-strip-news-btn {
+      background: var(--brass); color: var(--forest); border: none; font-weight: 700; font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.05em; padding: 0.4rem 0.9rem; border-radius: 4px; cursor: pointer;
+      transition: background 0.2s ease; font-family: inherit;
     }
-    .dispatch-ticker-scroll {
-      display: flex; gap: 3rem; white-space: nowrap; animation: ticker-anim 25s linear infinite;
+    .trust-strip-news-btn:hover { background: var(--brass-bright); }
+    @media(max-width: 1024px) {
+      .trust-strip-news-label { display: none; }
+      .trust-strip-news-input { width: 150px; }
     }
-    .dispatch-ticker-item { display: inline-flex; align-items: center; gap: 0.5rem; }
-    .dispatch-ticker-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
-    .dispatch-ticker-text { font-weight: 500; }
-    .dispatch-ticker-text strong { color: var(--brass-bright); }
-    .dispatch-ticker-text span.time { color: rgba(250, 249, 246, 0.5); margin-left: 0.5rem; font-size: 0.7rem; }
-
-    @keyframes ticker-anim {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+    @media(max-width: 768px) {
+      .trust-strip-news { display: none; }
+      .trust-strip-inner { justify-content: center; }
+      .trust-prop { font-size: 0.72rem; }
     }
 
     /* ═══════════════════════════════════════════════════════
@@ -956,7 +962,7 @@
 
     /* General Print Styles */
     @media print {
-      .navbar, .dispatch-ticker, .mobile-sticky-bar, .quote-wizard-card, .footer { display: none !important; }
+      .navbar, .trust-strip, .mobile-sticky-bar, .quote-wizard-card, .footer { display: none !important; }
       body { background: #ffffff; color: #000000; padding: 0; }
     }
   </style>
@@ -1238,58 +1244,23 @@
     </div>
   </section>
 
-  <!-- ═════════════════ LIVE DISPATCH TICKER ═════════════════ -->
-  <div class="dispatch-ticker">
-    <div class="dispatch-ticker-container">
-      <div class="container" style="display:flex; align-items:center; overflow:hidden;">
-        <div class="dispatch-ticker-label">
-          <span class="dispatch-ticker-dot animate-live"></span>
-          <span>Nationwide Dispatch</span>
+  <!-- ═════════════════ TRUST STRIP + NEWSLETTER ═════════════════ -->
+  <div class="trust-strip">
+    <div class="container">
+      <div class="trust-strip-inner">
+        <div class="trust-strip-props" aria-hidden="true">
+          <span class="trust-prop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Collect in 60 mins</span>
+          <span class="trust-prop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> &pound;20k insured</span>
+          <span class="trust-prop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> DBS-vetted drivers</span>
+          <span class="trust-prop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.58 2.81.7A2 2 0 0 1 22 16.92z"/></svg> 24/7 dispatch desk</span>
         </div>
-        <div class="dispatch-ticker-scroll" id="ticker-scroll">
-          <div class="dispatch-ticker-item">
-            <span class="dispatch-ticker-dot"></span>
-            <span class="dispatch-ticker-text">Luton Van dispatched: <strong>London (City)</strong> to <strong>Birmingham</strong><span class="time">2 mins ago</span></span>
+        <form class="trust-strip-news" onsubmit="event.preventDefault(); subscribeNewsletter();">
+          <label for="strip-email" class="trust-strip-news-label">Dispatch insights &amp; tariff alerts</label>
+          <div class="trust-strip-news-row">
+            <input type="email" id="strip-email" class="trust-strip-news-input" placeholder="name@company.co.uk" required aria-label="Email address"/>
+            <button type="submit" class="trust-strip-news-btn">Subscribe</button>
           </div>
-          <div class="dispatch-ticker-item">
-            <span class="dispatch-ticker-dot"></span>
-            <span class="dispatch-ticker-text">Motorcycle dispatched: <strong>Heathrow Airport</strong> to <strong>London (West End)</strong><span class="time">5 mins ago</span></span>
-          </div>
-          <div class="dispatch-ticker-item">
-            <span class="dispatch-ticker-dot"></span>
-            <span class="dispatch-ticker-text">Small Van collected: <strong>Manchester</strong> to <strong>Leeds</strong><span class="time">12 mins ago</span></span>
-          </div>
-          <div class="dispatch-ticker-item">
-            <span class="dispatch-ticker-dot"></span>
-            <span class="dispatch-ticker-text">Large Van dispatched: <strong>Bristol</strong> to <strong>Cardiff</strong><span class="time">18 mins ago</span></span>
-          </div>
-          <div class="dispatch-ticker-item">
-            <span class="dispatch-ticker-dot"></span>
-            <span class="dispatch-ticker-text">Medium Van collected: <strong>Nottingham</strong> to <strong>London (North)</strong><span class="time">22 mins ago</span></span>
-          </div>
-          
-          <!-- Duplicated for infinite scrolling scroll effect -->
-          <div class="dispatch-ticker-item">
-            <span class="dispatch-ticker-dot"></span>
-            <span class="dispatch-ticker-text">Luton Van dispatched: <strong>London (City)</strong> to <strong>Birmingham</strong><span class="time">2 mins ago</span></span>
-          </div>
-          <div class="dispatch-ticker-item">
-            <span class="dispatch-ticker-dot"></span>
-            <span class="dispatch-ticker-text">Motorcycle dispatched: <strong>Heathrow Airport</strong> to <strong>London (West End)</strong><span class="time">5 mins ago</span></span>
-          </div>
-          <div class="dispatch-ticker-item">
-            <span class="dispatch-ticker-dot"></span>
-            <span class="dispatch-ticker-text">Small Van collected: <strong>Manchester</strong> to <strong>Leeds</strong><span class="time">12 mins ago</span></span>
-          </div>
-          <div class="dispatch-ticker-item">
-            <span class="dispatch-ticker-dot"></span>
-            <span class="dispatch-ticker-text">Large Van dispatched: <strong>Bristol</strong> to <strong>Cardiff</strong><span class="time">18 mins ago</span></span>
-          </div>
-          <div class="dispatch-ticker-item">
-            <span class="dispatch-ticker-dot"></span>
-            <span class="dispatch-ticker-text">Medium Van collected: <strong>Nottingham</strong> to <strong>London (North)</strong><span class="time">22 mins ago</span></span>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
@@ -2897,7 +2868,9 @@
     }
 
     function subscribeNewsletter() {
-      const emailVal = document.getElementById("newsletter-email").value.trim();
+      const stripInput = document.getElementById("strip-email");
+      const footerInput = document.getElementById("newsletter-email");
+      const emailVal = (stripInput && stripInput.value.trim()) || (footerInput && footerInput.value.trim()) || "";
       if (!emailVal || !emailVal.includes("@")) {
         alert("Please enter a valid company email address.");
         return;
@@ -2931,9 +2904,19 @@
     }
 
     function showNewsletterSuccess() {
-      document.getElementById("newsletter-email").style.display = "none";
-      document.querySelector(".newsletter-form button").style.display = "none";
-      document.getElementById("newsletter-success-msg").style.display = "block";
+      const footerEmail = document.getElementById("newsletter-email");
+      if (footerEmail) {
+        footerEmail.style.display = "none";
+        const fb = document.querySelector(".newsletter-form button");
+        if (fb) fb.style.display = "none";
+        const msg = document.getElementById("newsletter-success-msg");
+        if (msg) msg.style.display = "block";
+      }
+      const stripForm = document.querySelector(".trust-strip-news");
+      if (stripForm) {
+        const row = stripForm.querySelector(".trust-strip-news-row");
+        if (row) row.innerHTML = '<span style="color:var(--brass-bright); font-size:0.8rem; font-weight:700;">&#10003; Subscribed to dispatch alerts.</span>';
+      }
     }
 
     /* ═══════════════════════════════════════════════════════
