@@ -762,34 +762,22 @@
     .service-icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; }
     
     .service-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--forest); }
-    .service-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; flex-grow: 1; }
-    
+    .service-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.25rem; flex-grow: 1; }
+
+    .service-actions { display: flex; gap: 0.5rem; margin-top: auto; flex-wrap: wrap; }
     .service-btn {
-      color: var(--brass); font-weight: 700; font-size: 0.8rem; text-transform: uppercase;
-      letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 0.5rem; margin-top: auto;
+      color: var(--ivory); background: var(--forest); font-weight: 700; font-size: 0.78rem; text-transform: uppercase;
+      letter-spacing: 0.04em; display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1rem;
+      border-radius: 6px; text-decoration: none; transition: background 0.2s ease, transform 0.2s ease; border: none; cursor: pointer; font-family: inherit;
     }
-    .service-card:hover .service-btn { color: var(--forest); }
-
-    /* ═══════════════════════════════════════════════════════
-       SECTORS & INDUSTRIES
-       ═══════════════════════════════════════════════════════ */
-    .industries-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-    @media(min-width: 768px) { .industries-grid { grid-template-columns: repeat(4, 1fr); } }
-    
-    .industry-card {
-      display: block; width: 100%; text-align: left; font: inherit; color: inherit; text-decoration: none;
-      background: var(--forest-light); border: 1px solid rgba(250, 249, 246, 0.08);
-      border-radius: 4px; padding: 1.5rem; transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    .service-btn:hover { background: var(--forest-light); transform: translateY(-1px); }
+    .service-btn svg { width: 12px; height: 12px; }
+    .service-btn-learn {
+      color: var(--brass-dark); background: transparent; border: 1px solid var(--brass-border); font-weight: 600; font-size: 0.78rem;
+      text-transform: uppercase; letter-spacing: 0.04em; padding: 0.6rem 1rem; border-radius: 6px; text-decoration: none;
+      transition: border-color 0.2s ease, color 0.2s ease; display: inline-flex; align-items: center; gap: 0.35rem;
     }
-    .industry-card:hover { background: var(--brass-muted); border-color: var(--brass); transform: translateY(-2px); }
-
-    .industry-icon { color: var(--brass-bright); margin-bottom: 1rem; display: block; }
-    .industry-icon svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 2; }
-
-    .industry-title { display: block; font-size: 1.05rem; font-weight: 600; color: var(--ivory); margin-bottom: 0.5rem; }
-    .industry-desc { display: block; font-size: 0.8rem; color: rgba(250, 249, 246, 0.6); line-height: 1.5; margin-bottom: 0.85rem; }
-    .industry-link { display: block; font-size: 0.75rem; font-weight: 700; color: var(--brass-bright); text-transform: uppercase; letter-spacing: 0.06em; transition: color 0.2s ease; }
-    .industry-card:hover .industry-link { color: var(--ivory); }
+    .service-btn-learn:hover { border-color: var(--brass); color: var(--forest); }
 
     /* ═══════════════════════════════════════════════════════
        REVIEWS & CUSTOMER PROOF
@@ -1613,131 +1601,85 @@
       </div>
 
       <div class="services-grid" data-reveal-stagger>
-        
-        <!-- Service 1 -->
+
+        <!-- Service 1: Same Day -->
         <div class="service-card">
           <div class="service-icon">
             <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
           </div>
           <h3 class="service-title">Same Day Courier</h3>
-          <p class="service-desc">Urgent document or package transport. Collection within 60 minutes nationwide and direct transit with no consolidation delays.</p>
-          <a href="#quote-container" onclick="preFillService('Same Day Delivery')" class="service-btn">
-            <span>Book Same Day</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
+          <p class="service-desc">Your parcel collected within 60 minutes and driven direct &mdash; no hubs, no consolidation. Nationwide, 24/7.</p>
+          <div class="service-actions">
+            <a href="#quote-container" onclick="preFillService('Same Day Delivery')" class="service-btn">Get a Quote</a>
+            <a href="same-day-courier.html" class="service-btn-learn">Learn More</a>
+          </div>
         </div>
 
-        <!-- Service 2 -->
+        <!-- Service 2: AOG -->
         <div class="service-card">
           <div class="service-icon">
             <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </div>
-          <h3 class="service-title">AOG &amp; Aviation Parts</h3>
-          <p class="service-desc">Time-critical delivery of critical parts to major UK airports. Trained airside drivers to handle emergency line-down scenarios.</p>
-          <a href="#quote-container" onclick="preFillService('AOG Aviation Parts')" class="service-btn">
-            <span>Aviation Logistics</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
+          <h3 class="service-title">AOG &amp; Aviation</h3>
+          <p class="service-desc">Grounded aircraft? A driver collects your part within 60 minutes and drives straight to the airport. Airside-experienced.</p>
+          <div class="service-actions">
+            <a href="#quote-container" onclick="preFillService('AOG Aviation Parts')" class="service-btn">Get a Quote</a>
+            <a href="aog-aviation-courier.html" class="service-btn-learn">Learn More</a>
+          </div>
         </div>
 
-        <!-- Service 3 -->
+        <!-- Service 3: Medical -->
         <div class="service-card">
           <div class="service-icon">
             <svg viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
           </div>
-          <h3 class="service-title">Medical &amp; Pharma Specimen</h3>
-          <p class="service-desc">Vetted, temperature-controlled, and chain-of-custody compliant transit for pharmacies, laboratories, and NHS suppliers.</p>
-          <a href="#quote-container" onclick="preFillService('Medical Specimen Delivery')" class="service-btn">
-            <span>Book Medical Run</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
+          <h3 class="service-title">Medical &amp; Pharma</h3>
+          <p class="service-desc">Specimens and pharma moved under strict chain-of-custody. DBS-vetted drivers, temperature-controlled, signed POD.</p>
+          <div class="service-actions">
+            <a href="#quote-container" onclick="preFillService('Medical Specimen Delivery')" class="service-btn">Get a Quote</a>
+            <a href="medical-courier.html" class="service-btn-learn">Learn More</a>
+          </div>
         </div>
 
-        <!-- Service 4 -->
+        <!-- Service 4: Legal -->
         <div class="service-card">
           <div class="service-icon">
             <svg viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           </div>
-          <h3 class="service-title">Legal Document Courier</h3>
-          <p class="service-desc">Court filings, original contracts, and commercial transactions. Driver hand-delivers directly to the recipient with immediate digital POD.</p>
-          <a href="#quote-container" onclick="preFillService('Legal Document Courier')" class="service-btn">
-            <span>Secure Legal Run</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
+          <h3 class="service-title">Legal Documents</h3>
+          <p class="service-desc">Court filings and contracts hand-delivered direct to the recipient. Confidential, signed, timestamped POD on completion.</p>
+          <div class="service-actions">
+            <a href="#quote-container" onclick="preFillService('Legal Document Courier')" class="service-btn">Get a Quote</a>
+            <a href="legal-courier.html" class="service-btn-learn">Learn More</a>
+          </div>
         </div>
 
-        <!-- Service 5 -->
+        <!-- Service 5: Freight -->
         <div class="service-card">
           <div class="service-icon">
             <svg viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
           </div>
           <h3 class="service-title">Commercial Freight</h3>
-          <p class="service-desc">Multi-pallet, bulky exhibition stands, and raw industrial freight direct transport. Luton tail lifts make cargo loading seamless.</p>
-          <a href="#quote-container" onclick="preFillService('Commercial Freight Pallet')" class="service-btn">
-            <span>Book Heavy Freight</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
+          <p class="service-desc">Pallets, exhibition stands, and heavy loads moved direct. Luton vans with tail lifts for seamless loading.</p>
+          <div class="service-actions">
+            <a href="#quote-container" onclick="preFillService('Commercial Freight Pallet')" class="service-btn">Get a Quote</a>
+            <a href="same-day-courier.html#freight" class="service-btn-learn">Learn More</a>
+          </div>
         </div>
 
-        <!-- Service 6 -->
+        <!-- Service 6: Trade -->
         <div class="service-card">
           <div class="service-icon">
             <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2m8-10a4 4 0 100-8 4 4 0 000 8z"/></svg>
           </div>
-          <h3 class="service-title">Dedicated Business Account</h3>
-          <p class="service-desc">Monthly invoicing, prioritized vehicle dispatches, direct line integration, and customized SLAs for corporate regular shippers.</p>
-          <a href="#trade" class="service-btn">
-            <span>Apply for Trade</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
+          <h3 class="service-title">Trade &amp; Custom Accounts</h3>
+          <p class="service-desc">Regular shipper? Get priority dispatch, 30-day invoicing, and volume pricing. Direct line to your account manager.</p>
+          <div class="service-actions">
+            <a href="#trade" class="service-btn">Apply Now</a>
+            <a href="trade-accounts.html" class="service-btn-learn">Learn More</a>
+          </div>
         </div>
 
-      </div>
-    </div>
-  </section>
-
-  <!-- ═════════════════ SERVICES — Who We Serve (sub-block) ═════════════════ -->
-  <section class="section bg-dark noise-bg" id="industries">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag" style="color: var(--brass-bright);">Who We Serve</span>
-        <h2 class="section-title">Built for Complex UK Industry Demands</h2>
-        <p class="section-desc" style="color: rgba(250,249,246,0.6);">Different commercial fields have precise rules. Our drivers are fully trained, verified, and equipped to support special regulatory frameworks. Explore each sector in depth.</p>
-      </div>
-
-      <div class="industries-grid" data-reveal-stagger>
-        <a href="aog-aviation-courier.html" class="industry-card">
-          <span class="industry-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-          </span>
-          <span class="industry-title">Aviation &amp; AOG</span>
-          <span class="industry-desc">Emergency parts, flight line tools, airside clearance logistics.</span>
-          <span class="industry-link">Explore aviation &rarr;</span>
-        </a>
-        <a href="legal-courier.html" class="industry-card">
-          <span class="industry-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 009 11V5a2 2 0 00-2-2H4a2 2 0 00-2 2v6c0 4.29 2.5 8 6 9.571M12 11c1.744 2.772 2.753 6.054 2.753 9.571m1.44-2.041l-.054-.09A13.916 13.916 0 0115 11V5a2 2 0 012-2h3a2 2 0 012 2v6c0 4.29-2.5 8-6 9.571"/></svg>
-          </span>
-          <span class="industry-title">Legal &amp; Law Firms</span>
-          <span class="industry-desc">Confidential document filing, contracts, deed transfer runs.</span>
-          <span class="industry-link">Explore legal &rarr;</span>
-        </a>
-        <a href="medical-courier.html" class="industry-card">
-          <span class="industry-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          </span>
-          <span class="industry-title">Medical &amp; Pharma</span>
-          <span class="industry-desc">Specimens, cold-chain components, secure deliveries.</span>
-          <span class="industry-link">Explore medical &rarr;</span>
-        </a>
-        <a href="same-day-courier.html#freight" class="industry-card">
-          <span class="industry-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
-          </span>
-          <span class="industry-title">Manufacturing</span>
-          <span class="industry-desc">Direct assembly supply line components, logistics downtime support.</span>
-          <span class="industry-link">Explore freight &rarr;</span>
-        </a>
       </div>
     </div>
   </section>
