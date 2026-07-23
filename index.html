@@ -805,7 +805,13 @@
     
     .reviews-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
     @media(min-width: 768px) { .reviews-grid { grid-template-columns: repeat(3, 1fr); } }
-    
+
+    .faq-tease-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+    @media(min-width: 768px) { .faq-tease-grid { grid-template-columns: repeat(3, 1fr); } }
+    .faq-tease-card { background: #ffffff; border: 1px solid var(--border-medium); border-radius: 4px; padding: 1.75rem; }
+    .faq-tease-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--forest); margin-bottom: 0.6rem; }
+    .faq-tease-card p { font-size: 0.92rem; color: var(--text-muted); line-height: 1.65; }
+
     .review-card {
       background: #ffffff; border: 1px solid var(--border-medium); border-radius: 4px;
       padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between;
@@ -1871,6 +1877,33 @@
             ✓ Application received. A controller will call you within 2 hours.
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════════════ COMMON QUESTIONS ═════════════════ -->
+  <section class="section" id="faq-tease">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Common Questions</span>
+        <h2 class="section-title">Answers Before You Book</h2>
+      </div>
+      <div class="faq-tease-grid" data-reveal-stagger>
+        <div class="faq-tease-card">
+          <h3>How quickly can you collect?</h3>
+          <p>A dedicated vehicle is dispatched within 60 minutes of your call or online booking, nationwide, 24/7. Central postcodes often see collection in 30&ndash;45 minutes.</p>
+        </div>
+        <div class="faq-tease-card">
+          <h3>How much does it cost?</h3>
+          <p>Pricing runs from &pound;25 base + &pound;1.00/mile for a motorcycle up to &pound;75 + &pound;2.10/mile for a Luton van. Use the quote calculator above for an instant estimate.</p>
+        </div>
+        <div class="faq-tease-card">
+          <h3>Is my delivery insured?</h3>
+          <p>Yes. Every job carries &pound;20,000 goods-in-transit insurance as standard, with DBS-vetted drivers and a signed digital proof of delivery on completion.</p>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:2rem;">
+        <a href="faq.html" class="service-btn" style="display:inline-flex;">See all FAQs <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
       </div>
     </div>
   </section>
