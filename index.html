@@ -1967,7 +1967,7 @@
     // Protection = Google Cloud restrictions, NOT secrecy. In Google Cloud Console
     // set: (1) Application restriction = HTTP referrer (samedayexpresscouriers.co.uk),
     // (2) API restriction = Distance Matrix API ONLY. Rotate if exposed.
-    const GOOGLE_MAPS_API_KEY = "AIzaSyDOSx0cKN9i-wVn_TI5g2ibm6jmsh4Sojw";
+    const GOOGLE_MAPS_API_KEY = ""; // Paste your restricted Google Maps Distance Matrix API key here. See PROGRESS.md §7.
 
     // Distance cache (avoid duplicate API calls / cost)
     const _distanceCache = {};
@@ -2640,12 +2640,10 @@
               _distanceCache[cacheKey] = { miles: floorMiles, minutes: minutes };
               renderQuoteResult(floorMiles, minutes, vehicle);
             } else {
-              console.log("Distance Matrix no result, falling back to Haversine");
               renderQuoteResultHaversine(origin, dest, vehicle);
             }
           })
-          .catch(err => {
-            console.error("Distance Matrix error, falling back to Haversine:", err);
+          .catch(() => {
             renderQuoteResultHaversine(origin, dest, vehicle);
           });
       } else {
@@ -2747,8 +2745,6 @@
         estimatedQuote: quoteState.calculatedPrice
       };
 
-      console.log("Transmitting lead payload to Google Sheets webhook:", leadPayload);
-
       // Perform POST dispatch to Google Sheets webhook endpoint
       if (GOOGLE_SHEETS_WEBHOOK_URL) {
         fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
@@ -2760,11 +2756,9 @@
           body: JSON.stringify(leadPayload)
         })
         .then(() => {
-          console.log("Lead webhook sent successfully.");
           proceedToQuoteReveal();
         })
-        .catch(err => {
-          console.error("Webhook dispatch failed:", err);
+        .catch(() => {
           // Graceful degradation: show quote anyway to prevent blocking conversion
           proceedToQuoteReveal();
         });
@@ -2891,8 +2885,6 @@
         estimatedWeeklyVolume: volume
       };
 
-      console.log("Submitting Trade application lead:", payload);
-      
       const submitBtn = document.getElementById("btn-trade-submit");
       submitBtn.disabled = true;
       submitBtn.textContent = "Transmitting...";
@@ -2907,9 +2899,8 @@
           body: JSON.stringify(payload)
         }).then(() => {
           showTradeSuccess();
-        }).catch(err => {
-          console.error("Trade application lead submission error:", err);
-          showTradeSuccess(); // degregates gracefully
+        }).catch(() => {
+          showTradeSuccess(); // degrades gracefully
         });
       } else {
         setTimeout(showTradeSuccess, 800);
@@ -2936,8 +2927,6 @@
         email: emailVal
       };
 
-      console.log("Transmitting Newsletter subscription:", payload);
-
       if (GOOGLE_SHEETS_WEBHOOK_URL) {
         fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
           method: "POST",
@@ -2948,8 +2937,7 @@
           body: JSON.stringify(payload)
         }).then(() => {
           showNewsletterSuccess();
-        }).catch(err => {
-          console.error("Newsletter submission error:", err);
+        }).catch(() => {
           showNewsletterSuccess();
         });
       } else {
