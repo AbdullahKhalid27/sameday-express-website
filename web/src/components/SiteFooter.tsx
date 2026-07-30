@@ -2,10 +2,11 @@ import Link from "next/link";
 import { FOOTER_LINKS, LEGAL_LINKS, SITE } from "@/lib/site";
 import { Icon } from "./Icon";
 import { TrustBar } from "./TrustBar";
+import { NewsletterForm } from "./NewsletterForm";
 
 /**
- * Site footer. Server component (no client interactivity this phase).
- * The newsletter input is a plain form — submit wiring comes in a later phase.
+ * Site footer. The only interactive piece is the NewsletterForm (client);
+ * everything else stays a server component for performance.
  *
  * Layout: contact block + 3 link columns on desktop, stacked on mobile,
  * trust bar across the top of the footer, legal row at the bottom.
@@ -99,28 +100,8 @@ export function SiteFooter() {
                 Join our newsletter. No spam, unsubscribe anytime.
               </p>
             </div>
-            {/* Plain form — wiring comes in a later phase. */}
-            <form
-              className="flex w-full max-w-md gap-2"
-              aria-label="Newsletter signup"
-            >
-              <label htmlFor="newsletter-email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="newsletter-email"
-                type="email"
-                required
-                placeholder="name@company.co.uk"
-                className="min-h-[44px] flex-1 rounded-md border border-ivory/15 bg-forest-dark px-3 text-sm text-ivory placeholder:text-ivory/40 focus:border-brass-bright focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="min-h-[44px] rounded-md bg-brass-dark px-5 text-sm font-semibold text-ivory transition-colors hover:bg-brass"
-              >
-                Join
-              </button>
-            </form>
+            {/* Newsletter form — real validation, TODO submit wiring */}
+            <NewsletterForm />
           </div>
         </div>
 
