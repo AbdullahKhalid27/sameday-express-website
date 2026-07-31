@@ -105,7 +105,7 @@
   <!-- Premium Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet"/>
+  <link media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet"/>
   
   <style>
     /* ═══════════════════════════════════════════════════════
@@ -793,6 +793,53 @@
     
     .reviews-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
     @media(min-width: 768px) { .reviews-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    /* Reviews-pending banner: honest placeholder until verified reviews are collected */
+    .reviews-pending {
+      border: 1px solid var(--brass-border);
+      background: var(--brass-muted);
+      border-radius: 4px;
+      padding: 3rem 2rem;
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .reviews-pending-inner { max-width: 600px; margin: 0 auto; }
+    .reviews-pending-badge {
+      display: inline-block;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brass-dark);
+      background: rgba(255,255,255,0.6);
+      border: 1px solid var(--brass-border);
+      border-radius: 100px;
+      padding: 0.4rem 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    .reviews-pending-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--forest);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+    .reviews-pending-text {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .reviews-pending-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.75rem;
+    }
 
     .faq-tease-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
     @media(min-width: 768px) { .faq-tease-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -1693,48 +1740,23 @@
         <p class="section-desc">We dispatch daily for hundreds of trade and urgent users. Here's what they say about our response times and secure network.</p>
       </div>
 
-      <div class="reviews-summary">
-        <div class="reviews-summary-metric">
-          <div class="reviews-summary-score">4.9</div>
-          <div class="reviews-summary-stars">★ ★ ★ ★ ★</div>
-          <div class="reviews-summary-label">Based on 145 Google Reviews</div>
-        </div>
-      </div>
-
-      <div class="reviews-grid" data-reveal-stagger>
-        <div class="review-card">
-          <div class="review-stars">★ ★ ★ ★ ★</div>
-          <p class="review-text">"Our legal firm had a critical court closing filing to deliver to Birmingham from London within 3 hours. Same Day Express booked a motorcycle within 5 mins, and documents were signed at court 1.5 hours ahead of schedule. Exceptional service!"</p>
-          <div class="review-author">
-            <div class="review-author-avatar">SM</div>
-            <div class="review-author-info">
-              <span class="review-author-name">Sarah Mitchell</span>
-              <span class="review-author-meta">Partner, Thompson Solicitors</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="review-card">
-          <div class="review-stars">★ ★ ★ ★ ★</div>
-          <p class="review-text">"AOG scenarios cost us thousands every hour. The Same Day Express dispatcher allocated a direct Large Van for a heavy turbine engine component within 20 mins of our call. Tracked the vehicle directly to Heathrow airside."</p>
-          <div class="review-author">
-            <div class="review-author-avatar">JC</div>
-            <div class="review-author-info">
-              <span class="review-author-name">James Crawford</span>
-              <span class="review-author-meta">Logistics Lead, AeroParts UK</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="review-card">
-          <div class="review-stars">★ ★ ★ ★ ★</div>
-          <p class="review-text">"We supply pharmacy networks and depend on secure chain of custody. Same Day Express provides vetted DBS-checked drivers with refrigerated storage capability. Outstanding track record of zero incidents."</p>
-          <div class="review-author">
-            <div class="review-author-avatar">ER</div>
-            <div class="review-author-info">
-              <span class="review-author-name">Dr. Emma Richardson</span>
-              <span class="review-author-meta">Supply Chain Director, MedPharma</span>
-            </div>
+      <div class="reviews-pending">
+        <div class="reviews-pending-inner">
+          <div class="reviews-pending-badge">Reviews Launching Soon</div>
+          <h3 class="reviews-pending-title">Our Verified Customer Feedback Programme Is In Setup</h3>
+          <p class="reviews-pending-text">
+            Same Day Express Couriers is building a verified review profile, collected
+            directly from our trade, legal, medical and aviation clients after each
+            completed same-day delivery. We do not publish ratings we cannot stand behind &mdash;
+            every review here will be tied to a real, dispatched job with confirmed proof of delivery.
+          </p>
+          <p class="reviews-pending-text">
+            If you have used our same-day courier service and would like to share your experience,
+            or you are a business looking to set up a trade account, we would value your feedback.
+          </p>
+          <div class="reviews-pending-actions">
+            <a href="#quote" class="btn btn-primary">Get a Same-Day Quote</a>
+            <a href="trade-accounts.html" class="btn btn-outline">Open a Trade Account</a>
           </div>
         </div>
       </div>
@@ -1943,7 +1965,7 @@
       <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
       <span>Call Now</span>
     </a>
-    <a href="https://wa.me/442045684675?text=Hi%2C%20I%20need%20an%20urgent%20same%20day%20courier%20quote%20dispatch." target="_blank" rel="noopener" class="mobile-sticky-btn btn-whatsapp">
+    <a href="https://wa.me/447884208718?text=Hi%2C%20I%20need%20an%20urgent%20same%20day%20courier%20quote%20dispatch." target="_blank" rel="noopener" class="mobile-sticky-btn btn-whatsapp">
       <!-- WhatsApp SVG -->
       <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.859-4.42 9.863-9.864.002-2.637-1.023-5.116-2.887-6.98C16.484 1.897 14.008.872 11.37.872c-5.436 0-9.858 4.42-9.863 9.864 0 1.742.476 3.44 1.377 4.939l-.974 3.565 3.65-.957zm11.758-6.938c-.322-.16-.1.258-2.6-.94-.323-.16-.558-.24-.788.11-.23.35-.89 1.12-1.09 1.35-.2.23-.4.26-.73.1-.32-.16-1.37-.5-2.6-1.6-1-.89-1.68-1.99-1.88-2.33-.2-.35-.02-.53.15-.69.15-.14.33-.39.5-.58.17-.2.22-.32.33-.53.11-.2.05-.39-.02-.55-.08-.16-.788-1.9-1.088-2.62-.29-.7-1.1-1.12-1.09-1.12-.22-.01-.48-.01-.73.01-.25.02-.67.11-1.02.49-.36.38-1.37 1.34-1.37 3.27s1.4 3.79 1.6 4.07c.2.28 2.76 4.22 6.68 5.92.93.4 1.66.64 2.23.82.94.3 1.8.26 2.48.16.76-.11 2.33-.95 2.66-1.87.33-.92.33-1.7.23-1.87-.1-.17-.36-.27-.69-.43z"/></svg>
       <span>WhatsApp</span>
@@ -2713,7 +2735,7 @@
         `• Cargo Weight: ${quoteState.weight}kg\n` +
         `• Estimate Price: £${quoteState.calculatedPrice} (ex. VAT)`
       );
-      document.getElementById("whatsapp-booking-btn").href = `https://wa.me/442045684675?text=${whatsappMsg}`;
+      document.getElementById("whatsapp-booking-btn").href = `https://wa.me/447884208718?text=${whatsappMsg}`;
     }
 
     /* ═══════════════════════════════════════════════════════
@@ -3046,7 +3068,7 @@
   </script>
 
   <!-- Sticky WhatsApp CTA -->
-  <a href="https://wa.me/442045684675?text=Hi%2C%20I%20need%20an%20urgent%20same%20day%20courier%20quote." target="_blank" rel="noopener" class="wa-float" aria-label="Chat on WhatsApp for a same-day courier quote">
+  <a href="https://wa.me/447884208718?text=Hi%2C%20I%20need%20an%20urgent%20same%20day%20courier%20quote." target="_blank" rel="noopener" class="wa-float" aria-label="Chat on WhatsApp for a same-day courier quote">
     <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.859-4.42 9.863-9.864.002-2.637-1.023-5.116-2.887-6.98C16.484 1.897 14.008.872 11.37.872c-5.436 0-9.858 4.42-9.863 9.864 0 1.742.476 3.44 1.377 4.939l-.974 3.565 3.65-.957zm11.758-6.938c-.322-.16-1.9-.94-2.194-1.048-.294-.107-.508-.16-.722.16-.214.32-.83 1.048-1.018 1.264-.187.214-.375.24-.697.08-.322-.16-1.36-.5-2.59-1.6-.957-.854-1.602-1.91-1.789-2.23-.187-.32-.02-.493.14-.652.144-.143.32-.375.48-.563.16-.187.214-.32.32-.534.107-.214.054-.4-.027-.563-.08-.16-.722-1.74-.988-2.382-.26-.625-.524-.54-.722-.55-.187-.01-.4-.01-.613-.01-.214 0-.562.08-.856.4-.294.32-1.124 1.098-1.124 2.677s1.15 3.105 1.312 3.32c.16.214 2.262 3.453 5.481 4.847.766.33 1.363.527 1.83.674.769.245 1.468.21 2.022.127.617-.092 1.9-.777 2.166-1.529.266-.752.266-1.396.187-1.529-.08-.134-.294-.214-.616-.374z"/></svg>
   </a>
 </body>

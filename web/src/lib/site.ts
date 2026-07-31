@@ -10,7 +10,7 @@ export const SITE = {
   phoneDisplay: "020 4568 4675",
   phoneHref: "+442045684675",
   whatsappHref:
-    "https://wa.me/442045684675?text=Hi%2C%20I%27d%20like%20a%20same-day%20courier%20quote.",
+    "https://wa.me/447884208718?text=Hi%2C%20I%27d%20like%20a%20same-day%20courier%20quote.",
   email: "bookings@samedayexpresscouriers.co.uk",
   hoursShort: "Open 24/7",
 } as const;

@@ -29,3 +29,6 @@ npm-debug.log*
 
 # ZCode internal
 .zcode/
+
+# MCP server config — points to a machine-local ponytail install path
+.mcp.json

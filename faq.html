@@ -15,7 +15,7 @@
   <link rel="canonical" href="https://samedayexpresscouriers.co.uk/faq.html"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet"/>
+  <link media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet"/>
     <script type="application/ld+json">
   {
   "@context": "https://schema.org",
@@ -609,22 +609,21 @@
       margin-bottom: 0.5rem; overflow: hidden; transition: var(--transition);
     }
     .faq-item:hover { border-color: var(--brass-border); }
+    .faq-item[open] { border-color: var(--brass-border); }
     .faq-question {
       display: flex; align-items: center; justify-content: space-between;
       padding: 1.15rem 1.5rem; cursor: pointer; font-family: 'Outfit', sans-serif;
       font-weight: 600; font-size: 0.95rem; color: var(--forest); background: none;
       border: none; width: 100%; text-align: left; line-height: 1.4;
+      list-style: none;
     }
+    .faq-question::-webkit-details-marker { display: none; }
     .faq-question:hover { color: var(--brass); }
     .faq-question .faq-chevron {
       width: 20px; height: 20px; flex-shrink: 0; margin-left: 1rem;
       transition: transform 0.3s ease; stroke: var(--text-light); fill: none; stroke-width: 2;
     }
-    .faq-item.open .faq-chevron { transform: rotate(180deg); }
-    .faq-answer {
-      max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s ease;
-    }
-    .faq-item.open .faq-answer { max-height: 500px; }
+    .faq-item[open] .faq-chevron { transform: rotate(180deg); }
     .faq-answer-inner {
       padding: 0 1.5rem 1.25rem;
     }
@@ -691,241 +690,201 @@
       <!-- FAQ Accordion -->
         <div class="faq-category">
           <div class="faq-category-title">Booking & Collection</div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          <details class="faq-item">
+            <summary class="faq-question">
               How quickly can you collect my parcel?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>We collect within 60 minutes of your confirmed booking, nationwide. Our drivers are positioned across the UK at all times, ready for immediate dispatch. For most major UK cities, collection is typically within 30-45 minutes.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>We collect within 60 minutes of your confirmed booking, nationwide. Our drivers are positioned across the UK at all times, ready for immediate dispatch. For most major UK cities, collection is typically within 30-45 minutes.</p>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          </details>
+          <details class="faq-item">
+            <summary class="faq-question">
               How do I book a same day courier?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>You can book instantly via our online quote form, by calling 020 4568 4675, or by WhatsApp. Our dispatch desk operates 24/7. Once booked, you'll receive driver and vehicle details within minutes.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>You can book instantly via our online quote form, by calling 020 4568 4675, or by WhatsApp. Our dispatch desk operates 24/7. Once booked, you'll receive driver and vehicle details within minutes.</p>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          </details>
+          <details class="faq-item">
+            <summary class="faq-question">
               Can I book a same day courier at night or on weekends?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>Yes. We operate 24 hours a day, 7 days a week, 365 days a year — including bank holidays. Urgent deliveries don't follow business hours, and neither do we.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>Yes. We operate 24 hours a day, 7 days a week, 365 days a year — including bank holidays. Urgent deliveries don't follow business hours, and neither do we.</p>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          </details>
+          <details class="faq-item">
+            <summary class="faq-question">
               How much does a same day courier cost in the UK?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>Pricing depends on distance, vehicle type, and cargo. As a guide: motorcycle starts from £25 + £1.00/mile, small vans from £35 + £1.20/mile, up to Luton vans from £75 + £2.10/mile. Use our online quote calculator for an instant price.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>Pricing depends on distance, vehicle type, and cargo. As a guide: motorcycle starts from £25 + £1.00/mile, small vans from £35 + £1.20/mile, up to Luton vans from £75 + £2.10/mile. Use our online quote calculator for an instant price.</p>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          </details>
+          <details class="faq-item">
+            <summary class="faq-question">
               Do I need to package my goods before collection?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>Yes. Items should be adequately packaged for transit. Our drivers cannot be held responsible for damage caused by inadequate packaging. For fragile or specialist cargo, contact us and we'll advise on appropriate packaging requirements.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>Yes. Items should be adequately packaged for transit. Our drivers cannot be held responsible for damage caused by inadequate packaging. For fragile or specialist cargo, contact us and we'll advise on appropriate packaging requirements.</p>
             </div>
-          </div>
+          </details>
         </div>
         <div class="faq-category">
           <div class="faq-category-title">Insurance & Security</div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          <details class="faq-item">
+            <summary class="faq-question">
               What goods-in-transit insurance do you carry?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>Every driver in our network carries £20,000 goods-in-transit (GIT) insurance as standard. This covers your consignment from collection to delivery. For higher-value items, please inform us at the time of booking.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>Every driver in our network carries £20,000 goods-in-transit (GIT) insurance as standard. This covers your consignment from collection to delivery. For higher-value items, please inform us at the time of booking.</p>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          </details>
+          <details class="faq-item">
+            <summary class="faq-question">
               Are your drivers DBS checked?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>Yes. All drivers in our network are DBS (Disclosure and Barring Service) background-checked. This is mandatory for all drivers — particularly important for medical, legal, and sensitive document deliveries.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>Yes. All drivers in our network are DBS (Disclosure and Barring Service) background-checked. This is mandatory for all drivers — particularly important for medical, legal, and sensitive document deliveries.</p>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          </details>
+          <details class="faq-item">
+            <summary class="faq-question">
               How do I know my delivery has been completed?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>Yes. Every job includes signed proof of delivery. You will receive driver and vehicle details on dispatch, plus a signed digital proof of delivery on completion.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>Yes. Every job includes signed proof of delivery. You will receive driver and vehicle details on dispatch, plus a signed digital proof of delivery on completion.</p>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          </details>
+          <details class="faq-item">
+            <summary class="faq-question">
               Do you provide proof of delivery?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>Yes. A digital proof of delivery (POD) with timestamp and recipient signature is provided for every job. This is sent to your email address upon completion.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>Yes. A digital proof of delivery (POD) with timestamp and recipient signature is provided for every job. This is sent to your email address upon completion.</p>
             </div>
-          </div>
+          </details>
         </div>
         <div class="faq-category">
           <div class="faq-category-title">Services & Cargo</div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          <details class="faq-item">
+            <summary class="faq-question">
               What types of goods can you deliver?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>We handle documents, parcels, pallets, medical specimens, legal papers, IT hardware, industrial parts, and more. We deliver anything from a single envelope via motorcycle to multi-pallet loads via Luton van with tail lift.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>We handle documents, parcels, pallets, medical specimens, legal papers, IT hardware, industrial parts, and more. We deliver anything from a single envelope via motorcycle to multi-pallet loads via Luton van with tail lift.</p>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          </details>
+          <details class="faq-item">
+            <summary class="faq-question">
               Can you deliver medical samples and pharmaceutical goods?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>Yes. We have experience with NHS supply chains, pharmacy deliveries, laboratory specimen transport, and cold-chain pharmaceutical goods. Our vetted drivers maintain chain of custody throughout.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>Yes. We have experience with NHS supply chains, pharmacy deliveries, laboratory specimen transport, and cold-chain pharmaceutical goods. Our vetted drivers maintain chain of custody throughout.</p>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          </details>
+          <details class="faq-item">
+            <summary class="faq-question">
               Can you deliver legal documents and court filings?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>Yes. We specialise in time-critical legal document delivery including court filings, original contracts, deed transfers, and signed agreements. Direct hand delivery with digital POD and timestamp.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>Yes. We specialise in time-critical legal document delivery including court filings, original contracts, deed transfers, and signed agreements. Direct hand delivery with digital POD and timestamp.</p>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          </details>
+          <details class="faq-item">
+            <summary class="faq-question">
               What is an AOG courier and do you handle them?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>AOG stands for Aircraft on Ground — a critical aviation emergency requiring urgent parts delivery to prevent aircraft downtime. We handle AOG runs to all major UK airports with airside-cleared drivers and immediate dispatch.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>AOG stands for Aircraft on Ground — a critical aviation emergency requiring urgent parts delivery to prevent aircraft downtime. We handle AOG runs to all major UK airports with airside-cleared drivers and immediate dispatch.</p>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          </details>
+          <details class="faq-item">
+            <summary class="faq-question">
               Do you deliver outside the UK?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>We currently specialise in UK domestic same-day delivery. For international shipments, please contact us and we will advise on the best available solution.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>We currently specialise in UK domestic same-day delivery. For international shipments, please contact us and we will advise on the best available solution.</p>
             </div>
-          </div>
+          </details>
         </div>
         <div class="faq-category">
           <div class="faq-category-title">Vehicles & Capacity</div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          <details class="faq-item">
+            <summary class="faq-question">
               What vehicles do you have available?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>Our fleet includes motorcycles (up to 20kg), small vans (up to 600kg), medium vans (up to 900kg), large vans LWB (up to 1,200kg), and Luton vans with tail lifts (up to 1,000kg with 4m load space). Select the right vehicle using our online quote form.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>Our fleet includes motorcycles (up to 20kg), small vans (up to 600kg), medium vans (up to 900kg), large vans LWB (up to 1,200kg), and Luton vans with tail lifts (up to 1,000kg with 4m load space). Select the right vehicle using our online quote form.</p>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          </details>
+          <details class="faq-item">
+            <summary class="faq-question">
               Can you carry pallets?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>Yes. Our large vans carry 2-3 standard pallets and our Luton vans with powered tail lifts handle heavy pallet loads. For bulk pallet freight, use our commercial freight booking option.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>Yes. Our large vans carry 2-3 standard pallets and our Luton vans with powered tail lifts handle heavy pallet loads. For bulk pallet freight, use our commercial freight booking option.</p>
             </div>
-          </div>
+          </details>
         </div>
         <div class="faq-category">
           <div class="faq-category-title">Business Accounts</div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          <details class="faq-item">
+            <summary class="faq-question">
               Do you offer accounts for regular business users?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>Yes. Our Trade Account programme offers priority dispatch, 30-day monthly invoicing, volume pricing, and a dedicated dispatcher contact. Apply via our Trade Accounts page or call 020 4568 4675.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>Yes. Our Trade Account programme offers priority dispatch, 30-day monthly invoicing, volume pricing, and a dedicated dispatcher contact. Apply via our Trade Accounts page or call 020 4568 4675.</p>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          </details>
+          <details class="faq-item">
+            <summary class="faq-question">
               Can you integrate with our existing logistics platform?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>Contact our commercial team to discuss integration options. We support custom SLAs for corporate clients with regular dispatch requirements.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>Contact our commercial team to discuss integration options. We support custom SLAs for corporate clients with regular dispatch requirements.</p>
             </div>
-          </div>
+          </details>
         </div>
         <div class="faq-category">
           <div class="faq-category-title">Coverage</div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          <details class="faq-item">
+            <summary class="faq-question">
               Which areas of the UK do you cover?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>We cover the entire UK mainland including London, Birmingham, Manchester, Leeds, Bristol, Glasgow, Edinburgh, Cardiff, and all surrounding regions. No area is too remote — our nationwide driver network ensures coverage everywhere.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>We cover the entire UK mainland including London, Birmingham, Manchester, Leeds, Bristol, Glasgow, Edinburgh, Cardiff, and all surrounding regions. No area is too remote — our nationwide driver network ensures coverage everywhere.</p>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
+          </details>
+          <details class="faq-item">
+            <summary class="faq-question">
               How long does a same day delivery take?
               <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner">
-                <p>Transit time depends on distance. A London-to-Birmingham run typically takes 2-2.5 hours door to door. London to Manchester is approximately 3-4 hours. Our drivers travel direct — no stops, no hubs, no delays.</p>
-              </div>
+            </summary>
+            <div class="faq-answer-inner">
+              <p>Transit time depends on distance. A London-to-Birmingham run typically takes 2-2.5 hours door to door. London to Manchester is approximately 3-4 hours. Our drivers travel direct — no stops, no hubs, no delays.</p>
             </div>
-          </div>
+          </details>
         </div>
 
 
@@ -1013,7 +972,7 @@
       <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
       <span>Call Now</span>
     </a>
-    <a href="https://wa.me/442045684675?text=Hi%2C%20I%20need%20an%20urgent%20same%20day%20courier%20quote%20dispatch." target="_blank" rel="noopener" class="mobile-sticky-btn btn-whatsapp">
+    <a href="https://wa.me/447884208718?text=Hi%2C%20I%20need%20an%20urgent%20same%20day%20courier%20quote%20dispatch." target="_blank" rel="noopener" class="mobile-sticky-btn btn-whatsapp">
       <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.859-4.42 9.863-9.864.002-2.637-1.023-5.116-2.887-6.98C16.484 1.897 14.008.872 11.37.872c-5.436 0-9.858 4.42-9.863 9.864 0 1.742.476 3.44 1.377 4.939l-.974 3.565 3.65-.957zm11.758-6.938c-.322-.16-.1.258-2.6-.94-.323-.16-.558-.24-.788.11-.23.35-.89 1.12-1.09 1.35-.2.23-.4.26-.73.1-.32-.16-1.37-.5-2.6-1.6-1-.89-1.68-1.99-1.88-2.33-.2-.35-.02-.53.15-.69.15-.14.33-.39.5-.58.17-.2.22-.32.33-.53.11-.2.05-.39-.02-.55-.08-.16-.788-1.9-1.088-2.62-.29-.7-1.1-1.12-1.09-1.12-.22-.01-.48-.01-.73.01-.25.02-.67.11-1.02.49-.36.38-1.37 1.34-1.37 3.27s1.4 3.79 1.6 4.07c.2.28 2.76 4.22 6.68 5.92.93.4 1.66.64 2.23.82.94.3 1.8.26 2.48.16.76-.11 2.33-.95 2.66-1.87.33-.92.33-1.7.23-1.87-.1-.17-.36-.27-.69-.43z"/></svg>
       <span>WhatsApp</span>
     </a>
@@ -1050,19 +1009,9 @@
       }
     }
   </script>
-  <script>
-    function toggleFaq(btn) {
-      const item = btn.closest('.faq-item');
-      const wasOpen = item.classList.contains('open');
-      // Close all
-      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
-      // Toggle clicked
-      if (!wasOpen) item.classList.add('open');
-    }
-  </script>
 
   <!-- Sticky WhatsApp CTA -->
-  <a href="https://wa.me/442045684675?text=Hi%2C%20I%20need%20an%20urgent%20same%20day%20courier%20quote." target="_blank" rel="noopener" class="wa-float" aria-label="Chat on WhatsApp for a same-day courier quote">
+  <a href="https://wa.me/447884208718?text=Hi%2C%20I%20need%20an%20urgent%20same%20day%20courier%20quote." target="_blank" rel="noopener" class="wa-float" aria-label="Chat on WhatsApp for a same-day courier quote">
     <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.859-4.42 9.863-9.864.002-2.637-1.023-5.116-2.887-6.98C16.484 1.897 14.008.872 11.37.872c-5.436 0-9.858 4.42-9.863 9.864 0 1.742.476 3.44 1.377 4.939l-.974 3.565 3.65-.957zm11.758-6.938c-.322-.16-1.9-.94-2.194-1.048-.294-.107-.508-.16-.722.16-.214.32-.83 1.048-1.018 1.264-.187.214-.375.24-.697.08-.322-.16-1.36-.5-2.59-1.6-.957-.854-1.602-1.91-1.789-2.23-.187-.32-.02-.493.14-.652.144-.143.32-.375.48-.563.16-.187.214-.32.32-.534.107-.214.054-.4-.027-.563-.08-.16-.722-1.74-.988-2.382-.26-.625-.524-.54-.722-.55-.187-.01-.4-.01-.613-.01-.214 0-.562.08-.856.4-.294.32-1.124 1.098-1.124 2.677s1.15 3.105 1.312 3.32c.16.214 2.262 3.453 5.481 4.847.766.33 1.363.527 1.83.674.769.245 1.468.21 2.022.127.617-.092 1.9-.777 2.166-1.529.266-.752.266-1.396.187-1.529-.08-.134-.294-.214-.616-.374z"/></svg>
   </a>
 </body>

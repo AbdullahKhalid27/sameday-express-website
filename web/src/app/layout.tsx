@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     template: "%s | Same Day Express Couriers",
   },
   description:
-    "UK same-day dedicated courier service. Nationwide collection within 60 minutes. DBS-vetted drivers, £20,000 goods-in-transit insurance, 24/7 live GPS tracking.",
+    "UK same-day dedicated courier service. Nationwide collection within 60 minutes. DBS-vetted drivers, £20,000 goods-in-transit insurance, signed proof of delivery, and phone updates from our 24/7 dispatch team.",
 };
 
 export default function RootLayout({

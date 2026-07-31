@@ -32,6 +32,48 @@
   /* ── Semantic ── */
   --color-success: #227845;
   --color-danger: #b33939;
+  --color-info: #2980b9;
+
+  /* ── Text shades ──
+     --color-text-muted is the Part S AA-readability fix (audit
+     flagged --text-muted as ~6.3:1 contrast on ivory). Use for
+     secondary body text; never below this contrast. */
+  --color-text-main: #1c2821;
+  --color-text-muted: #52625a;
+  --color-text-light: #a4b2aa;
+
+  /* ── Subtle backgrounds / borders (used dozens of times per page) ── */
+  --color-forest-muted: rgba(28, 40, 33, 0.05);
+  --color-forest-highlight: rgba(28, 40, 33, 0.1);
+  --color-brass-muted: rgba(156, 128, 92, 0.08);
+  --color-brass-border: rgba(156, 128, 92, 0.2);
+  --color-success-muted: rgba(34, 120, 69, 0.08);
+  --color-danger-muted: rgba(179, 57, 57, 0.08);
+  --color-border-subtle: rgba(28, 40, 33, 0.08);
+  --color-border-medium: rgba(28, 40, 33, 0.15);
+
+  /* ── Elevation ── */
+  --shadow-sm: 0 2px 8px rgba(28, 40, 33, 0.04);
+  --shadow-md: 0 8px 24px rgba(28, 40, 33, 0.08);
+  --shadow-lg: 0 16px 40px rgba(28, 40, 33, 0.12);
+
+  /* ── Radius scale (from static-site usage frequencies) ──
+     focus 2px · cards 4px · panels 6px · large 8px · pills 100px · circles 50% */
+  --radius-focus: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-pill: 100px;
+
+  /* ── Motion ──
+     Two named easings + three duration tiers. All overridden to
+     ~0ms by prefers-reduced-motion in the base layer below. */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration-micro: 150ms;
+  --duration-standard: 250ms;
+  --duration-emphasis: 500ms;
+  --transition-standard: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* ── Fonts (vars supplied by next/font in layout.tsx) ──
      Full fallback stack prevents FOUT — system font renders instantly
