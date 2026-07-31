@@ -4,6 +4,7 @@ import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { MobileStickyBar } from "@/components/MobileStickyBar";
+import { CookieBanner } from "@/components/CookieBanner";
 
 /*
  * next/font self-hosts the font files (no Google CDN request, no layout shift).
@@ -78,6 +79,8 @@ export default function RootLayout({
         {/* Mobile sticky bar sits at the bottom; reserve space so it never
             overlaps footer content on small screens. */}
         <div className="h-14 md:hidden" aria-hidden />
+        {/* Cookie consent banner — visual shell only, no logic wired yet. */}
+        <CookieBanner />
       </body>
     </html>
   );

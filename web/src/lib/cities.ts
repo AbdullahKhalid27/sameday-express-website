@@ -1,8 +1,12 @@
 /**
- * City page data — verbatim copy for the 6 location landing pages.
+ * City page data — copy for the 8 location landing pages.
  *
- * Transcribed exactly from the static site's 6 same-day-courier-{city}.html
- * files. No copy altered. Drives the shared <CityPage> template.
+ * The 6 original pages (London, Manchester, Birmingham, Bristol, Leeds,
+ * Glasgow) were transcribed exactly from the static site's
+ * same-day-courier-{city}.html files. Edinburgh and Liverpool were added to
+ * meet the 8-city coverage requirement (no static reference existed for these
+ * two); their copy follows the same structure and tone as the other 6.
+ * Drives the shared <CityPage> template.
  *
  * Per the audit: London differs structurally (4 "who" cards vs 6, different
  * "who" heading/intro, dark "who" section vs ivory). These differences are
@@ -618,6 +622,196 @@ export const CITIES: CityData[] = [
       },
     ],
     ctaH2: "Need a Courier in Glasgow Right Now?",
+    ctaBody: "Call our 24/7 dispatch desk. A driver is ready to collect within 60 minutes.",
+  },
+  {
+    slug: "same-day-courier-edinburgh",
+    cityName: "Edinburgh",
+    region: "Scotland",
+    h1: "Same Day Courier Edinburgh — Collection in 60 Minutes",
+    routeChips: [
+      "M8 to Glasgow",
+      "A1 southbound to Newcastle",
+      "Edinburgh Airport (EDI)",
+      "City bypass (A720)",
+      "LEZ compliant fleet",
+    ],
+    answerBlock:
+      "A same-day courier in Edinburgh collects within 60 minutes across every EH postcode — from the city centre and the financial district to Edinburgh Airport and the port of Leith. DBS-vetted drivers, £20,000 goods-in-transit insurance, and LEZ-compliant vehicles, 24/7.",
+    serviceH2: "Same Day Courier Service in Edinburgh",
+    serviceBody:
+      "Your parcel leaves Edinburgh within 60 minutes and goes direct — no hub, no sorting. You get a named driver who knows the Royal Mile, the financial district, and the Edinburgh Airport approaches, plus a signed proof of delivery. LEZ-compliant vehicles, 24/7.",
+    postcodesH2: "Postcodes We Cover in Edinburgh",
+    postcodesIntro: "We collect and deliver across all Edinburgh postcode areas.",
+    postcodeGroups: [
+      { label: "City Centre & Old Town", codes: "EH1-3" },
+      { label: "New Town", codes: "EH4-7" },
+      { label: "South Edinburgh", codes: "EH8-9, EH16" },
+      { label: "West Edinburgh", codes: "EH11-12, EH14" },
+      { label: "Leith & Port", codes: "EH6" },
+      { label: "Airport (EDI)", codes: "EH12" },
+    ],
+    whoH2: "Who Uses Us in Edinburgh",
+    whoIntro: "Local businesses that depend on our same day courier service.",
+    whoCards: [
+      {
+        title: "Financial & Professional Services",
+        body: "Urgent document and parcel delivery between Edinburgh's banks, investment firms, and professional service businesses in the financial district and New Town.",
+      },
+      {
+        title: "Edinburgh Airport (EDI)",
+        body: "AOG and time-critical aviation parts delivery to Edinburgh Airport with drivers experienced in airport delivery procedures and airside coordination.",
+      },
+      {
+        title: "Legal & Courts",
+        body: "Same day court filing and confidential document delivery to the Court of Session, Edinburgh Sheriff Court, and the city's law firms and advocates.",
+      },
+      {
+        title: "Festivals & Events",
+        body: "Urgent delivery of event materials, production equipment, and supplies to the Edinburgh International Festival, Fringe venues, and conference centres.",
+      },
+      {
+        title: "Healthcare & NHS",
+        body: "Specimen transport, pharmacy deliveries, and medical equipment moves for NHS Lothian hospitals, clinics, and private healthcare providers.",
+      },
+      {
+        title: "Tech & Digital",
+        body: "IT hardware, server components, and prototype delivery for Edinburgh's technology sector across the city's innovation hubs and university spin-outs.",
+      },
+    ],
+    whoSectionVariant: "ivory",
+    howH2: "How to Book a Courier in Edinburgh",
+    howSteps: [
+      {
+        number: "01",
+        title: "Call or Book Online",
+        body: "Ring our 24/7 dispatch desk on 020 4568 4675 or use our online quote form. Specify Edinburgh collection and delivery details.",
+      },
+      {
+        number: "02",
+        title: "Driver Dispatched in Minutes",
+        body: "A dedicated vehicle is allocated from our Edinburgh driver network. Collection typically within 30-60 minutes.",
+      },
+      {
+        number: "03",
+        title: "Direct Delivery with POD",
+        body: "Your goods travel direct to the delivery address. Live GPS tracking throughout. Digital POD on completion.",
+      },
+    ],
+    faqH2: "Edinburgh Courier FAQ",
+    faqItems: [
+      {
+        question: "How quickly can you collect in Edinburgh?",
+        answer:
+          "We collect within 60 minutes across Edinburgh postcodes. The city centre (EH1-EH3) and New Town typically see collection within 30-40 minutes. The Edinburgh bypass and our driver positioning keep outer areas well within the 60-minute target.",
+      },
+      {
+        question: "Are your vehicles compliant with Edinburgh's Low Emission Zone?",
+        answer:
+          "Yes. Edinburgh's Low Emission Zone (LEZ) covers the city centre, and all vehicles we deploy for Edinburgh work are LEZ-compliant. We ensure the correct vehicle is allocated for your delivery zone so there are no access delays or penalty charges.",
+      },
+      {
+        question: "Do you cover Glasgow and the wider Scottish Central Belt?",
+        answer:
+          "Yes. While this page focuses on Edinburgh, our network covers Glasgow, Stirling, Dundee, Aberdeen, and the entire Scottish Central Belt. Call our dispatch desk for any Scottish delivery outside Edinburgh.",
+      },
+    ],
+    ctaH2: "Need a Courier in Edinburgh Right Now?",
+    ctaBody: "Call our 24/7 dispatch desk. A driver is ready to collect within 60 minutes.",
+  },
+  {
+    slug: "same-day-courier-liverpool",
+    cityName: "Liverpool",
+    region: "Merseyside",
+    h1: "Same Day Courier Liverpool — Collection in 60 Minutes",
+    routeChips: [
+      "M62 trans-Pennine to Manchester",
+      "M57 / M58 orbital",
+      "Liverpool John Lennon Airport (LPL)",
+      "Port of Liverpool",
+      "Clean Air Zone aware",
+    ],
+    answerBlock:
+      "A same-day courier in Liverpool collects within 60 minutes across every L postcode — from the city centre and the commercial district to the Port of Liverpool and Liverpool John Lennon Airport. DBS-vetted drivers, £20,000 goods-in-transit insurance, and Clean Air Zone-compliant vehicles, 24/7.",
+    serviceH2: "Same Day Courier Service in Liverpool",
+    serviceBody:
+      "Your parcel leaves Liverpool within 60 minutes and goes direct — no hub, no multi-drop. You get a named driver who knows the M62 corridor, the commercial district, and the Port of Liverpool, plus a signed proof of delivery. Clean Air Zone-compliant vehicles, 24/7.",
+    postcodesH2: "Postcodes We Cover in Liverpool",
+    postcodesIntro: "We collect and deliver across all Liverpool postcode areas.",
+    postcodeGroups: [
+      { label: "City Centre", codes: "L1-3" },
+      { label: "Waterfront & Business District", codes: "L2-3" },
+      { label: "South Liverpool", codes: "L17-19, L25" },
+      { label: "North Liverpool", codes: "L4-6, L9-10" },
+      { label: "Port & Bootle", codes: "L20-21" },
+      { label: "Airport (LPL)", codes: "L24" },
+    ],
+    whoH2: "Who Uses Us in Liverpool",
+    whoIntro: "Local businesses that depend on our same day courier service.",
+    whoCards: [
+      {
+        title: "Port of Liverpool",
+        body: "Time-critical delivery of shipping documents, customs paperwork, and parts to the Port of Liverpool and Peel Ports facilities, with drivers familiar with port access procedures.",
+      },
+      {
+        title: "Liverpool John Lennon Airport (LPL)",
+        body: "AOG and urgent aviation parts delivery to Liverpool John Lennon Airport with drivers experienced in airport delivery protocols.",
+      },
+      {
+        title: "Maritime & Shipping",
+        body: "Same day delivery of marine parts, ship supplies, and maritime documentation to shipping companies and maritime service providers along the Mersey.",
+      },
+      {
+        title: "Legal & Courts",
+        body: "Court filing delivery to Liverpool Civil and Family Court and confidential document exchange between the city's law firms and solicitors.",
+      },
+      {
+        title: "Healthcare & NHS",
+        body: "Specimen transport, pharmacy deliveries, and medical equipment moves for Liverpool University Hospitals NHS Foundation Trust and private healthcare providers.",
+      },
+      {
+        title: "Digital & Creative",
+        body: "Urgent delivery of media assets, production materials, and IT hardware for Liverpool's growing digital and creative sector in the Baltic Triangle and Knowledge Quarter.",
+      },
+    ],
+    whoSectionVariant: "ivory",
+    howH2: "How to Book a Courier in Liverpool",
+    howSteps: [
+      {
+        number: "01",
+        title: "Call or Book Online",
+        body: "Ring our 24/7 dispatch desk on 020 4568 4675 or use our online quote form. Specify Liverpool collection and delivery details.",
+      },
+      {
+        number: "02",
+        title: "Driver Dispatched in Minutes",
+        body: "A dedicated vehicle is allocated from our Liverpool driver network. Collection typically within 30-60 minutes.",
+      },
+      {
+        number: "03",
+        title: "Direct Delivery with POD",
+        body: "Your goods travel direct to the delivery address. Live GPS tracking throughout. Digital POD on completion.",
+      },
+    ],
+    faqH2: "Liverpool Courier FAQ",
+    faqItems: [
+      {
+        question: "How quickly can you collect in Liverpool?",
+        answer:
+          "We collect within 60 minutes across Liverpool postcodes. The city centre (L1-L3) and waterfront business district typically see collection within 30-40 minutes. Our drivers are positioned across Merseyside for rapid dispatch.",
+      },
+      {
+        question: "Can you deliver to the Port of Liverpool?",
+        answer:
+          "Yes. We deliver to the Port of Liverpool and Peel Ports facilities regularly, including time-critical shipping documents, customs paperwork, and parts. Our drivers are familiar with port access procedures and the relevant delivery points.",
+      },
+      {
+        question: "Do you cover the wider Merseyside area?",
+        answer:
+          "Yes. While this page focuses on Liverpool, our network covers the Wirral, St Helens, Knowsley, Sefton, and the wider Merseyside region. Call our dispatch desk for any Merseyside collection or delivery.",
+      },
+    ],
+    ctaH2: "Need a Courier in Liverpool Right Now?",
     ctaBody: "Call our 24/7 dispatch desk. A driver is ready to collect within 60 minutes.",
   },
 ];

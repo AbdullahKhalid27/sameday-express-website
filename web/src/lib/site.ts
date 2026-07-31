@@ -17,14 +17,20 @@ export const SITE = {
 
 export type NavItem = { label: string; href: string };
 
+/**
+ * Primary navigation — matches the static reference site exactly:
+ * Home, Fleet, Services, Custom, About, FAQ, Contact.
+ *
+ * Fleet / Services point to the relevant homepage sections (anchor links)
+ * exactly as the reference does; the other items are dedicated routes.
+ */
 export const PRIMARY_NAV: NavItem[] = [
-  { label: "Same Day Courier", href: "/services/same-day-courier" },
-  { label: "AOG Aviation", href: "/services/aog-aviation-courier" },
-  { label: "Medical", href: "/services/medical-courier" },
-  { label: "Legal", href: "/services/legal-courier" },
-  { label: "Locations", href: "/locations" },
-  { label: "Trade Accounts", href: "/trade-accounts" },
+  { label: "Home", href: "/#home" },
+  { label: "Fleet", href: "/#fleet" },
+  { label: "Services", href: "/#services" },
+  { label: "Custom", href: "/#trade" },
   { label: "About", href: "/about" },
+  { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -32,21 +38,24 @@ export const FOOTER_LINKS: { heading: string; items: NavItem[] }[] = [
   {
     heading: "Services",
     items: [
-      { label: "Same Day Courier", href: "/services/same-day-courier" },
-      { label: "AOG Aviation Courier", href: "/services/aog-aviation-courier" },
-      { label: "Medical Courier", href: "/services/medical-courier" },
-      { label: "Legal Courier", href: "/services/legal-courier" },
+      { label: "Same Day Courier", href: "/same-day-courier" },
+      { label: "AOG & Aviation Parts", href: "/aog-aviation-courier" },
+      { label: "Medical Courier Runs", href: "/medical-courier" },
+      { label: "Legal Document Delivery", href: "/legal-courier" },
+      { label: "Apply for Trade Account", href: "/trade-accounts" },
     ],
   },
   {
-    heading: "Locations",
+    heading: "Special Coverage",
     items: [
-      { label: "London", href: "/locations/same-day-courier-london" },
-      { label: "Manchester", href: "/locations/same-day-courier-manchester" },
-      { label: "Birmingham", href: "/locations/same-day-courier-birmingham" },
-      { label: "Bristol", href: "/locations/same-day-courier-bristol" },
-      { label: "Leeds", href: "/locations/same-day-courier-leeds" },
-      { label: "Glasgow", href: "/locations/same-day-courier-glasgow" },
+      { label: "London", href: "/same-day-courier-london" },
+      { label: "Birmingham", href: "/same-day-courier-birmingham" },
+      { label: "Manchester", href: "/same-day-courier-manchester" },
+      { label: "Leeds", href: "/same-day-courier-leeds" },
+      { label: "Bristol", href: "/same-day-courier-bristol" },
+      { label: "Glasgow", href: "/same-day-courier-glasgow" },
+      { label: "Edinburgh", href: "/same-day-courier-edinburgh" },
+      { label: "Liverpool", href: "/same-day-courier-liverpool" },
     ],
   },
   {
@@ -62,7 +71,8 @@ export const FOOTER_LINKS: { heading: string; items: NavItem[] }[] = [
 ];
 
 export const LEGAL_LINKS: NavItem[] = [
-  { label: "Terms", href: "/terms" },
   { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Terms & Carriage Conditions", href: "/terms" },
+  { label: "Cookie Policy", href: "/cookie-policy" },
   { label: "Sitemap", href: "/sitemap" },
 ];

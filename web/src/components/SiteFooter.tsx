@@ -105,8 +105,30 @@ export function SiteFooter() {
           </div>
         </div>
 
+        {/* Legal disclosure — placeholder until client provides real numbers */}
+        <div className="mt-10 grid gap-px overflow-hidden rounded-md border border-ivory/10 bg-ivory/10 text-sm text-ivory/60 sm:grid-cols-3">
+          <div className="bg-forest-dark px-4 py-3">
+            <p className="font-heading text-xs font-bold uppercase tracking-widest text-brass-bright">
+              Company Reg. No.
+            </p>
+            <p className="mt-1">[Company details pending]</p>
+          </div>
+          <div className="bg-forest-dark px-4 py-3">
+            <p className="font-heading text-xs font-bold uppercase tracking-widest text-brass-bright">
+              VAT No.
+            </p>
+            <p className="mt-1">[Company details pending]</p>
+          </div>
+          <div className="bg-forest-dark px-4 py-3">
+            <p className="font-heading text-xs font-bold uppercase tracking-widest text-brass-bright">
+              ICO Registration
+            </p>
+            <p className="mt-1">[Company details pending]</p>
+          </div>
+        </div>
+
         {/* Legal row */}
-        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-ivory/10 pt-6 text-xs text-ivory/55 sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-ivory/10 pt-6 text-xs text-ivory/55 sm:flex-row">
           <p>
             © {year} {SITE.legalName}. All rights reserved.
           </p>

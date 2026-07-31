@@ -12,6 +12,7 @@ import { TradeAccountForm } from "@/components/TradeAccountForm";
 
 import { SITE } from "@/lib/site";
 import { FLEET, FLEET_ORDER } from "@/lib/fleet";
+import type { VehicleId } from "@/lib/fleet";
 import {
   organizationJsonLd,
   websiteJsonLd,
@@ -44,6 +45,25 @@ const HOME_FAQ = [
       "Yes. All drivers carry DBS background checks and £20,000 goods-in-transit insurance as standard on every job.",
   },
 ];
+
+/**
+ * Fleet photo placeholders — inline SVG data-URIs (zero network requests, no
+ * file dependencies). Each renders as a labelled 4:3 warm-stone tile so the
+ * grid layout is stable from first paint. Swap the data-URI for a real path
+ * (e.g. "/fleet/motorcycle.jpg") when the client supplies vehicle photos.
+ */
+const FLEET_PLACEHOLDER_SVG = (label: string) =>
+  `data:image/svg+xml,${encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#e0dacd"/><text x="50%" y="50%" font-family="system-ui,sans-serif" font-size="22" font-weight="600" fill="#7d6547" text-anchor="middle" dominant-baseline="middle">${label}</text></svg>`,
+  )}`;
+
+const FLEET_IMG: Record<VehicleId, string> = {
+  motorcycle: FLEET_PLACEHOLDER_SVG("Motorcycle"),
+  small_van: FLEET_PLACEHOLDER_SVG("Small Van"),
+  medium_van: FLEET_PLACEHOLDER_SVG("Medium Van"),
+  large_van: FLEET_PLACEHOLDER_SVG("Large Van"),
+  luton_van: FLEET_PLACEHOLDER_SVG("Luton Van"),
+};
 
 export default function HomePage() {
   return (
@@ -224,7 +244,18 @@ export default function HomePage() {
               const v = FLEET[id];
               return (
                 <Reveal key={id} delay={i * 70} className="h-full">
-                  <Card as="li" className="h-full">
+                  <Card as="li" className="h-full overflow-hidden p-0">
+                    {/* Fleet photo slot — real photos dropped in later.
+                        Placeholder is an inline data-URI (zero network) so the
+                        layout is stable from first paint. Swap `src` for
+                                        /fleet/{id}.jpg when client supplies images. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={FLEET_IMG[id]}
+                      alt={v.name}
+                      className="aspect-[4/3] w-full object-cover bg-ivory-deep"
+                    />
+                    <div className="p-5">
                     <h3 className="font-heading text-lg font-bold">{v.name}</h3>
                     <p className="mt-2 text-sm text-text-muted">
                       {v.display.card}
@@ -259,6 +290,7 @@ export default function HomePage() {
                       <Button href="#quote" variant="ghost" size="sm">
                         Select &amp; Quote
                       </Button>
+                    </div>
                     </div>
                   </Card>
                 </Reveal>
