@@ -1,16 +1,17 @@
 /**
  * Transit quote calculation — pure, server-safe (no DOM).
  *
- * Ported verbatim from the static site's index.html pricing functions:
- * calculateHaversineDistance / renderQuoteResult / renderQuoteResultHaversine.
- * Constants (1.3 road factor, 5mi floor, 45mph, +15min dispatch, 1609.34 m/mi)
- * are unchanged.
+ * Ported from the static site, extended to return an itemised breakdown
+ * (base, mileage, CCZ surcharge, VAT) so the wizard can show every line
+ * item. Constants (1.3 road factor, 5mi floor, 45mph, +15min dispatch)
+ * are unchanged from the original.
  */
 
 import type { Postcode } from "./postcode";
 import type { Vehicle } from "./fleet";
+import { CCZ_SURCHARGE, VAT_RATE, isInCCZ } from "./fleet";
 
-/** Result of a quote calculation. */
+/** Itemised quote breakdown — every charge line shown to the customer. */
 export interface QuoteResult {
   /** Road miles, floored to a 5-mile minimum. */
   miles: number;
@@ -18,8 +19,20 @@ export interface QuoteResult {
   totalMinutes: number;
   /** "X mins" or "X hrs Y mins". */
   formattedDuration: string;
-  /** Estimated price in GBP, 2 decimals (string, e.g. "52.00"). */
-  price: string;
+  /** Vehicle base price in GBP (string, 2 dp). */
+  basePrice: string;
+  /** Mileage charge in GBP (string, 2 dp). */
+  mileageCost: string;
+  /** CCZ surcharge in GBP (string, 2 dp) — "0.00" if not applicable. */
+  cczSurcharge: string;
+  /** Whether the CCZ surcharge was applied (origin or dest in EC1–WC1). */
+  cczApplied: boolean;
+  /** Subtotal before VAT in GBP (string, 2 dp). */
+  subtotal: string;
+  /** VAT at 20% in GBP (string, 2 dp). */
+  vat: string;
+  /** Grand total in GBP (string, 2 dp). */
+  total: string;
   /** Estimated CO₂ in kg, 1 decimal (string, e.g. "3.8"). */
   co2: string;
   /** Whether miles were estimated (Haversine) vs real road distance. */
@@ -55,10 +68,49 @@ export function formatDuration(totalMinutes: number): string {
     : `${Math.floor(totalMinutes / 60)} hrs ${totalMinutes % 60} mins`;
 }
 
+/** Build a QuoteResult from raw road miles + vehicle + postcodes. */
+function buildQuote(
+  roadDistance: number,
+  driveMinutes: number,
+  vehicle: Vehicle,
+  origin: Postcode,
+  dest: Postcode,
+  estimated: boolean,
+): QuoteResult {
+  const miles = Math.max(roadDistance, 5); // 5mi minimum floor
+  const totalMinutes = driveMinutes + 15; // +15 dispatch overhead
+  const formattedDuration = formatDuration(totalMinutes);
+
+  const basePriceNum = vehicle.basePrice;
+  const mileageNum = miles * vehicle.perMile;
+  const cczApplied = isInCCZ(origin.name) || isInCCZ(dest.name);
+  const cczNum = cczApplied ? CCZ_SURCHARGE : 0;
+  const subtotalNum = basePriceNum + mileageNum + cczNum;
+  const vatNum = subtotalNum * VAT_RATE;
+  const totalNum = subtotalNum + vatNum;
+
+  const estimatedCO2 = miles * vehicle.co2PerMile;
+
+  return {
+    miles,
+    totalMinutes,
+    formattedDuration,
+    basePrice: basePriceNum.toFixed(2),
+    mileageCost: mileageNum.toFixed(2),
+    cczSurcharge: cczNum.toFixed(2),
+    cczApplied,
+    subtotal: subtotalNum.toFixed(2),
+    vat: vatNum.toFixed(2),
+    total: totalNum.toFixed(2),
+    co2: estimatedCO2.toFixed(1),
+    estimated,
+    distanceLabel: estimated ? `${miles} miles (est.)` : `${miles} miles`,
+  };
+}
+
 /**
- * Haversine fallback quote — used when there is no Google Maps key (the
- * current state) or the API call fails. Faithful to renderQuoteResultHaversine:
- * straight-line × 1.3 road factor, 5mi floor, 45mph assumed speed, +15min.
+ * Haversine fallback quote — used when there is no Google Maps key or the
+ * API call fails. Straight-line × 1.3 road factor, 5mi floor, 45mph, +15min.
  */
 export function calculateHaversineQuote(
   origin: Postcode,
@@ -71,49 +123,19 @@ export function calculateHaversineQuote(
     dest.lat,
     dest.lng,
   );
-  let roadDistance = Math.round(straightLineDistance * 1.3); // 1.3 = realistic UK road factor
-  if (roadDistance < 5) roadDistance = 5; // minimum charge floor
-  const drivingHours = roadDistance / 45; // assumes 45 mph average
-  const totalMinutes = Math.round(drivingHours * 60 + 15); // +15 dispatch overhead
-  const formattedDuration = formatDuration(totalMinutes);
-  const mileageCost = roadDistance * vehicle.perMile;
-  const totalEstimatedPrice = vehicle.basePrice + mileageCost;
-  const estimatedCO2 = roadDistance * vehicle.co2PerMile;
-
-  return {
-    miles: roadDistance,
-    totalMinutes,
-    formattedDuration,
-    price: totalEstimatedPrice.toFixed(2),
-    co2: estimatedCO2.toFixed(1),
-    estimated: true,
-    distanceLabel: `${roadDistance} miles (est.)`,
-  };
+  const roadDistance = Math.round(straightLineDistance * 1.3);
+  const drivingHours = roadDistance / 45; // 45 mph average
+  const driveMinutes = Math.round(drivingHours * 60);
+  return buildQuote(roadDistance, driveMinutes, vehicle, origin, dest, true);
 }
 
-/**
- * Build a quote from real Google Distance Matrix road distance.
- * Faithful to renderQuoteResult: meters→miles (1609.34), 5mi floor, +15min.
- */
+/** Build a quote from real Google Distance Matrix road distance. */
 export function calculateRoadQuote(
   miles: number,
   driveMinutes: number,
   vehicle: Vehicle,
+  origin: Postcode,
+  dest: Postcode,
 ): QuoteResult {
-  const floorMiles = Math.max(miles, 5);
-  const totalMinutes = driveMinutes + 15; // +15 dispatch overhead
-  const formattedDuration = formatDuration(totalMinutes);
-  const mileageCost = floorMiles * vehicle.perMile;
-  const totalEstimatedPrice = vehicle.basePrice + mileageCost;
-  const estimatedCO2 = floorMiles * vehicle.co2PerMile;
-
-  return {
-    miles: floorMiles,
-    totalMinutes,
-    formattedDuration,
-    price: totalEstimatedPrice.toFixed(2),
-    co2: estimatedCO2.toFixed(1),
-    estimated: false,
-    distanceLabel: `${floorMiles} miles`,
-  };
+  return buildQuote(miles, driveMinutes, vehicle, origin, dest, false);
 }

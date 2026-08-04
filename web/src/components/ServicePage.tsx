@@ -355,12 +355,12 @@ function SectionContent({
             {section.faqItems.map((faq) => (
               <details
                 key={faq.question}
-                className="group rounded-md border border-border-subtle bg-white px-5 transition-colors open:border-brass-border hover:border-brass-border"
+                className="faq-item group rounded-md border border-border-subtle bg-white px-5 transition-colors open:border-brass-border hover:border-brass-border"
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-heading text-base font-semibold text-forest [&::-webkit-details-marker]:hidden">
                   {faq.question}
                   <svg
-                    className="h-5 w-5 flex-shrink-0 transition-transform group-open:rotate-180"
+                    className="h-5 w-5 flex-shrink-0 text-text-light transition-transform duration-200 group-open:rotate-180"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -369,9 +369,13 @@ function SectionContent({
                     <polyline points="6 9 12 15 18 9" />
                   </svg>
                 </summary>
-                <p className="pb-4 text-sm leading-relaxed text-text-muted">
-                  {faq.answer}
-                </p>
+                <div className="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-200 ease-out group-open:grid-rows-[1fr]">
+                  <div className="overflow-hidden">
+                    <p className="pb-4 text-sm leading-relaxed text-text-muted">
+                      {faq.answer}
+                    </p>
+                  </div>
+                </div>
               </details>
             ))}
           </div>

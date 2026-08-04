@@ -53,6 +53,7 @@ interface WizardState {
   phone: string;
   email: string;
   company: string;
+  whatsapp: string;
 }
 
 const initialState: WizardState = {
@@ -68,6 +69,7 @@ const initialState: WizardState = {
   phone: "",
   email: "",
   company: "",
+  whatsapp: "",
 };
 
 export function QuoteWizard() {
@@ -86,12 +88,15 @@ export function QuoteWizard() {
     setS((prev) => ({ ...prev, [key]: value }));
   }
 
-  /* ── Vehicle recommendation (weight + cargo type, faithful to recommendVehicle) ── */
+  /* ── Vehicle recommendation (weight + cargo type) ──
+     Updated for the 8-vehicle fleet. Ladder uses real maxWeight caps. */
   function recommendVehicle(weight: number, cargoType: string): VehicleId | null {
     if (weight <= 20 && cargoType === "documents") return "motorcycle";
-    if (weight <= 600) return "small_van";
-    if (weight <= 900) return "medium_van";
-    if (weight <= 1200) return "large_van";
+    if (weight <= 700) return "small_van";
+    if (weight <= 900) return "ford_transit_swb";
+    if (weight <= 1000) return "ford_transit_lwb";
+    if (weight <= 1100) return "renault_trafic_mwb";
+    if (weight <= 1200) return "mercedes_sprinter_xlwb";
     return null; // exceeds capacity
   }
 
@@ -156,7 +161,7 @@ export function QuoteWizard() {
       `• Distance: ${quote.miles} miles (${quote.formattedDuration})\n` +
       `• Selected Asset: ${vehicle.name}\n` +
       `• Cargo Weight: ${s.weight}kg\n` +
-      `• Estimate Price: £${quote.price} (ex. VAT)`;
+      `• Estimate Price: £${quote.total} (inc. VAT)`;
     return `${SITE.whatsappHref.split("?")[0]}?text=${encodeURIComponent(msg)}`;
   }
 
@@ -481,6 +486,21 @@ function Step2Cargo({
           </p>
         </div>
       )}
+
+      {/* ═══════ PRICE FLOOR ESTIMATE (Prompt 7b) ═══════
+          Shows the vehicle-tier base price as an honest floor estimate
+          once cargo weight + type are known. Distance is unknown at this
+          step, so we show the base only — not a fabricated total.
+          Exact price (with mileage, CCZ, VAT) is revealed in Step 4. */}
+      {s.vehicleId && !overCapacity && (
+        <div className="mt-3 rounded-md border border-success-muted bg-success-muted p-3 text-sm">
+          <p className="font-semibold text-success">Estimated From £{FLEET[s.vehicleId].basePrice.toFixed(0)}</p>
+          <p className="mt-0.5 text-xs text-ivory/70">
+            Base rate for a {FLEET[s.vehicleId].name}. Estimate only — exact price
+            (with mileage, CCZ &amp; VAT) is confirmed after route entry.
+          </p>
+        </div>
+      )}
       {overCapacity && (
         <div className="mt-4 rounded-md border border-danger-muted bg-danger-muted p-3 text-sm text-ivory">
           <p className="font-semibold text-danger">
@@ -520,7 +540,7 @@ function Step2Cargo({
                   <span className="text-xs text-ivory/60">
                     {disabled
                       ? `Max ${v.maxWeight}kg — too small`
-                      : `Up to ${v.maxWeight}kg · ${v.display.costLine}`}
+                      : `Up to ${v.maxWeight}kg`}
                   </span>
                 </button>
               );
@@ -591,6 +611,14 @@ function Step3Contact({
           value={s.company}
           onChange={(v) => set("company", v)}
         />
+        {/* WhatsApp — client-specified label, optional, separate from required phone */}
+        <WizardField
+          id="contact-whatsapp"
+          label="Give us your WhatsApp number for ease"
+          placeholder="e.g. 07123 456789 (optional)"
+          value={s.whatsapp}
+          onChange={(v) => set("whatsapp", v)}
+        />
       </div>
     </div>
   );
@@ -627,16 +655,69 @@ function Step4Result({
         <SummaryRow label="Selected Asset:" value={vehicleName} />
         <SummaryRow label="Est. Carbon Footprint:" value={`≈ ${result.co2} kg CO₂`} />
         <SummaryRow label="Transit Insurance:" value="£20,000 Included" valueClass="text-success" />
+
+        {/* ═══════ Itemised pricing breakdown (Prompt 8b/8c) ═══════ */}
+        <div className="mt-3 space-y-1.5 border-t border-forest-highlight pt-3">
+          <SummaryRow label="Vehicle Base Rate:" value={`£${result.basePrice}`} />
+          <SummaryRow label={`Mileage (${result.miles} mi):`} value={`£${result.mileageCost}`} />
+          {result.cczApplied && (
+            <SummaryRow
+              label="London CCZ Surcharge (EC1–WC1):"
+              value={`£${result.cczSurcharge}`}
+              valueClass="text-brass-bright"
+            />
+          )}
+          <SummaryRow label="Subtotal:" value={`£${result.subtotal}`} />
+          <SummaryRow label="VAT (20%):" value={`£${result.vat}`} />
+        </div>
         <div className="flex items-baseline justify-between border-t border-forest-highlight pt-3">
           <dt className="font-semibold">Estimated Total:</dt>
           <dd className="font-heading text-2xl font-bold text-brass-bright">
-            £{result.price}
+            £{result.total}
           </dd>
         </div>
       </dl>
       <p className="mt-1 text-right text-xs text-ivory/50">
-        Prices subject to VAT &amp; standard fuel adjustments.
+        Inc. VAT at 20%. CCZ surcharge applies to London EC1–WC1 postcodes only.
       </p>
+
+      {/* ═══════ Payment choice (Prompt 8e) ═══════
+          Two large buttons — UI shell only, no backend logic yet.
+          Both marked TODO for the backend phase (Prompt 6.9). */}
+      <div className="mt-6">
+        <p className="mb-3 text-center text-sm font-medium text-ivory/80">
+          How would you like to pay?
+        </p>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {/* Pay Now — Stripe card payment */}
+          <button
+            type="button"
+            className="flex min-h-[88px] flex-col items-center justify-center rounded-lg border border-brass-border bg-brass-muted px-4 py-4 text-center transition-colors hover:border-brass"
+            // TODO: wire to /api/checkout — Stripe Checkout session for card payment
+          >
+            <span className="font-heading text-base font-bold text-ivory">
+              Pay Now
+            </span>
+            <span className="mt-1 text-xs text-ivory/65">
+              Secure card payment via Stripe
+            </span>
+          </button>
+
+          {/* Pay on Delivery — COD */}
+          <button
+            type="button"
+            className="flex min-h-[88px] flex-col items-center justify-center rounded-lg border border-brass-border bg-brass-muted px-4 py-4 text-center transition-colors hover:border-brass"
+            // TODO: wire to /api/order/confirm-cod — confirm Cash on Delivery booking
+          >
+            <span className="font-heading text-base font-bold text-ivory">
+              Pay on Delivery
+            </span>
+            <span className="mt-1 text-xs text-ivory/65">
+              Cash or bank transfer arranged directly with our driver
+            </span>
+          </button>
+        </div>
+      </div>
 
       <div className="mt-6 space-y-3">
         <a

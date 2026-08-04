@@ -33,7 +33,7 @@ const SECTIONS: Section[] = [
   {
     heading: "2. Collection & Delivery",
     body:
-      "We aim to collect your goods within 60 minutes of booking confirmation for same-day services within our standard coverage areas, though this is an indicative target and not a guaranteed commitment unless expressly agreed in writing. The Customer is responsible for ensuring that someone is available at the collection point to hand over the goods at the agreed time, and that someone is available at the delivery point to receive them. If collection cannot be completed due to no one being available, a failed collection charge may apply. Delivery times are estimates based on route conditions, traffic, and weather and are not guaranteed unless a specific delivery deadline is agreed in writing with a corresponding surcharge. We will make reasonable attempts to notify the Customer of any significant delays. Proof of delivery, including a signature or photographic evidence where applicable, will be provided upon request.",
+      "We aim to collect your goods within 60 minutes of booking confirmation for same-day services within our standard coverage areas, though this is an indicative target and not a guaranteed commitment unless expressly agreed in writing. The Customer is responsible for ensuring that someone is available at the collection point to hand over the goods at the agreed time, and that someone is available at the delivery point to receive them. If collection cannot be completed due to no one being available, a failed collection charge may apply. Delivery times are estimates based on route conditions, traffic, and weather and are not guaranteed unless a specific delivery deadline is agreed in writing with a corresponding surcharge. We will make reasonable attempts to notify the Customer of any significant delays. Proof of delivery, including a signature or photographic evidence where applicable, will be provided upon request. If a delivery cannot be completed because no one is available at the delivery address to receive the goods, the driver will wait up to 15 minutes and attempt to contact the recipient. After this period, the goods may be returned to the collection point or held at our nearest facility for re-delivery, and the Customer will be liable for any additional mileage, waiting time, or re-delivery charges. Re-delivery must be arranged within 24 hours; goods not collected within 7 days may be disposed of at our discretion.",
   },
   {
     heading: "3. Liability & Insurance",
@@ -63,7 +63,7 @@ const SECTIONS: Section[] = [
   {
     heading: "6. Payment Terms",
     body:
-      "Payment is due at the time of booking for ad hoc customers unless a trade account has been established. Trade account holders are subject to credit terms as agreed in their trade account agreement, typically 30 days from the date of invoice. Invoices are issued upon completion of delivery or at the end of the billing period for trade account customers. We accept payment by credit card, debit card, bank transfer, and BACS. Late payments may incur interest at the rate of 8% above the Bank of England base rate, calculated on a daily basis from the due date until the date of actual payment, in accordance with the Late Payment of Commercial Debts (Interest) Act 1998. We reserve the right to suspend services to any trade account holder whose payments are overdue.",
+      "Payment is due at the time of booking for ad hoc customers unless a trade account has been established or Cash on Delivery (COD) has been agreed in advance. Trade account holders are subject to credit terms as agreed in their trade account agreement, typically 30 days from the date of invoice. Two payment options are available for ad hoc bookings: (a) Pay Now — secure card payment via our payment processor at the time of booking; or (b) Pay on Delivery (COD) — cash or bank transfer arranged directly with your driver on completion of delivery, subject to prior agreement and credit checks where applicable. COD bookings must be confirmed by our dispatch desk before dispatch. Invoices are issued upon completion of delivery or at the end of the billing period for trade account customers. We accept payment by credit card, debit card, bank transfer, and BACS. Late payments may incur interest at the rate of 8% above the Bank of England base rate, calculated on a daily basis from the due date until the date of actual payment, in accordance with the Late Payment of Commercial Debts (Interest) Act 1998. We reserve the right to suspend services to any trade account holder whose payments are overdue.",
   },
   {
     heading: "7. Cancellation & Refunds",
@@ -157,6 +157,8 @@ export default function TermsPage() {
               </li>
               <li>Address: London, United Kingdom</li>
               <li>Website: samedayexpresscouriers.co.uk</li>
+              <li>Company Registration Number: [Company details pending]</li>
+              <li>VAT Registration Number: [Company details pending]</li>
             </ul>
           </div>
         </div>

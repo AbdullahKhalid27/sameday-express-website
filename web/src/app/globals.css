@@ -161,6 +161,19 @@
    Utilities
    ───────────────────────────────────────────── */
 @layer utilities {
+  /*
+     FAQ / accordion performance — content-visibility: auto tells the browser
+     to skip rendering work for off-screen items until the user scrolls to
+     them. On long FAQ pages (20+ items) this measurably cuts initial paint
+     cost. The contain-intrinsic-size hint prevents scrollbar jumpiness by
+     reserving a placeholder height before the real content renders.
+     Safe in all evergreen browsers; ignored (no-op) where unsupported.
+  */
+  .faq-item {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 72px;
+  }
+
   /* Skip-link: visually hidden until focused */
   .skip-link {
     position: absolute;

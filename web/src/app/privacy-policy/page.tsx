@@ -38,9 +38,10 @@ const SECTIONS: Section[] = [
     items: [
       { label: "Identity Data:", text: "Your first name, last name, and company name when you provide them via our quote form, trade account application, or when contacting us by phone or email." },
       { label: "Contact Data:", text: "Your email address, telephone number, and billing address so that we can respond to enquiries, provide quotes, confirm bookings, and deliver courier services." },
+      { label: "WhatsApp Data:", text: "Your WhatsApp number if you choose to provide it for ease of dispatch communication, separate from your required contact phone number. This field is entirely optional." },
       { label: "Collection and Delivery Data:", text: "Collection addresses, delivery addresses, postcodes, and contact details for senders and recipients. This is essential for fulfilling courier bookings and providing accurate route planning." },
       { label: "Financial Data:", text: "Payment card details or bank account information when you pay for our services. We do not store full card details on our servers; payments are processed through secure third-party payment providers who are PCI DSS compliant." },
-      { label: "Technical Data:", text: "Your IP address, browser type and version, time zone setting, browser plug-in types, operating system and platform, and other technology on the devices you use to access our website. We collect this data automatically using cookies and similar technologies." },
+      { label: "Technical Data:", text: "Your IP address, browser type and version, time zone setting, browser plug-in types, operating system and platform, and other technology on the devices you use to access our website. We collect this data automatically using cookies and similar technologies for security, fraud prevention, and site integrity." },
       { label: "Usage Data:", text: "Information about how you use our website, including pages visited, time spent on pages, click patterns, and navigation paths. This helps us understand how visitors interact with our content and improve the user experience." },
       { label: "Marketing Data:", text: "Your preferences in receiving marketing communications from us and your communication preferences more generally, collected when you subscribe to our newsletter or opt into marketing." },
     ],
@@ -67,8 +68,10 @@ const SECTIONS: Section[] = [
       "We do not sell, rent, or trade your personal data to third parties for their marketing purposes. We may share your data with carefully selected third parties only in the following circumstances, and always under appropriate data protection agreements:",
     items: [
       { label: "Courier and Logistics Partners:", text: "We share collection and delivery details with our network of DBS-vetted drivers and subcontracted courier partners solely for the purpose of fulfilling your booking. These partners are contractually obligated to handle your data in compliance with UK GDPR." },
-      { label: "Payment Processors:", text: "Financial data is shared with our PCI DSS-compliant payment providers to securely process transactions. We never store full card details on our own systems." },
-      { label: "IT Service Providers:", text: "We use trusted providers for website hosting, email delivery, and analytics. These providers act as data processors under strict contractual terms." },
+      { label: "Stripe (Payment Processing):", text: "When you choose to pay by card, your payment is processed securely by Stripe, a PCI DSS-compliant payment provider. Stripe receives your card details and transaction data to process the charge. We never store full card details on our own systems." },
+      { label: "Resend (Transactional Email):", text: "We use Resend to deliver transactional emails such as booking confirmations, proof-of-delivery notifications, and quote responses. Your email address is shared with Resend solely to send these communications." },
+      { label: "Google Maps Platform (Route Calculation):", text: "When you request a quote, we use the Google Maps Distance Matrix API to calculate the road distance between your collection and delivery postcodes. Your postcode data is sent to Google to generate an accurate distance and price estimate." },
+      { label: "IT Service Providers:", text: "We use trusted providers for website hosting and analytics. These providers act as data processors under strict contractual terms." },
       { label: "Legal and Regulatory Bodies:", text: "We may disclose data if required by law, court order, or regulatory authority, including HMRC, the Information Commissioner's Office (ICO), or law enforcement agencies." },
       { label: "Business Transfers:", text: "In the event of a merger, acquisition, or sale of assets, your data may be transferred as part of that transaction, subject to continued protection under this policy." },
     ],
@@ -211,6 +214,7 @@ export default function PrivacyPolicyPage() {
               </li>
               <li>Address: London, United Kingdom</li>
               <li>Website: samedayexpresscouriers.co.uk</li>
+              <li>ICO Registration Number: [Company details pending]</li>
             </ul>
           </div>
         </div>

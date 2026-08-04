@@ -213,8 +213,8 @@ export const SERVICES: ServiceData[] = [
         intro: "AOG teams often rely on the same day network for non-airside urgent transport.",
         cards: [
           { title: "Same Day Courier", href: "/same-day-courier", body: "Dedicated vehicle delivery for urgent parts, documents, and equipment outside aviation." },
-          { title: "Medical Courier", href: "/medical-courier", body: "Chain-of-custody delivery for specimen and pharmaceutical consignments." },
-          { title: "Legal Courier", href: "/legal-courier", body: "Secure hand delivery for court filings, contracts, and confidential legal documents." },
+          { title: "Medical Courier", href: "/services/medical-courier", body: "Chain-of-custody delivery for specimen and pharmaceutical consignments." },
+          { title: "Legal Courier", href: "/services/legal-courier", body: "Secure hand delivery for court filings, contracts, and confidential legal documents." },
         ],
       },
       {
@@ -306,7 +306,7 @@ export const SERVICES: ServiceData[] = [
         h2: "Related Services",
         intro: "Medical teams often also need legal and aviation courier support.",
         cards: [
-          { title: "Legal Document Courier", href: "/legal-courier", body: "Direct hand delivery for court filings, contracts, and other confidential documents." },
+          { title: "Legal Document Courier", href: "/services/legal-courier", body: "Direct hand delivery for court filings, contracts, and other confidential documents." },
           { title: "AOG Aviation Courier", href: "/aog-aviation-courier", body: "Emergency parts delivery to UK airports when aviation schedules cannot wait." },
           { title: "Same Day Courier", href: "/same-day-courier", body: "Nationwide dedicated vehicle service for any urgent delivery that needs to move today." },
         ],
@@ -393,7 +393,7 @@ export const SERVICES: ServiceData[] = [
         h2: "Related Services",
         intro: "Legal teams often also need medical and general same day support.",
         cards: [
-          { title: "Medical Courier", href: "/medical-courier", body: "Secure specimen, pharmaceutical, and equipment transport with chain of custody." },
+          { title: "Medical Courier", href: "/services/medical-courier", body: "Secure specimen, pharmaceutical, and equipment transport with chain of custody." },
           { title: "Same Day Courier", href: "/same-day-courier", body: "Fast dedicated delivery for any urgent documents or parcels that need to move today." },
           { title: "AOG Aviation Courier", href: "/aog-aviation-courier", body: "Emergency aviation logistics for time-critical aircraft parts and airport delivery." },
         ],

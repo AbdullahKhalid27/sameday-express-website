@@ -28,7 +28,6 @@ export const PRIMARY_NAV: NavItem[] = [
   { label: "Home", href: "/#home" },
   { label: "Fleet", href: "/#fleet" },
   { label: "Services", href: "/#services" },
-  { label: "Custom", href: "/#trade" },
   { label: "About", href: "/about" },
   { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },
@@ -40,8 +39,8 @@ export const FOOTER_LINKS: { heading: string; items: NavItem[] }[] = [
     items: [
       { label: "Same Day Courier", href: "/same-day-courier" },
       { label: "AOG & Aviation Parts", href: "/aog-aviation-courier" },
-      { label: "Medical Courier Runs", href: "/medical-courier" },
-      { label: "Legal Document Delivery", href: "/legal-courier" },
+      { label: "Medical Courier Runs", href: "/services/medical-courier" },
+      { label: "Legal Document Delivery", href: "/services/legal-courier" },
       { label: "Apply for Trade Account", href: "/trade-accounts" },
     ],
   },

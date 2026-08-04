@@ -1,124 +1,197 @@
 /**
- * Fleet specifications — single source of truth for vehicle rates.
+ * Fleet specifications — single source of truth for vehicle data.
  *
- * Ported verbatim from the static site's index.html FLEET object.
- * Consumed by both the QuoteWizard (pricing) and the homepage fleet grid (display).
+ * 8 client-confirmed vehicles in ascending capacity order.
+ * Consumed by QuoteWizard (pricing), homepage fleet grid, and /fleet page.
  *
- * Do NOT alter these values — they are the published tariff and match the
- * homepage marketing copy ("from £25 + £1.00/mile … up to £75 + £2.10/mile").
+ * Pricing is NEVER rendered on fleet cards — it only appears inside the
+ * quote wizard after a real calculation. This is the rate-card-exposure
+ * fix every audit flagged.
+ *
+ * Dimensions follow the static-site convention: L × W × H in mm.
+ * Motorcycle has no cargo-bay dimensions (omitted on card).
+ *
+ * Per-mile rates are provisional placeholders (client to update later),
+ * set on an ascending scale tied to base price.
  */
 
 export type VehicleId =
   | "motorcycle"
   | "small_van"
-  | "medium_van"
-  | "large_van"
-  | "luton_van";
+  | "ford_transit_swb"
+  | "renault_trafic_mwb"
+  | "ford_transit_lwb"
+  | "mercedes_sprinter_xlwb"
+  | "mercedes_sprinter_luton_box"
+  | "mercedes_sprinter_luton_curtain";
 
 export interface Vehicle {
-  /** Display name, e.g. "Large Van (LWB)". */
+  /** Display name, e.g. "Ford Transit SWB". */
   name: string;
   /** Maximum payload in kilograms. */
   maxWeight: number;
   /** Base price in GBP, added to the mileage cost. */
   basePrice: number;
-  /** Cost per mile in GBP. */
+  /** Cost per mile in GBP. Provisional — client to update. */
   perMile: number;
   /** kg CO₂ emitted per mile — used for the carbon-footprint line. */
   co2PerMile: number;
   /** One-line description shown under the vehicle name. */
   desc: string;
-  /** Homepage fleet-card display metadata (verbatim from static site). */
+  /** Homepage fleet-card display metadata. */
   display: {
     /** Marketing blurb shown in the fleet grid card. */
     card: string;
-    /** Cargo bay dimensions, e.g. "1.5m L x 1.2m W x 1.1m H". */
-    volume: string;
-    /** Typical-use-case label, e.g. "Boxed Stock & IT Hardware". */
+    /** Cargo bay dimensions "L × W × H mm". Null for motorcycle. */
+    dimensions: { length: number; width: number; height: number } | null;
+    /** Typical-use-case label, e.g. "Passports & Legal Filings". */
     useCase: string;
-    /** Cost line, e.g. "Base £35 + £1.20/mile". */
-    costLine: string;
   };
 }
 
 export const FLEET: Record<VehicleId, Vehicle> = {
   motorcycle: {
-    name: "Motorcycle Courier",
+    name: "Motorcycle",
     maxWeight: 20,
-    basePrice: 25.0,
+    basePrice: 35.0,
     perMile: 1.0,
     co2PerMile: 0.06,
     desc: "Ideal for documents, keys, passports, and small parcels up to 20kg.",
     display: {
       card: "Bypasses metropolitan traffic for ultimate speed on documents, passports, keys, and urgent medical specimens.",
-      volume: "Small Backpack / A4 Box",
-      useCase: "Passports & Legal Filings",
-      costLine: "Base £25 + £1.00/mile",
+      dimensions: null,
+      useCase: "Documents, passports & legal filings",
     },
   },
   small_van: {
     name: "Small Van",
-    maxWeight: 600,
-    basePrice: 35.0,
+    maxWeight: 700,
+    basePrice: 45.0,
     perMile: 1.2,
     co2PerMile: 0.25,
-    desc: "Suitable for cartons, small pallets, or business materials up to 600kg.",
+    desc: "Suitable for cartons, small pallets, or business materials up to 700kg.",
     display: {
       card: "Perfect for retail inventories, electronics, multiple small parcels, and regional corporate office supply transfers.",
-      volume: "1.5m L x 1.2m W x 1.1m H",
-      useCase: "Boxed Stock & IT Hardware",
-      costLine: "Base £35 + £1.20/mile",
+      dimensions: { length: 1800, width: 1200, height: 1200 },
+      useCase: "Boxed stock & IT hardware",
     },
   },
-  medium_van: {
-    name: "Medium Van",
+  ford_transit_swb: {
+    name: "Ford Transit SWB",
     maxWeight: 900,
-    basePrice: 45.0,
+    basePrice: 55.0,
     perMile: 1.4,
-    co2PerMile: 0.3,
+    co2PerMile: 0.28,
     desc: "Perfect for single standard pallets or large office supplies up to 900kg.",
     display: {
-      card: "Ideal for commercial office equipment shifts, event displays, medical shipments, and medium manufacturing goods.",
-      volume: "2.4m L x 1.7m W x 1.4m H",
-      useCase: "1 Standard Pallet & Equipment",
-      costLine: "Base £45 + £1.40/mile",
+      card: "Ideal for commercial office equipment shifts, event displays, and medium manufacturing goods.",
+      dimensions: { length: 2400, width: 1400, height: 1500 },
+      useCase: "1 standard pallet & equipment",
     },
   },
-  large_van: {
-    name: "Large Van (LWB)",
-    maxWeight: 1200,
-    basePrice: 55.0,
-    perMile: 1.65,
-    co2PerMile: 0.38,
-    desc: "Best for heavy cargo, multiple standard pallets, or bulky equipment up to 1.2 tonnes.",
+  renault_trafic_mwb: {
+    name: "Renault Trafic MWB",
+    maxWeight: 1100,
+    basePrice: 60.0,
+    perMile: 1.6,
+    co2PerMile: 0.3,
+    desc: "Mid-wheelbase van for multi-pallet loads or bulky equipment up to 1,100kg.",
     display: {
-      card: "The workhorse for industrial shipments, raw materials, heavy furniture, construction tooling, and bulk commercial runs.",
-      volume: "3.3m L x 1.7m W x 1.8m H",
-      useCase: "2-3 Pallets & Heavy Cargo",
-      costLine: "Base £55 + £1.65/mile",
+      card: "Reliable mid-size workhorse for inter-site transfers, exhibition gear, and trade consignments.",
+      dimensions: { length: 2800, width: 1400, height: 1500 },
+      useCase: "2 pallets & trade consignments",
     },
   },
-  luton_van: {
-    name: "Luton Van + Tail Lift",
+  ford_transit_lwb: {
+    name: "Ford Transit LWB",
     maxWeight: 1000,
-    basePrice: 75.0,
-    perMile: 2.1,
-    co2PerMile: 0.42,
-    desc: "Features a motorized tail lift for palletized freight or bulky exhibitions up to 1 tonne.",
+    basePrice: 65.0,
+    perMile: 1.8,
+    co2PerMile: 0.34,
+    desc: "Long-wheelbase van for heavy cargo, multiple pallets, or bulky equipment up to 1,000kg.",
     display: {
-      card: "Designed with high-volume load spaces and powered tail lifts. Suitable for heavy industrial machinery and bulky show furniture.",
-      volume: "4.0m L x 2.0m W x 2.2m H",
-      useCase: "Large Pallet Logistics & Events",
-      costLine: "Base £75 + £2.10/mile",
+      card: "The workhorse for industrial shipments, raw materials, heavy furniture, and bulk commercial runs.",
+      dimensions: { length: 3600, width: 1500, height: 1700 },
+      useCase: "Multi-pallet & heavy cargo",
+    },
+  },
+  mercedes_sprinter_xlwb: {
+    name: "Mercedes Sprinter XLWB",
+    maxWeight: 1200,
+    basePrice: 70.0,
+    perMile: 2.0,
+    co2PerMile: 0.38,
+    desc: "Extra-long wheelbase premium van for high-volume loads up to 1,200kg.",
+    display: {
+      card: "Premium long-load option for high-value freight, large equipment moves, and multi-stop trade deliveries.",
+      dimensions: { length: 4600, width: 1500, height: 1900 },
+      useCase: "High-volume & premium freight",
+    },
+  },
+  mercedes_sprinter_luton_box: {
+    name: "Mercedes Sprinter Luton Box",
+    maxWeight: 1200,
+    basePrice: 80.0,
+    perMile: 2.2,
+    co2PerMile: 0.42,
+    desc: "Luton box body for maximum-volume palletised freight up to 1,200kg.",
+    display: {
+      card: "Maximum load volume for multi-pallet commercial freight, exhibition builds, and bulky office relocations.",
+      dimensions: { length: 4400, width: 2400, height: 2200 },
+      useCase: "Multi-pallet commercial freight",
+    },
+  },
+  mercedes_sprinter_luton_curtain: {
+    name: "Mercedes Sprinter Luton Curtain",
+    maxWeight: 1200,
+    basePrice: 80.0,
+    perMile: 2.2,
+    co2PerMile: 0.42,
+    desc: "Curtain-sided Luton for fast side-loading palletised freight up to 1,200kg.",
+    display: {
+      card: "Curtain-side access for rapid forklift loading of palletised goods, plant equipment, and oversized freight.",
+      dimensions: { length: 4400, width: 2400, height: 2200 },
+      useCase: "Forklift-loaded & side-access freight",
     },
   },
 };
 
-/** Ordered list for rendering the fleet grid. */
+/** Ordered list for rendering the fleet grid (ascending capacity). */
 export const FLEET_ORDER: VehicleId[] = [
   "motorcycle",
   "small_van",
-  "medium_van",
-  "large_van",
-  "luton_van",
+  "ford_transit_swb",
+  "renault_trafic_mwb",
+  "ford_transit_lwb",
+  "mercedes_sprinter_xlwb",
+  "mercedes_sprinter_luton_box",
+  "mercedes_sprinter_luton_curtain",
 ];
+
+/* ─────────────────────────────────────────────────────────────────
+   Pricing constants — CCZ surcharge & VAT.
+   CCZ applies to London EC1–WC1 postcode districts only.
+   VAT is 20% and itemised in the quote breakdown.
+   ───────────────────────────────────────────────────────────────── */
+
+/** London Congestion Charge zone surcharge in GBP. */
+export const CCZ_SURCHARGE = 18;
+
+/** VAT rate (0.20 = 20%). Applied to subtotal (base + mileage + ccz). */
+export const VAT_RATE = 0.2;
+
+/**
+ * London EC1–WC1 postcode area prefixes that trigger the CCZ surcharge.
+ * Matched case-insensitively against the outbound postcode's area portion.
+ */
+export const CCZ_POSTCODE_AREAS = [
+  "EC1", "EC2", "EC3", "EC4",
+  "WC1", "WC2",
+];
+
+/** Returns true if a UK postcode string falls in the London EC1–WC1 zone. */
+export function isInCCZ(postcode: string): boolean {
+  const area = postcode.trim().toUpperCase().replace(/[^A-Z0-9]/g, "").match(/^([A-Z]{1,2}\d)/);
+  if (!area) return false;
+  return CCZ_POSTCODE_AREAS.includes(area[1]);
+}
