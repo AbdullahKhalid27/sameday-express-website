@@ -417,3 +417,17 @@ export const SERVICES: ServiceData[] = [
 export function getService(slug: string): ServiceData | undefined {
   return SERVICES.find((s) => s.slug === slug);
 }
+
+/**
+ * The actual public URL path for a service.
+ *
+ * Two services (same-day-courier, aog-aviation-courier) live at the root as
+ * flat routes; the other two (medical-courier, legal-courier) live under
+ * /services/. Mirrors the app router folder layout so canonical URLs, JSON-LD,
+ * and the sitemap all agree on the real address.
+ */
+const ROOT_SERVICES = new Set(["same-day-courier", "aog-aviation-courier"]);
+
+export function servicePath(slug: string): string {
+  return ROOT_SERVICES.has(slug) ? `/${slug}` : `/services/${slug}`;
+}

@@ -41,12 +41,14 @@ const GROUPS = [
   {
     heading: "Locations",
     items: [
-      { label: "London", href: "/locations/same-day-courier-london" },
-      { label: "Manchester", href: "/locations/same-day-courier-manchester" },
-      { label: "Birmingham", href: "/locations/same-day-courier-birmingham" },
-      { label: "Bristol", href: "/locations/same-day-courier-bristol" },
-      { label: "Leeds", href: "/locations/same-day-courier-leeds" },
-      { label: "Glasgow", href: "/locations/same-day-courier-glasgow" },
+      { label: "London", href: "/same-day-courier-london" },
+      { label: "Manchester", href: "/same-day-courier-manchester" },
+      { label: "Birmingham", href: "/same-day-courier-birmingham" },
+      { label: "Bristol", href: "/same-day-courier-bristol" },
+      { label: "Leeds", href: "/same-day-courier-leeds" },
+      { label: "Glasgow", href: "/same-day-courier-glasgow" },
+      { label: "Edinburgh", href: "/same-day-courier-edinburgh" },
+      { label: "Liverpool", href: "/same-day-courier-liverpool" },
     ],
   },
   {

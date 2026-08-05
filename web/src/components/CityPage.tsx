@@ -24,7 +24,9 @@ export function cityPageMetadata(city: CityData): Metadata {
   return pageMetadata({
     title: city.h1,
     description: city.answerBlock,
-    path: `/locations/${city.slug}`,
+    // Flat URL at the root — e.g. /same-day-courier-london. Matches the
+    // footer links and the locked "flat URL" SEO decision (FRONTEND-FIXES P0-2).
+    path: `/${city.slug}`,
   });
 }
 

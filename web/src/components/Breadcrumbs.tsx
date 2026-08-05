@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Icon } from "./Icon";
+import { SITE } from "@/lib/site";
 
 /**
  * Breadcrumb trail for inner pages.
@@ -32,7 +33,9 @@ export function Breadcrumbs({ items, onDark = false, className }: BreadcrumbsPro
       "@type": "ListItem",
       position: i + 1,
       name: item.label,
-      ...(item.href && i < items.length - 1 ? { item: item.href } : {}),
+      ...(item.href && i < items.length - 1
+        ? { item: `${SITE.domain}${item.href}` }
+        : {}),
     })),
   };
 

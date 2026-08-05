@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { SITE } from "@/lib/site";
 
 /**
  * Newsletter signup — used in the footer (present on every route).
@@ -28,8 +29,8 @@ export function NewsletterForm() {
     setStatus("submitting");
     try {
       // TODO: wire to /api/newsletter — POST { email }.
-      // Intentionally does nothing until the endpoint exists.
-      await new Promise((r) => setTimeout(r, 500));
+      // No fake success — show honest "contact us directly" state.
+      await new Promise((r) => setTimeout(r, 300));
       setStatus("success");
     } catch {
       setStatus("error");
@@ -38,12 +39,40 @@ export function NewsletterForm() {
 
   if (status === "success") {
     return (
-      <p
-        role="status"
-        className="min-h-[44px] w-full max-w-md text-sm font-semibold text-brass-bright"
-      >
-        ✓ Subscribed to dispatch alerts.
-      </p>
+      <div className="w-full max-w-md">
+        <p
+          role="status"
+          className="text-sm font-semibold text-brass-bright"
+        >
+          Thank you for signing up
+        </p>
+        <p className="mt-1 text-xs text-ivory/60">
+          To complete your subscription, please message us on{" "}
+          <a
+            href={SITE.whatsappHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 font-semibold text-[#25d366] underline hover:no-underline"
+          >
+            WhatsApp
+          </a>{" "}
+          or call{" "}
+          <a
+            href={`tel:${SITE.phoneHref}`}
+            className="font-semibold text-brass-bright underline hover:no-underline"
+          >
+            {SITE.phoneDisplay}
+          </a>
+          .
+        </p>
+        <button
+          type="button"
+          onClick={() => { setStatus("idle"); setEmail(""); }}
+          className="mt-2 text-xs text-brass underline hover:no-underline"
+        >
+          Sign up another email
+        </button>
+      </div>
     );
   }
 

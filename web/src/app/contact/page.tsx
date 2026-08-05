@@ -122,7 +122,7 @@ export default function ContactPage() {
             {HUBS.map((hub) => (
               <a
                 key={hub}
-                href={`/locations/same-day-courier-${hub.toLowerCase()}`}
+                href={`/same-day-courier-${hub.toLowerCase()}`}
                 className="rounded-full border border-brass-border bg-white px-4 py-1.5 text-sm font-medium text-brass-dark hover:bg-brass-muted"
               >
                 {hub}

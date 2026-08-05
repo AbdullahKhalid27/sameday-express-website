@@ -41,7 +41,7 @@ export function CityLinksBar({ currentSlug }: { currentSlug: string }) {
           {others.map((c) => (
             <li key={c.slug}>
               <Link
-                href={`/locations/${c.slug}`}
+                href={`/${c.slug}`}
                 className="inline-flex items-center rounded-full border border-brass-border bg-white px-4 py-2 text-sm font-medium text-forest transition-colors hover:border-brass hover:bg-brass-muted hover:text-forest"
               >
                 {c.label}

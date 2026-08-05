@@ -9,6 +9,7 @@ import { CTASection } from "./CTASection";
 import { JsonLd } from "./JsonLd";
 
 import type { ServiceData, ServiceSection } from "@/lib/services";
+import { servicePath } from "@/lib/services";
 import { serviceJsonLd, faqJsonLd, pageMetadata } from "@/lib/seo";
 
 /**
@@ -26,7 +27,7 @@ export function servicePageMetadata(service: ServiceData): Metadata {
   return pageMetadata({
     title: service.h1,
     description: service.metaDescription,
-    path: `/services/${service.slug}`,
+    path: servicePath(service.slug),
   });
   // JSON-LD is emitted separately in the component (needs both Service + FAQ).
 }
@@ -43,7 +44,7 @@ export function ServicePage({ service }: { service: ServiceData }) {
           serviceJsonLd({
             name: service.h1.split(" — ")[0] ?? service.h1,
             description: service.metaDescription,
-            path: `/services/${service.slug}`,
+            path: servicePath(service.slug),
             cities: ["London", "Manchester", "Birmingham", "Bristol", "Leeds", "Glasgow"],
           }),
           ...(faqs.length > 0 ? [faqJsonLd(faqs)] : []),

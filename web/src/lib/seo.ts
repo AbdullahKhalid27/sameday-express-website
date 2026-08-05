@@ -26,7 +26,7 @@ interface PageMetaInput {
   ogImage?: string;
 }
 
-const DEFAULT_OG_IMAGE = `${SITE.domain}/assets/og-image.jpg`;
+const DEFAULT_OG_IMAGE = `${SITE.domain}/og-image.jpg`;
 
 export function pageMetadata({
   title,
@@ -89,6 +89,12 @@ export function organizationJsonLd() {
       "UK same-day dedicated courier service. Nationwide 60-minute collection. DBS vetted drivers, £20,000 goods-in-transit insurance, signed proof of delivery.",
     foundingDate: "2020",
     areaServed: "United Kingdom",
+    priceRange: "££",
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 51.5074,
+      longitude: -0.1278,
+    },
     address: { "@type": "PostalAddress", addressCountry: "GB" },
     contactPoint: {
       "@type": "ContactPoint",
