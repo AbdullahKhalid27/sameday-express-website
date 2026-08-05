@@ -14,16 +14,22 @@ import { Icon } from "./Icon";
  * Features:
  *  - Top trust strip (phone + 24/7), hidden on scroll to save space.
  *  - Sticky bar with shadow that intensifies after scrolling 20px.
- *  - Desktop nav (>= lg), CTA button, click-to-call.
+ *  - Desktop nav (>= lg) with brass hover-underline + scroll-spy.
+ *  - CTA button, click-to-call.
  *  - Mobile hamburger (< lg) opens a focus-trapped slide-in menu.
  *
  * Keyboard:
  *  - Tab order: skip-link → logo → nav links → CTA → phone.
  *  - Mobile menu traps focus, releases on close, closes on Esc.
  */
+
+/** Homepage anchor targets the scroll-spy watches. Order = nav priority. */
+const SCROLL_SPY_IDS = ["home", "fleet", "services"] as const;
+
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Scroll shadow state.
@@ -32,6 +38,42 @@ export function SiteHeader() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Scroll-spy: highlight the in-view homepage section in the navbar.
+  // Only runs where the anchor targets exist (homepage). On other routes
+  // no element matches and the observer simply never fires — the navbar
+  // stays in its default (no active underline) state.
+  useEffect(() => {
+    const sections = SCROLL_SPY_IDS
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (sections.length === 0) {
+      setActiveSection(null);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Pick the topmost intersecting section to handle overlapping bands.
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) {
+          setActiveSection(visible[0].target.id);
+        }
+      },
+      {
+        // Trigger when a section's top crosses ~30% down the viewport,
+        // and release it once it scrolls past ~70%.
+        rootMargin: "-30% 0px -65% 0px",
+        threshold: 0,
+      },
+    );
+
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
   }, []);
 
   // Escape closes the mobile menu.
@@ -96,16 +138,33 @@ export function SiteHeader() {
           {/* Desktop nav */}
           <nav aria-label="Primary" className="hidden lg:block">
             <ul className="flex items-center gap-1">
-              {PRIMARY_NAV.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="rounded px-3 py-2 text-sm font-medium text-forest/80 transition-colors hover:bg-ivory-deep hover:text-forest"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+              {PRIMARY_NAV.map((item) => {
+                // Scroll-spy match: only homepage anchor links (#home/#fleet/#services).
+                const hash = item.href.includes("#")
+                  ? item.href.slice(item.href.indexOf("#") + 1)
+                  : null;
+                const isActive = hash !== null && hash === activeSection;
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      aria-current={isActive ? "true" : undefined}
+                      className={cn(
+                        "relative rounded px-3 py-2 text-sm font-medium transition-colors",
+                        "text-forest/80 hover:bg-ivory-deep hover:text-forest",
+                        // Brass underline — slides in on hover, persists when active.
+                        "after:absolute after:bottom-0.5 after:left-3 after:right-3 after:h-0.5 after:rounded-full",
+                        "after:bg-brass-dark after:transition-[width,opacity] after:duration-250 after:ease-[cubic-bezier(0.2,0.8,0.2,1)]",
+                        isActive
+                          ? "after:opacity-100 text-forest"
+                          : "after:opacity-0 hover:after:opacity-100",
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
 

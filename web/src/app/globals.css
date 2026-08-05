@@ -189,4 +189,91 @@
   .skip-link:focus-visible {
     top: 0;
   }
+
+  /*
+     ═══════════════════════════════════════════════════════════
+     MOTION — keyframes ported from the static reference site.
+     All six run infinitely where used; every one is overridden to
+     ~0ms by the prefers-reduced-motion block in the base layer, so
+     no extra guard is needed here.
+     ═══════════════════════════════════════════════════════════ */
+  @keyframes pulse-live {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.9); }
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes hub-pulse {
+    0% { r: 3; opacity: 0.8; }
+    100% { r: 9; opacity: 0; }
+  }
+  @keyframes route-dash {
+    to { stroke-dashoffset: -220; }
+  }
+
+  /* ── Live "drivers active" badge dot ──
+     Breathing pulse, reused on hero badge + phone CTA dot. */
+  .animate-live {
+    animation: pulse-live 2s infinite ease-in-out;
+  }
+
+  /* ── Hero load stagger ──
+     Direct children slide up in sequence. Set per-child
+     animation-delay inline (or via the .delay-* helpers below).
+     Children without an explicit delay fall back to 0. */
+  .hero-stagger > * {
+    animation: slide-up 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  .hero-stagger > *:nth-child(1) { animation-delay: 0ms; }
+  .hero-stagger > *:nth-child(2) { animation-delay: 110ms; }
+  .hero-stagger > *:nth-child(3) { animation-delay: 250ms; }
+  .hero-stagger > *:nth-child(4) { animation-delay: 400ms; }
+  .hero-stagger > *:nth-child(5) { animation-delay: 550ms; }
+
+  /* ── Shimmer sweep for primary buttons ──
+     A diagonal brass-toned gloss slides across on hover, or
+     loops while a button is in a loading state. Pair with
+     `relative overflow-hidden` on the button. */
+  .btn-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      120deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.35) 50%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+    pointer-events: none;
+  }
+  .btn-shimmer:hover::after {
+    animation: shimmer 1.5s infinite;
+  }
+  .btn-shimmer.is-loading::after {
+    animation: shimmer 1.2s infinite;
+  }
+
+  /* ── Dispatch map animations ──
+     hub-pulse expands an SVG ring outward (r 3→9, fades out).
+     route-dash flows the dashed corridor lines along their path. */
+  .map-hub-pulse {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: hub-pulse 2.8s ease-out infinite;
+  }
+  .map-route-dash {
+    stroke-dasharray: 6 6;
+    animation: route-dash 12s linear infinite;
+  }
 }

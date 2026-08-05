@@ -68,11 +68,11 @@ export default function HomePage() {
           }}
         />
         <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:py-24 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:py-28 lg:px-8">
-          <div>
+          <div className="hero-stagger">
             <span className="inline-flex items-center gap-2 rounded-full border border-brass-border bg-forest/40 px-3 py-1.5 text-xs font-medium text-brass-bright">
               <span
                 aria-hidden
-                className="h-1.5 w-1.5 rounded-full bg-success"
+                className="animate-live h-1.5 w-1.5 rounded-full bg-success"
               />
               Drivers active &amp; ready nationwide
             </span>
@@ -203,9 +203,11 @@ export default function HomePage() {
 
       {/* ═══════ FLEET ═══════ */}
       <SectionShell
+        id="fleet"
         variant="ivory-deep"
         spacing="lg"
         label="The Same Day Express fleet"
+        className="scroll-mt-24"
       >
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-heading text-sm font-bold uppercase tracking-widest text-brass-dark">
@@ -224,9 +226,11 @@ export default function HomePage() {
 
       {/* ═══════ SERVICES ═══════ */}
       <SectionShell
+        id="services"
         variant="ivory"
         spacing="lg"
         label="Specialist courier services"
+        className="scroll-mt-24"
       >
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-heading text-sm font-bold uppercase tracking-widest text-brass-dark">
@@ -284,34 +288,36 @@ export default function HomePage() {
             what they say about our response times and secure network.
           </p>
         </div>
-        <div className="mx-auto mt-10 max-w-2xl rounded-lg border border-brass-border bg-brass-muted p-8 text-center sm:p-12">
-          <span className="inline-block rounded-full border border-brass-border bg-white/60 px-4 py-1.5 font-heading text-xs font-bold uppercase tracking-wider text-brass-dark">
-            Reviews Launching Soon
-          </span>
-          <h3 className="mt-6 font-heading text-2xl font-bold">
-            Our Verified Customer Feedback Programme Is In Setup
-          </h3>
-          <p className="mt-4 text-text-muted">
-            Same Day Express Couriers is building a verified review profile,
-            collected directly from our trade, legal, medical and aviation
-            clients after each completed same-day delivery. We do not publish
-            ratings we cannot stand behind — every review here will be tied to a
-            real, dispatched job with confirmed proof of delivery.
-          </p>
-          <p className="mt-3 text-text-muted">
-            If you have used our same-day courier service and would like to
-            share your experience, or you are a business looking to set up a
-            trade account, we would value your feedback.
-          </p>
-          <div className="mt-7 flex flex-wrap justify-center gap-3">
-            <Button href="#quote" variant="primary">
-              Get a Same-Day Quote
-            </Button>
-            <Button href="/trade-accounts" variant="secondary" className="border-forest/25 text-forest hover:bg-forest-muted">
-              Open a Trade Account
-            </Button>
+        <Reveal>
+          <div className="mx-auto mt-10 max-w-2xl rounded-lg border border-brass-border bg-brass-muted p-8 text-center sm:p-12">
+            <span className="inline-block rounded-full border border-brass-border bg-white/60 px-4 py-1.5 font-heading text-xs font-bold uppercase tracking-wider text-brass-dark">
+              Reviews Launching Soon
+            </span>
+            <h3 className="mt-6 font-heading text-2xl font-bold">
+              Our Verified Customer Feedback Programme Is In Setup
+            </h3>
+            <p className="mt-4 text-text-muted">
+              Same Day Express Couriers is building a verified review profile,
+              collected directly from our trade, legal, medical and aviation
+              clients after each completed same-day delivery. We do not publish
+              ratings we cannot stand behind — every review here will be tied to a
+              real, dispatched job with confirmed proof of delivery.
+            </p>
+            <p className="mt-3 text-text-muted">
+              If you have used our same-day courier service and would like to
+              share your experience, or you are a business looking to set up a
+              trade account, we would value your feedback.
+            </p>
+            <div className="mt-7 flex flex-wrap justify-center gap-3">
+              <Button href="#quote" variant="primary">
+                Get a Same-Day Quote
+              </Button>
+              <Button href="/trade-accounts" variant="secondary" className="border-forest/25 text-forest hover:bg-forest-muted">
+                Open a Trade Account
+              </Button>
+            </div>
           </div>
-        </div>
+        </Reveal>
       </SectionShell>
 
       {/* ═══════ TRADE ACCOUNTS ═══════ */}
@@ -395,36 +401,42 @@ export default function HomePage() {
         </div>
         <div className="mt-12">
           <CardGrid cols={3}>
-            <Card as="li">
-              <h3 className="font-heading text-lg font-bold">
-                How quickly can you collect?
-              </h3>
-              <p className="mt-2 text-sm text-text-muted">
-                A dedicated vehicle is dispatched within 60 minutes of your call
-                or online booking, nationwide, 24/7. Central postcodes often see
-                collection in 30–45 minutes.
-              </p>
-            </Card>
-            <Card as="li">
-              <h3 className="font-heading text-lg font-bold">
-                How much does it cost?
-              </h3>
-              <p className="mt-2 text-sm text-text-muted">
-                Pricing runs from £25 base + £1.00/mile for a motorcycle up to
-                £75 + £2.10/mile for a Luton van. Use the quote calculator above
-                for an instant estimate.
-              </p>
-            </Card>
-            <Card as="li">
-              <h3 className="font-heading text-lg font-bold">
-                Is my delivery insured?
-              </h3>
-              <p className="mt-2 text-sm text-text-muted">
-                Yes. Every job carries £20,000 goods-in-transit insurance as
-                standard, with DBS-vetted drivers and a signed digital proof of
-                delivery on completion.
-              </p>
-            </Card>
+            <Reveal as="li" className="h-full" delay={0}>
+              <Card className="h-full">
+                <h3 className="font-heading text-lg font-bold">
+                  How quickly can you collect?
+                </h3>
+                <p className="mt-2 text-sm text-text-muted">
+                  A dedicated vehicle is dispatched within 60 minutes of your call
+                  or online booking, nationwide, 24/7. Central postcodes often see
+                  collection in 30–45 minutes.
+                </p>
+              </Card>
+            </Reveal>
+            <Reveal as="li" className="h-full" delay={80}>
+              <Card className="h-full">
+                <h3 className="font-heading text-lg font-bold">
+                  How much does it cost?
+                </h3>
+                <p className="mt-2 text-sm text-text-muted">
+                  Pricing runs from £25 base + £1.00/mile for a motorcycle up to
+                  £75 + £2.10/mile for a Luton van. Use the quote calculator above
+                  for an instant estimate.
+                </p>
+              </Card>
+            </Reveal>
+            <Reveal as="li" className="h-full" delay={160}>
+              <Card className="h-full">
+                <h3 className="font-heading text-lg font-bold">
+                  Is my delivery insured?
+                </h3>
+                <p className="mt-2 text-sm text-text-muted">
+                  Yes. Every job carries £20,000 goods-in-transit insurance as
+                  standard, with DBS-vetted drivers and a signed digital proof of
+                  delivery on completion.
+                </p>
+              </Card>
+            </Reveal>
           </CardGrid>
         </div>
         <div className="mt-8 text-center">

@@ -2,11 +2,17 @@
  * Live dispatch coverage map — the flagship inline SVG.
  * Extracted from page.tsx into its own component for reuse.
  *
+ * Motion (P1-3): primary hubs emit an expanding brass ring (hub-pulse)
+ * staggered per hub; route corridors carry flowing dashes (route-dash).
+ * The whole map fades in on scroll via <Reveal>. All motion is silenced
+ * under prefers-reduced-motion by the base-layer override in globals.css.
+ *
  * Legend a11y fix (Prompt 7a): legend text upgraded to text-base and
  * ivory/90 on forest-dark for ≥ 12:1 contrast (well past WCAG AA 4.5:1).
  * Swatch sizing bumped for tap-target and visual clarity.
- * Map SVG geometry, hub layout, and animations are unchanged.
  */
+
+import { Reveal } from "./Reveal";
 
 export function DispatchMap() {
   const primaryHubs = [
@@ -90,7 +96,7 @@ export function DispatchMap() {
           </div>
         </div>
 
-        <div className="mx-auto w-full max-w-sm">
+        <Reveal className="mx-auto w-full max-w-sm">
           <svg
             viewBox="0 0 260 360"
             role="img"
@@ -112,19 +118,20 @@ export function DispatchMap() {
               d="M40 196 C52 192 64 200 62 214 C58 226 44 230 34 222 C28 212 32 200 40 196 Z"
             />
 
-            {/* Route corridors */}
+            {/* Route corridors — flowing dashes (route-dash). Each path
+                carries its own dash offset start so the motion doesn't
+                look mechanically synchronised. */}
             <g
               fill="none"
-              stroke="rgba(189,166,133,0.3)"
+              stroke="rgba(189,166,133,0.35)"
               strokeWidth="0.8"
-              strokeDasharray="3 3"
             >
-              <path d="M110 70 Q150 150 196 252" />
-              <path d="M150 108 Q175 180 196 252" />
-              <path d="M150 108 Q130 90 110 70" />
-              <path d="M150 200 Q175 225 196 252" />
-              <path d="M130 232 Q165 245 196 252" />
-              <path d="M172 112 Q190 120 200 88" />
+              <path className="map-route-dash" d="M110 70 Q150 150 196 252" style={{ animationDelay: "0s" }} />
+              <path className="map-route-dash" d="M150 108 Q175 180 196 252" style={{ animationDelay: "-2s" }} />
+              <path className="map-route-dash" d="M150 108 Q130 90 110 70" style={{ animationDelay: "-4s" }} />
+              <path className="map-route-dash" d="M150 200 Q175 225 196 252" style={{ animationDelay: "-6s" }} />
+              <path className="map-route-dash" d="M130 232 Q165 245 196 252" style={{ animationDelay: "-8s" }} />
+              <path className="map-route-dash" d="M172 112 Q190 120 200 88" style={{ animationDelay: "-10s" }} />
             </g>
 
             {/* Secondary hubs */}
@@ -143,9 +150,20 @@ export function DispatchMap() {
               </g>
             ))}
 
-            {/* Primary hubs */}
+            {/* Primary hubs — each emits an expanding brass ring (hub-pulse),
+                staggered by h.delay so the network feels alive, not synced. */}
             {primaryHubs.map((h) => (
               <g key={h.label}>
+                <circle
+                  className="map-hub-pulse"
+                  cx={h.x}
+                  cy={h.y}
+                  r="3"
+                  fill="none"
+                  stroke="var(--color-brass-bright)"
+                  strokeWidth="1"
+                  style={{ animationDelay: `${h.delay * 0.5}s` }}
+                />
                 <circle
                   cx={h.x}
                   cy={h.y}
@@ -174,7 +192,7 @@ export function DispatchMap() {
               </g>
             ))}
           </svg>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

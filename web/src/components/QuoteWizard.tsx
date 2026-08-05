@@ -246,9 +246,35 @@ export function QuoteWizard() {
             type="button"
             onClick={goNext}
             disabled={nextDisabled}
-            className="ml-auto inline-flex min-h-[44px] items-center justify-center rounded-md bg-brass px-6 py-2.5 text-sm font-bold text-forest transition-all hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-40"
+            className={[
+              "btn-shimmer relative ml-auto inline-flex min-h-[44px] items-center justify-center gap-2 overflow-hidden rounded-md bg-brass px-6 py-2.5 text-sm font-bold text-forest transition-all",
+              "hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-40",
+              submitting ? "is-loading cursor-wait" : "",
+            ].join(" ")}
           >
-            {submitting ? "Processing…" : nextLabel}
+            {submitting && (
+              <svg
+                className="h-4 w-4 animate-spin"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-90"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                />
+              </svg>
+            )}
+            {submitting ? "Calculating…" : nextLabel}
           </button>
         </div>
       )}

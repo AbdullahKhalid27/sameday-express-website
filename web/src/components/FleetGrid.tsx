@@ -41,16 +41,26 @@ export function FleetGrid() {
           const v = FLEET[id];
           const meta = FLEET_DISPLAY[id];
           return (
-            <li key={id} className="h-full">
-              <Card as="article" className="h-full overflow-hidden p-0">
-                {/* Vehicle image — aspect 4:3, object-cover so any photo fits. */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={meta.image}
-                  alt={meta.alt}
-                  className="aspect-[4/3] w-full bg-ivory-deep object-cover"
-                />
-                <div className="p-5">
+            <li key={id} className="group h-full">
+              <Card
+                as="article"
+                className="h-full overflow-hidden p-0 transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg"
+              >
+                {/* Vehicle image — aspect 4:3, object-cover; zooms gently on
+                    card hover. Overflow-hidden on the card clips the scale. */}
+                <div className="overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={meta.image}
+                    alt={meta.alt}
+                    className="aspect-[4/3] w-full bg-ivory-deep object-cover transition-transform duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-105"
+                  />
+                </div>
+                <div className="relative p-5">
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-brass-dark transition-transform duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-x-100"
+                  />
                   <h3 className="font-heading text-lg font-bold text-forest">
                     {v.name}
                   </h3>

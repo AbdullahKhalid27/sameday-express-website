@@ -23,6 +23,8 @@ interface SectionShellProps {
   bleed?: boolean;
   /** Accessible label for screen readers (becomes aria-label). */
   label?: string;
+  /** Optional element id — used as a scroll-spy / anchor target. */
+  id?: string;
   className?: string;
   children: React.ReactNode;
 }
@@ -47,11 +49,13 @@ export function SectionShell({
   spacing = "md",
   bleed = false,
   label,
+  id,
   className,
   children,
 }: SectionShellProps) {
   return (
     <section
+      id={id}
       aria-label={label}
       aria-hidden={label ? undefined : true}
       className={cn(VARIANT[variant], SPACING[spacing], className)}
