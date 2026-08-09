@@ -1,0 +1,416 @@
+// SDX — Same Day Express courier schema
+// Prisma 7 + PostgreSQL (Neon → Coolify later)
+//
+// Rules:
+// - All money = integer pence (£35.00 = 3500). Never Float/Decimal for money.
+// - UUIDs for all IDs.
+// - Soft deletes (deletedAt) on Customer, Lead, Order.
+// - Lead↔Order: one-directional. Order has leadId → Lead. Lead has NO orderId.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  // url is wired through prisma.config.ts (datasource.url) in Prisma 7
+}
+
+// ── ENUMS ──────────────────────────────────────────────────
+
+enum CustomerType {
+  INDIVIDUAL
+  BUSINESS
+  TRADE_ACCOUNT
+}
+
+enum TradeStatus {
+  NONE
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum LeadType {
+  QUOTE_REQUEST
+  CONTACT_ENQUIRY
+  TRADE_ACCOUNT_APPLICATION
+  NEWSLETTER_SIGNUP
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUOTE_SENT
+  CONVERTED
+  LOST
+  SPAM
+}
+
+enum QuoteStatus {
+  DRAFT
+  GENERATED
+  EXPIRED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+// ── CUSTOMER ───────────────────────────────────────────────
+// Deduplicated by email. Upsert on every lead submission.
+
+model Customer {
+  id          String       @id @default(uuid())
+  email       String       @unique
+  name        String
+  phone       String?
+  company     String?
+  whatsapp    String?
+  type        CustomerType @default(INDIVIDUAL)
+  tradeStatus TradeStatus  @default(NONE)
+  source      String       @default("website")
+  notes       String?
+
+  leads     Lead[]
+  orders    Order[]
+  quotes    Quote[]
+  tradeApps TradeAccountApplication[]
+  contactEnquiries ContactEnquiry[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([email])
+  @@index([phone])
+  @@index([createdAt])
+  @@index([type])
+}
+
+// ── LEAD ───────────────────────────────────────────────────
+// Every inbound touch. Never deleted. rawData = exact form payload.
+// IMPORTANT: No orderId field here. Order has leadId pointing to Lead (one-directional FK).
+
+model Lead {
+  id         String     @id @default(uuid())
+  customerId String
+  customer   Customer   @relation(fields: [customerId], references: [id])
+
+  type        LeadType
+  status      LeadStatus @default(NEW)
+  source      String     @default("website")
+  sourceUrl   String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  rawData     Json
+
+  convertedAt DateTime?
+
+  quote    Quote?
+  tradeApp TradeAccountApplication?
+  contact  ContactEnquiry?
+  order    Order?
+  quoteAttempts QuoteAttempt[] @relation("QuoteAttemptLead")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([customerId])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+  @@index([source])
+}
+
+// ── QUOTE ──────────────────────────────────────────────────
+// Pricing snapshot. All money = integer pence.
+// estimated=true means Haversine was used (not Google Routes API).
+
+model Quote {
+  id         String      @id @default(uuid())
+  leadId     String      @unique
+  lead       Lead        @relation(fields: [leadId], references: [id])
+  customerId String
+  customer   Customer    @relation(fields: [customerId], references: [id])
+
+  originPostcode String
+  originLat      Float
+  originLng      Float
+  destPostcode   String
+  destLat        Float
+  destLng        Float
+  distanceMiles  Int
+  estimated      Boolean @default(true)
+
+  cargoType  String
+  weightKg   Int
+  vehicleId  String
+
+  basePricePence    Int
+  mileageCostPence  Int
+  cczSurchargePence Int
+  subtotalPence     Int
+  vatPence          Int
+  totalPence        Int
+
+  status    QuoteStatus @default(GENERATED)
+  expiresAt DateTime    @default(dbgenerated("NOW() + INTERVAL '24 hours'"))
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([customerId])
+  @@index([createdAt])
+  @@index([status])
+  @@index([vehicleId])
+}
+
+// ── QUOTE ATTEMPT ──────────────────────────────────────────
+// Captures abandoned funnels — saved at Step 2 before user enters contact details.
+// No PII. No customer link (user hasn't identified yet).
+// Use for: popular route analysis, retargeting, conversion funnel audit.
+// Debounced: only fire after user stops changing postcodes for 3 seconds.
+
+model QuoteAttempt {
+  id               String    @id @default(uuid())
+  originPostcode   String
+  originLat        Float
+  originLng        Float
+  destPostcode     String
+  destLat          Float
+  destLng          Float
+  distanceMiles    Int?
+  vehicleId        String?
+  cargoType        String?
+  weightKg         Int?
+  utmSource        String?
+  utmMedium        String?
+  utmCampaign      String?
+  convertedToLead   Lead?    @relation("QuoteAttemptLead", fields: [convertedToLeadId], references: [id])
+  convertedToLeadId String?
+
+  createdAt DateTime @default(now())
+
+  @@index([originPostcode])
+  @@index([destPostcode])
+  @@index([createdAt])
+  @@index([convertedToLeadId])
+}
+
+// ── TRADE ACCOUNT APPLICATION ──────────────────────────────
+
+model TradeAccountApplication {
+  id         String   @id @default(uuid())
+  leadId     String   @unique
+  lead       Lead     @relation(fields: [leadId], references: [id])
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  companyName   String
+  contactName   String
+  phone         String
+  email         String
+  weeklyVolume  String
+
+  reviewedBy    String?
+  reviewedAt    DateTime?
+  decisionNotes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([customerId])
+  @@index([createdAt])
+}
+
+// ── CONTACT ENQUIRY ────────────────────────────────────────
+
+model ContactEnquiry {
+  id         String   @id @default(uuid())
+  leadId     String   @unique
+  lead       Lead     @relation(fields: [leadId], references: [id])
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  name                String
+  company             String?
+  phone               String
+  email               String
+  collectionPostcode  String?
+  deliveryPostcode    String?
+  message             String
+
+  respondedAt DateTime?
+  respondedBy String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([customerId])
+  @@index([createdAt])
+}
+
+// ── NEWSLETTER SUBSCRIBER ──────────────────────────────────
+
+model NewsletterSubscriber {
+  id             String    @id @default(uuid())
+  email          String    @unique
+  source         String    @default("footer")
+  subscribed     Boolean   @default(true)
+  unsubscribedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([subscribed])
+}
+
+// ── ORDER ──────────────────────────────────────────────────
+// Created ONLY after Stripe payment_intent.succeeded webhook fires.
+// NOT used until Stripe integration phase.
+// leadId points TO Lead (one-directional). Lead has NO orderId field.
+
+model Order {
+  id         String      @id @default(uuid())
+  leadId     String?     @unique
+  lead       Lead?       @relation(fields: [leadId], references: [id])
+  customerId String
+  customer   Customer    @relation(fields: [customerId], references: [id])
+
+  orderNumber String      @unique // SDX-2026-00001
+  status      OrderStatus @default(PENDING)
+
+  originPostcode String
+  destPostcode   String
+  distanceMiles  Int
+  cargoType      String
+  weightKg       Int
+  vehicleId      String
+
+  basePricePence    Int
+  mileageCostPence  Int
+  cczSurchargePence Int
+  subtotalPence     Int
+  vatPence          Int
+  totalPence        Int
+
+  stripePaymentIntentId String? @unique
+  stripeSessionId       String?
+  paymentStatus         PaymentStatus @default(PENDING)
+  paidAt                DateTime?
+
+  specialInstructions String?
+
+  payments Payment[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([customerId])
+  @@index([orderNumber])
+  @@index([status])
+  @@index([createdAt])
+  @@index([stripePaymentIntentId])
+}
+
+// ── PAYMENT ────────────────────────────────────────────────
+// Append-only Stripe ledger. NEVER update rows.
+// Refunds = new row. stripeEventId = idempotency key.
+// NOT used until Stripe integration phase.
+
+model Payment {
+  id                    String        @id @default(uuid())
+  orderId               String
+  order                 Order         @relation(fields: [orderId], references: [id])
+
+  stripePaymentIntentId String
+  stripeChargeId        String?
+  stripeEventId         String        @unique
+
+  amountPence Int
+  currency    String        @default("gbp")
+  status      PaymentStatus
+
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+  @@index([stripeEventId])
+  @@index([stripePaymentIntentId])
+}
+
+// ── EMAIL LOG ──────────────────────────────────────────────
+// Every outbound Resend email recorded here.
+// Audit trail: "I never got the email" → show the log.
+
+model EmailLog {
+  id              String  @id @default(uuid())
+  to              String
+  subject         String
+  resendMessageId String? @unique // returned by Resend API on success
+  status          String  @default("sent") // "sent" | "failed" | "bounced"
+  entityType      String? // "Lead" | "Order" — what triggered this email
+  entityId        String? // UUID of the entity
+
+  createdAt DateTime @default(now())
+
+  @@index([to])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+// ── WEBHOOK EVENT ──────────────────────────────────────────
+// Raw Stripe webhook payloads stored BEFORE processing.
+// Replay from here if handler crashes. Idempotent via stripeEventId uniqueness.
+// NOT used until Stripe integration phase.
+
+model WebhookEvent {
+  id            String  @id @default(uuid())
+  stripeEventId String  @unique
+  type          String // "payment_intent.succeeded" etc.
+  payload       Json // full raw Stripe event object
+  processed     Boolean @default(false)
+  processedAt   DateTime?
+  error         String?
+
+  createdAt DateTime @default(now())
+
+  @@index([stripeEventId])
+  @@index([processed])
+  @@index([type])
+}
+
+// ── ACTIVITY LOG ───────────────────────────────────────────
+// Audit trail. Who changed what, when. Never delete rows.
+
+model ActivityLog {
+  id         String  @id @default(uuid())
+  entityType String // "Lead" | "Order" | "Customer"
+  entityId   String
+  action     String // "created" | "status_changed" | "converted"
+  actor      String // email or "system" or "stripe_webhook"
+  oldValues  Json?
+  newValues  Json?
+  ipAddress  String?
+
+  createdAt DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
