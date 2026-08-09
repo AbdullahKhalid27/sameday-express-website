@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import type { Prisma } from "@/generated/prisma/client";
 import { leadSchema, verifyTurnstile } from "@/lib/validation";
 import { captureLeadWithResilience } from "@/lib/leads";
 import { getUtmFromHeaders } from "@/lib/utm";
@@ -100,7 +101,7 @@ export async function POST(request: NextRequest) {
       customerCompany: d.company,
       customerWhatsapp: d.whatsapp,
       leadType: "QUOTE_REQUEST",
-      leadRawData: d as unknown as Record<string, unknown>,
+      leadRawData: d as unknown as Prisma.InputJsonValue,
       leadSource: "website",
       utmSource,
       utmMedium,
