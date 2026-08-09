@@ -14,7 +14,10 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // url is wired through prisma.config.ts (datasource.url) in Prisma 7
+  // In Prisma 7, the connection URL is NOT declared here — it lives in
+  // prisma.config.ts (datasource.url for the app, migrations.url for migrate).
+  // The runtime client gets the URL via the @prisma/adapter-pg driver adapter
+  // in src/lib/db.ts. See https://pris.ly/d/config-datasource
 }
 
 // ── ENUMS ──────────────────────────────────────────────────
