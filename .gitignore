@@ -32,3 +32,12 @@ npm-debug.log*
 
 # MCP server config — points to a machine-local ponytail install path
 .mcp.json
+
+# Legacy static HTML site (kept locally for SEO reference only)
+/*.html
+/blog/*.html
+/robots.txt
+/sitemap.xml
+/vercel-test.txt
+/nul
+/package-lock.json
