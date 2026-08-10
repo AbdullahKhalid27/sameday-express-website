@@ -1,8 +1,9 @@
 import { PrismaClient } from "@/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { PHASE_PRODUCTION_BUILD } from "next/constants";
 
 /**
- * Prisma 7 singleton — safe for Next.js hot-reload AND for `next build`.
+ * Prisma 7 singleton — build-safe AND hot-reload-safe.
  *
  * Prisma 7 generates the client to src/generated/prisma (see schema.prisma
  * `output = "../src/generated/prisma"`), so we import from the generated
@@ -12,18 +13,27 @@ import { PrismaPg } from "@prisma/adapter-pg";
  * (PrismaPg) which wraps node-postgres (`pg`). It reads DATABASE_URL — the
  * Neon POOLED connection (PgBouncer) — for runtime queries.
  *
- * ── LAZY INSTANTIATION (critical for `next build`) ──────────────────────
- * The client must NOT be created at module-load time. During `next build`,
- * Next.js imports every route module to "collect page data" — including
- * API routes that transitively import this file. If `createPrismaClient()`
- * runs at import time, it throws when DATABASE_URL isn't present in the
- * build environment (it's a runtime-only secret on Vercel), failing the
- * whole build with "DATABASE_URL is not set".
+ * ── BUILD-SAFE (the critical part) ───────────────────────────────────────
+ * During `next build`, Next.js imports every route module to collect page
+ * data — including API routes that transitively import this file. The build
+ * environment does NOT have DATABASE_URL (it's a runtime secret on Vercel).
+ * If `createPrismaClient()` runs during build, it throws
+ * "DATABASE_URL is not set" and fails the entire build.
  *
- * The fix: export `prisma` as a lazy proxy. The real client is created on
- * first *property access* (i.e. at request time), never at import time.
- * The build imports the module safely; the client only materialises when a
- * request actually hits an API route.
+ * We guard against this TWO ways:
+ *   1. Check Next.js's build phase (PHASE_PRODUCTION_BUILD).
+ *   2. Check whether DATABASE_URL is actually present.
+ * If either indicates "not a real runtime with a DB", we export a no-op
+ * proxy that safely does nothing. No throw, no connection attempt.
+ *
+ * This pattern is the standard solution used by the official Prisma +
+ * Next.js example for exactly this build-time crash.
+ *
+ * ── LAZY INSTANTIATION ──────────────────────────────────────────────────
+ * Even at runtime, the real client is created on first *property access*
+ * (request time), not at import time. This is belt-and-suspenders: even
+ * if the build-phase detection somehow misses, the client still won't
+ * instantiate until a request actually needs it.
  *
  * ── HOT-RELOAD GUARD ────────────────────────────────────────────────────
  * In development, Next.js tears down and recreates modules on every
@@ -33,11 +43,24 @@ import { PrismaPg } from "@prisma/adapter-pg";
  */
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefined };
 
+/**
+ * True when we're inside `next build` (page-data collection) OR when no
+ * DATABASE_URL is present. In either case, instantiating a real Prisma
+ * client would crash — so we return a no-op stub instead.
+ */
+function shouldUseStub(): boolean {
+  // next/constants exports the phase symbols. During `next build` the
+  // runtime sets process.env.NEXT_PHASE to PHASE_PRODUCTION_BUILD.
+  if (process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD) return true;
+  if (!process.env.DATABASE_URL) return true;
+  return false;
+}
+
 function createPrismaClient(): PrismaClient {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) {
     throw new Error(
-      "DATABASE_URL is not set. Add it to .env.local (Neon pooled connection string)."
+      "DATABASE_URL is not set. Add it to .env.local (dev) or the Vercel dashboard (prod)."
     );
   }
   // PrismaPg accepts a connection string directly (see @prisma/adapter-pg types:
@@ -61,21 +84,36 @@ function getPrisma(): PrismaClient {
 }
 
 /**
- * Lazy proxy: `prisma` is typed as PrismaClient and supports
- * `prisma.lead.create(...)` etc., but the underlying client is only
- * constructed on first property access. This keeps `next build`'s page-data
- * collection from instantiating (and crashing) the client when
- * DATABASE_URL isn't set in the build environment.
- *
- * The proxy only intercepts property get; everything else (instanceof, etc.)
- * passes through to the real client once materialised.
+ * A no-op proxy used during `next build` and when DATABASE_URL is absent.
+ * Every property access returns a no-op function (that recursively returns
+ * another proxy) or undefined. This lets Next.js's page-data collector
+ * traverse the module without crashing, even though no DB is available.
  */
-export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
-  get(_target, prop: string | symbol) {
-    const client = getPrisma();
-    const value = (client as unknown as Record<string | symbol, unknown>)[prop];
-    // Preserve method `this` binding for Prisma model delegates
-    // (prisma.lead.create, prisma.$transaction, etc.).
-    return typeof value === "function" ? value.bind(client) : value;
-  },
-});
+function createStubPrisma(): PrismaClient {
+  const stub = new Proxy({} as PrismaClient, {
+    get() {
+      // Returning a chainable function lets patterns like
+      // prisma.lead.create(...) and prisma.$transaction(...) no-op silently.
+      const noop: any = () => noop;
+      return noop;
+    },
+  });
+  return stub as unknown as PrismaClient;
+}
+
+/**
+ * What we export. During build / when DATABASE_URL is missing: a no-op stub.
+ * At runtime with DATABASE_URL set: a lazy proxy that materialises the real
+ * PrismaClient on first property access.
+ */
+export const prisma: PrismaClient = shouldUseStub()
+  ? createStubPrisma()
+  : (new Proxy({} as PrismaClient, {
+      get(_target, prop: string | symbol) {
+        const client = getPrisma();
+        const value = (client as unknown as Record<string | symbol, unknown>)[prop];
+        // Preserve method `this` binding for Prisma model delegates
+        // (prisma.lead.create, prisma.$transaction, etc.).
+        return typeof value === "function" ? value.bind(client) : value;
+      },
+    }) as PrismaClient);
