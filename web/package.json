@@ -16,6 +16,7 @@
     "db:reset": "prisma migrate reset"
   },
   "dependencies": {
+    "@marsidev/react-turnstile": "^1.5.5",
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.0",
     "clsx": "^2.1.1",

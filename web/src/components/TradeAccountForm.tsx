@@ -1,21 +1,18 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useRef, useEffect, type FormEvent } from "react";
 import { Button } from "./Button";
 import { SITE } from "@/lib/site";
+import { getUtmFromUrl, type UtmParams } from "@/lib/utm";
+import { TurnstileWidget, useTurnstileToken } from "./TurnstileWidget";
 
 /**
  * Trade account application form.
  *
  * Ports the static site's #tradeForm with real inline validation (no alert())
- * and explicit idle/validating/success/error states. Submission is deliberately
- * NOT wired — see TODO below. Success state shows honest contact options
- * (WhatsApp + phone) instead of a fake "we'll call you" message.
- *
- * Payload shape (for the next phase's /api endpoint), faithful to the static
- * site's webhook payload:
- *   { timestamp, formType:"trade_account_application",
- *     companyName, contactName, phone, email, estimatedWeeklyVolume }
+ * and explicit idle/validating/success/error states. Wired to POST
+ * /api/trade-account with Turnstile bot-check + honeypot + UTM capture.
+ * Success state shows honest contact options (WhatsApp + phone).
  */
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -66,6 +63,14 @@ export function TradeAccountForm() {
     email: "",
     volume: "1-5",
   });
+  const utmRef = useRef<UtmParams>({});
+  const honeypotRef = useRef<HTMLInputElement>(null);
+  const { tokenRef, solved, handleVerify } = useTurnstileToken();
+
+  // Capture UTM params once on mount.
+  useEffect(() => {
+    utmRef.current = getUtmFromUrl();
+  }, []);
 
   const update =
     (field: keyof typeof values) =>
@@ -93,14 +98,38 @@ export function TradeAccountForm() {
 
     setStatus("submitting");
     try {
-      // TODO: wire to /api/trade-account — POST the payload below.
-      // No fake success — show honest "contact us directly" state.
-      // Payload: { timestamp: new Date().toISOString(),
-      //   formType: "trade_account_application", companyName: values.company,
-      //   contactName: values.name, phone: values.phone, email: values.email,
-      //   estimatedWeeklyVolume: values.volume }
-      await new Promise((r) => setTimeout(r, 400));
-      setStatus("success");
+      const res = await fetch("/api/trade-account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          turnstileToken: tokenRef.current,
+          honeypot: honeypotRef.current?.value ?? "",
+          // Schema field names (tradeAccountSchema) → form state field names
+          companyName: values.company,
+          contactName: values.name,
+          phone: values.phone,
+          email: values.email,
+          estimatedWeeklyVolume: values.volume,
+          utmSource: utmRef.current.utmSource,
+          utmMedium: utmRef.current.utmMedium,
+          utmCampaign: utmRef.current.utmCampaign,
+        }),
+      });
+      if (res.ok || res.status === 202) {
+        setStatus("success");
+      } else if (res.status === 400) {
+        const data = await res.json().catch(() => null);
+        setStatus("idle");
+        setErrors((prev) => ({
+          ...prev,
+          company: data?.error?.includes("company") ? data.error : prev.company,
+          name: data?.error?.includes("name") ? data.error : prev.name,
+          phone: data?.error?.includes("phone") ? data.error : prev.phone,
+          email: data?.error?.includes("email") ? data.error : prev.email,
+        }));
+      } else {
+        setStatus("error");
+      }
     } catch {
       setStatus("error");
     }
@@ -239,8 +268,31 @@ export function TradeAccountForm() {
         </p>
       )}
 
-      <Button type="submit" size="lg" className="w-full" disabled={status === "submitting"}>
-        {status === "submitting" ? "Transmitting…" : "Submit Application"}
+      {/* Honeypot — hidden field that bots fill automatically. Must stay empty. */}
+      <input
+        ref={honeypotRef}
+        type="text"
+        name="_honey"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute left-[-9999px] h-0 w-0 opacity-0"
+      />
+
+      {/* Bot check — Cloudflare Turnstile. Dev-degrades gracefully. */}
+      <TurnstileWidget onVerify={handleVerify} />
+
+      <Button
+        type="submit"
+        size="lg"
+        className="w-full"
+        disabled={status === "submitting" || !solved}
+      >
+        {status === "submitting"
+          ? "Transmitting…"
+          : !solved
+            ? "Verify you're human…"
+            : "Submit Application"}
       </Button>
     </form>
   );

@@ -10,6 +10,8 @@ import {
 } from "@/lib/postcode";
 import { calculateHaversineQuote, type QuoteResult } from "@/lib/quote";
 import { SITE } from "@/lib/site";
+import { getUtmFromUrl, type UtmParams } from "@/lib/utm";
+import { TurnstileWidget, useTurnstileToken } from "./TurnstileWidget";
 
 /**
  * 4-step quote wizard — faithful React port of the static site's #quote-container.
@@ -77,6 +79,58 @@ export function QuoteWizard() {
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<QuoteResult | null>(null);
   const [whatsappHref, setWhatsappHref] = useState("#");
+  const [leadError, setLeadError] = useState<string | null>(null);
+  const utmRef = useRef<UtmParams>({});
+  const honeypotRef = useRef<HTMLInputElement>(null);
+  const { tokenRef, solved, handleVerify: handleTurnstileVerify } = useTurnstileToken();
+  const quoteAttemptFired = useRef(false);
+
+  // Capture UTM params once on mount.
+  useEffect(() => {
+    utmRef.current = getUtmFromUrl();
+  }, []);
+
+  /* ── Debounced /api/quote-attempt (abandoned funnel, fire-and-forget) ──
+     Fires once per session when BOTH postcodes are confirmed AND the user
+     has been on Step 2 for 3 seconds without advancing. Skipped if the user
+     has already reached Step 3 (they've identified themselves by then).
+     No PII is sent — only postcodes, coords, and UTM. */
+  useEffect(() => {
+    // Need both postcodes confirmed + a distance computable.
+    if (!s.origin || !s.dest) return;
+    // Don't fire once the user has reached the contact step or beyond.
+    if (s.step >= 3) return;
+    // Only fire once per session.
+    if (quoteAttemptFired.current) return;
+
+    const timer = setTimeout(() => {
+      quoteAttemptFired.current = true;
+      // Fire-and-forget: no await, no UI blocking, errors swallowed.
+      void fetch("/api/quote-attempt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          originPostcode: s.origin!.name,
+          originLat: s.origin!.lat,
+          originLng: s.origin!.lng,
+          destPostcode: s.dest!.name,
+          destLat: s.dest!.lat,
+          destLng: s.dest!.lng,
+          distanceMiles: undefined, // computed below if we have a vehicle
+          vehicleId: s.vehicleId ?? undefined,
+          cargoType: s.cargoType || undefined,
+          weightKg: s.weight ?? undefined,
+          utmSource: utmRef.current.utmSource,
+          utmMedium: utmRef.current.utmMedium,
+          utmCampaign: utmRef.current.utmCampaign,
+        }),
+      }).catch(() => {
+        /* Swallow — analytics, not critical path. */
+      });
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [s.origin, s.dest, s.step, s.vehicleId, s.cargoType, s.weight]);
 
   // Step validity
   const step1Valid = !!s.origin && !!s.dest;
@@ -126,26 +180,60 @@ export function QuoteWizard() {
     if (s.step > 1) set("step", s.step - 1);
   }
 
-  /* ── Submit (step 3 → 4) — NO fake success, TODO wiring ── */
+  /* ── Submit (step 3 → 4) — POST /api/lead ──
+     Builds the leadSchema-compatible payload, computes the Haversine quote
+     client-side (as before), and persists it via the API. On success the
+     quote is stored and the user advances to Step 4. */
   async function submitLead() {
     if (!s.origin || !s.dest || !s.vehicleId) return;
     setSubmitting(true);
+    setLeadError(null);
     try {
-      // TODO: wire to /api/lead — POST the leadPayload below.
-      // Intentionally does nothing until the endpoint exists.
-      // Payload: { timestamp, fullName: s.name, phone: s.phone, email: s.email,
-      //   company: s.company||"N/A", origin: s.origin.name, destination: s.dest.name,
-      //   cargoWeight: s.weight, cargoType: s.cargoType,
-      //   selectedVehicle: FLEET[s.vehicleId].name, distanceMiles, driveDuration,
-      //   estimatedQuote }
-
       const vehicle = FLEET[s.vehicleId];
       const quote = calculateHaversineQuote(s.origin, s.dest, vehicle);
-      setResult(quote);
-      setWhatsappHref(buildWhatsAppLink(quote, vehicle));
-      set("step", 4);
+
+      const res = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          turnstileToken: tokenRef.current,
+          honeypot: honeypotRef.current?.value ?? "",
+          fullName: s.name,
+          phone: s.phone,
+          email: s.email,
+          company: s.company || "N/A",
+          origin: s.origin.name,
+          destination: s.dest.name,
+          cargoWeight: s.weight,
+          cargoType: s.cargoType,
+          selectedVehicle: vehicle.name,
+          distanceMiles: quote.miles,
+          driveDuration: quote.totalMinutes,
+          estimatedQuote: quote,
+          whatsapp: s.whatsapp || undefined,
+          utmSource: utmRef.current.utmSource,
+          utmMedium: utmRef.current.utmMedium,
+          utmCampaign: utmRef.current.utmCampaign,
+        }),
+      });
+
+      if (res.ok || res.status === 202) {
+        setResult(quote);
+        setWhatsappHref(buildWhatsAppLink(quote, vehicle));
+        set("step", 4);
+      } else if (res.status === 400) {
+        const data = await res.json().catch(() => null);
+        setLeadError(
+          data?.error || "Please check your details and try again."
+        );
+      } else {
+        // 500 or other — honest "call us" fallback.
+        setLeadError(
+          "Something went wrong. Please call us to get your quote."
+        );
+      }
     } catch {
-      // No fake success — stay on step 3. Endpoint wiring in next phase.
+      setLeadError("Something went wrong. Please call us to get your quote.");
     } finally {
       setSubmitting(false);
     }
@@ -174,7 +262,7 @@ export function QuoteWizard() {
   const nextDisabled =
     (s.step === 1 && !step1Valid) ||
     (s.step === 2 && !step2Valid) ||
-    (s.step === 3 && !step3Valid) ||
+    (s.step === 3 && (!step3Valid || !solved)) ||
     submitting;
 
   const nextLabel = s.step === 3 ? "Reveal Quote ✓" : "Next Step →";
@@ -220,7 +308,16 @@ export function QuoteWizard() {
           onSelectVehicle={(id) => set("vehicleId", id)}
         />
       )}
-      {s.step === 3 && <Step3Contact s={s} set={set} />}
+      {s.step === 3 && (
+        <Step3Contact
+          s={s}
+          set={set}
+          leadError={leadError}
+          turnstileSolved={solved}
+          onTurnstileVerify={handleTurnstileVerify}
+          honeypotRef={honeypotRef}
+        />
+      )}
       {s.step === 4 && result && s.vehicleId && (
         <Step4Result
           result={result}
@@ -583,9 +680,17 @@ function Step2Cargo({
 function Step3Contact({
   s,
   set,
+  leadError,
+  turnstileSolved,
+  onTurnstileVerify,
+  honeypotRef,
 }: {
   s: WizardState;
   set: <K extends keyof WizardState>(key: K, value: WizardState[K]) => void;
+  leadError: string | null;
+  turnstileSolved: boolean;
+  onTurnstileVerify: (token: string) => void;
+  honeypotRef: React.RefObject<HTMLInputElement | null>;
 }) {
   const [touched, setTouched] = useState({ name: false, phone: false, email: false });
   const nameErr = touched.name && s.name.trim().length < 2;
@@ -645,6 +750,37 @@ function Step3Contact({
           value={s.whatsapp}
           onChange={(v) => set("whatsapp", v)}
         />
+
+        {/* Bot check — Cloudflare Turnstile. Dev-degrades gracefully. */}
+        <TurnstileWidget onVerify={onTurnstileVerify} />
+
+        {/* Honeypot — hidden field that bots fill. Must stay empty. */}
+        <input
+          ref={honeypotRef}
+          type="text"
+          name="_honey"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          className="absolute left-[-9999px] h-0 w-0 opacity-0"
+        />
+
+        {/* Lead submission error (from /api/lead) */}
+        {leadError && (
+          <p
+            role="alert"
+            className="rounded-md border border-danger-muted bg-danger-muted p-3 text-sm font-medium text-danger"
+          >
+            {leadError}
+          </p>
+        )}
+
+        {/* Turnstile status hint — only shown when not yet solved (real-key mode) */}
+        {!turnstileSolved && (
+          <p className="text-xs text-ivory/50">
+            Please complete the bot check above to continue.
+          </p>
+        )}
       </div>
     </div>
   );

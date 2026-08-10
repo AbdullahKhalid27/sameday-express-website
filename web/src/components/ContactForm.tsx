@@ -1,20 +1,18 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useRef, useEffect, type FormEvent } from "react";
 import { Button } from "./Button";
 import { SITE } from "@/lib/site";
+import { getUtmFromUrl, type UtmParams } from "@/lib/utm";
+import { TurnstileWidget, useTurnstileToken } from "./TurnstileWidget";
 
 /**
  * Contact form — ports the static site's contact.html #contactForm.
  *
  * Fields match the source exactly (name/company/phone/email/collection postcode/
  * delivery postcode/message). Real inline validation (no alert()) with
- * idle/submitting/success/error states. Submission is NOT wired — see TODO.
- *
- * Payload shape (for the next phase's /api endpoint), derived from the markup
- * name= attributes:
- *   { name, company, phone, email, collection_postcode,
- *     delivery_postcode, message }
+ * idle/submitting/success/error states. Wired to POST /api/contact with
+ * Turnstile bot-check + honeypot + UTM capture.
  */
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -41,6 +39,14 @@ export function ContactForm() {
     to: "",
     message: "",
   });
+  const utmRef = useRef<UtmParams>({});
+  const honeypotRef = useRef<HTMLInputElement>(null);
+  const { tokenRef, solved, handleVerify } = useTurnstileToken();
+
+  // Capture UTM params once on mount.
+  useEffect(() => {
+    utmRef.current = getUtmFromUrl();
+  }, []);
 
   const update =
     (field: keyof typeof values) =>
@@ -70,11 +76,38 @@ export function ContactForm() {
 
     setStatus("submitting");
     try {
-      // TODO: wire to /api/contact — POST the payload below.
-      // Payload: { ...values, timestamp: new Date().toISOString() }
-      // No fake success — show honest "contact us directly" state.
-      await new Promise((r) => setTimeout(r, 400));
-      setStatus("success");
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          turnstileToken: tokenRef.current,
+          honeypot: honeypotRef.current?.value ?? "",
+          name: values.name,
+          company: values.company,
+          phone: values.phone,
+          email: values.email,
+          from: values.from,
+          to: values.to,
+          message: values.message,
+          utmSource: utmRef.current.utmSource,
+          utmMedium: utmRef.current.utmMedium,
+          utmCampaign: utmRef.current.utmCampaign,
+        }),
+      });
+      if (res.ok || res.status === 202) {
+        setStatus("success");
+      } else if (res.status === 400) {
+        const data = await res.json().catch(() => null);
+        setStatus("idle");
+        setErrors((prev) => ({
+          ...prev,
+          name: data?.error?.includes("name") ? data.error : prev.name,
+          phone: data?.error?.includes("phone") ? data.error : prev.phone,
+          email: data?.error?.includes("email") ? data.error : prev.email,
+        }));
+      } else {
+        setStatus("error");
+      }
     } catch {
       setStatus("error");
     }
@@ -222,8 +255,31 @@ export function ContactForm() {
         </p>
       )}
 
-      <Button type="submit" size="lg" className="w-full" disabled={status === "submitting"}>
-        {status === "submitting" ? "Sending…" : "Send Enquiry"}
+      {/* Honeypot — hidden field that bots fill automatically. Must stay empty. */}
+      <input
+        ref={honeypotRef}
+        type="text"
+        name="_honey"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute left-[-9999px] h-0 w-0 opacity-0"
+      />
+
+      {/* Bot check — Cloudflare Turnstile. Dev-degrades gracefully. */}
+      <TurnstileWidget onVerify={handleVerify} />
+
+      <Button
+        type="submit"
+        size="lg"
+        className="w-full"
+        disabled={status === "submitting" || !solved}
+      >
+        {status === "submitting"
+          ? "Sending…"
+          : !solved
+            ? "Verify you're human…"
+            : "Send Enquiry"}
       </Button>
     </form>
   );

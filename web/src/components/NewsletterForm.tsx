@@ -1,22 +1,29 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useRef, useEffect, type FormEvent } from "react";
 import { SITE } from "@/lib/site";
+import { getUtmFromUrl, type UtmParams } from "@/lib/utm";
 
 /**
  * Newsletter signup — used in the footer (present on every route).
  *
  * Ports the static site's subscribeNewsletter() with real inline validation
- * (replaces the alert()). Submission is NOT wired — see TODO. No fake success.
+ * (replaces the alert()). Wired to POST /api/newsletter.
  *
- * Payload shape (for the next phase's /api endpoint):
- *   { timestamp: new Date().toISOString(),
- *     formType: "newsletter_subscription", email }
+ * Lightweight by design — no Turnstile, no honeypot (email-only, low-risk).
+ * The API route upserts the NewsletterSubscriber table.
  */
 export function NewsletterForm() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const utmRef = useRef<UtmParams>({});
+
+  // Capture UTM params once on mount. Stored in a ref so it survives
+  // re-renders without triggering them.
+  useEffect(() => {
+    utmRef.current = getUtmFromUrl();
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -28,10 +35,22 @@ export function NewsletterForm() {
     setError(null);
     setStatus("submitting");
     try {
-      // TODO: wire to /api/newsletter — POST { email }.
-      // No fake success — show honest "contact us directly" state.
-      await new Promise((r) => setTimeout(r, 300));
-      setStatus("success");
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: trimmed,
+          utmSource: utmRef.current.utmSource,
+          utmMedium: utmRef.current.utmMedium,
+          utmCampaign: utmRef.current.utmCampaign,
+        }),
+      });
+      if (res.ok) {
+        setStatus("success");
+      } else {
+        // 400 = invalid email (shouldn't happen post-client-check), 500 = DB
+        setStatus("error");
+      }
     } catch {
       setStatus("error");
     }
