@@ -80,6 +80,9 @@ export function QuoteWizard() {
   const [result, setResult] = useState<QuoteResult | null>(null);
   const [whatsappHref, setWhatsappHref] = useState("#");
   const [leadError, setLeadError] = useState<string | null>(null);
+  const [leadId, setLeadId] = useState<string | null>(null);
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
   const utmRef = useRef<UtmParams>({});
   const honeypotRef = useRef<HTMLInputElement>(null);
   const { tokenRef, solved, handleVerify: handleTurnstileVerify } = useTurnstileToken();
@@ -225,8 +228,10 @@ export function QuoteWizard() {
       });
 
       if (res.ok || res.status === 202) {
+        const data = await res.json().catch(() => null);
         setResult(quote);
         setWhatsappHref(buildWhatsAppLink(quote, vehicle));
+        if (data?.leadId) setLeadId(data.leadId);
         set("step", 4);
       } else if (res.status === 400) {
         const data = await res.json().catch(() => null);
@@ -264,6 +269,46 @@ export function QuoteWizard() {
     setS(initialState);
     setResult(null);
     setWhatsappHref("#");
+    setLeadId(null);
+    setPayError(null);
+  }
+
+  /* ── Pay Now (step 4) — POST /api/stripe/checkout ──
+     Creates a Stripe Checkout Session from the saved Quote and redirects
+     the user to Stripe's hosted payment page. The webhook handler creates
+     the Order + Payment rows when payment succeeds. */
+  async function payNow() {
+    if (!leadId) {
+      setPayError("Please submit your details first, then click Pay Now.");
+      return;
+    }
+    setPaying(true);
+    setPayError(null);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ leadId }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        // Redirect to Stripe Checkout (full-page redirect).
+        if (data.url) {
+          window.location.href = data.url;
+          return;
+        }
+      }
+
+      const data = await res.json().catch(() => null);
+      setPayError(
+        data?.error || "Could not start payment. Please call us to book."
+      );
+    } catch {
+      setPayError("Could not start payment. Please call us to book.");
+    } finally {
+      setPaying(false);
+    }
   }
 
   const nextDisabled =
@@ -331,6 +376,10 @@ export function QuoteWizard() {
           vehicleName={FLEET[s.vehicleId].name}
           whatsappHref={whatsappHref}
           onRestart={restart}
+          leadId={leadId}
+          paying={paying}
+          payError={payError}
+          onPayNow={payNow}
         />
       )}
 
@@ -800,11 +849,19 @@ function Step4Result({
   vehicleName,
   whatsappHref,
   onRestart,
+  leadId,
+  paying,
+  payError,
+  onPayNow,
 }: {
   result: QuoteResult;
   vehicleName: string;
   whatsappHref: string;
   onRestart: () => void;
+  leadId: string | null;
+  paying: boolean;
+  payError: string | null;
+  onPayNow: () => void;
 }) {
   return (
     <div>
@@ -850,41 +907,57 @@ function Step4Result({
         Inc. VAT at 20%. CCZ surcharge applies to London EC1–WC1 postcodes only.
       </p>
 
-      {/* ═══════ Payment choice (Prompt 8e) ═══════
-          Two large buttons — UI shell only, no backend logic yet.
-          Both marked TODO for the backend phase (Prompt 6.9). */}
+      {/* ═══════ Payment choice ═══════ */}
       <div className="mt-6">
         <p className="mb-3 text-center text-sm font-medium text-ivory/80">
           How would you like to pay?
         </p>
+        {payError && (
+          <p className="mb-3 rounded-md border border-red-400/40 bg-red-500/10 px-4 py-2 text-center text-sm text-red-200">
+            {payError}
+          </p>
+        )}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {/* Pay Now — Stripe card payment */}
           <button
             type="button"
-            className="flex min-h-[88px] flex-col items-center justify-center rounded-lg border border-brass-border bg-brass-muted px-4 py-4 text-center transition-colors hover:border-brass"
-            // TODO: wire to /api/checkout — Stripe Checkout session for card payment
+            onClick={onPayNow}
+            disabled={paying || !leadId}
+            className="flex min-h-[88px] flex-col items-center justify-center rounded-lg border border-brass-border bg-brass-muted px-4 py-4 text-center transition-colors hover:border-brass disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <span className="font-heading text-base font-bold text-ivory">
-              Pay Now
-            </span>
-            <span className="mt-1 text-xs text-ivory/65">
-              Secure card payment via Stripe
-            </span>
+            {paying ? (
+              <>
+                <span className="font-heading text-base font-bold text-ivory">
+                  Redirecting…
+                </span>
+                <span className="mt-1 text-xs text-ivory/65">
+                  Taking you to secure payment
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="font-heading text-base font-bold text-ivory">
+                  Pay Now
+                </span>
+                <span className="mt-1 text-xs text-ivory/65">
+                  Secure card payment via Stripe
+                </span>
+              </>
+            )}
           </button>
 
           {/* Pay on Delivery — COD */}
-          <button
-            type="button"
+          <a
+            href={`tel:${SITE.phoneHref}`}
             className="flex min-h-[88px] flex-col items-center justify-center rounded-lg border border-brass-border bg-brass-muted px-4 py-4 text-center transition-colors hover:border-brass"
-            // TODO: wire to /api/order/confirm-cod — confirm Cash on Delivery booking
           >
             <span className="font-heading text-base font-bold text-ivory">
               Pay on Delivery
             </span>
             <span className="mt-1 text-xs text-ivory/65">
-              Cash or bank transfer arranged directly with our driver
+              Call dispatch to arrange cash or bank transfer
             </span>
-          </button>
+          </a>
         </div>
       </div>
 

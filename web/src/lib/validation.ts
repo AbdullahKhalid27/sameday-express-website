@@ -114,6 +114,16 @@ export const quoteAttemptSchema = z.object({
 
 export type QuoteAttemptInput = z.infer<typeof quoteAttemptSchema>;
 
+// ── Stripe Checkout (create session from a saved quote) ──
+// The client sends the leadId (from /api/lead) so the checkout route can
+// load the saved Quote, build a Stripe Checkout Session, and link the
+// resulting Order back to the Lead.
+export const checkoutSchema = z.object({
+  leadId: z.string().uuid("Invalid lead reference"),
+});
+
+export type CheckoutInput = z.infer<typeof checkoutSchema>;
+
 // ── Shared: Turnstile verification ────────────────────────
 export async function verifyTurnstile(token: string): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET_KEY;
