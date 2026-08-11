@@ -41,3 +41,12 @@ npm-debug.log*
 /vercel-test.txt
 /nul
 /package-lock.json
+
+# Internal spec doc (not for the public repo)
+SDX_DATABASE_PROMPTS.md
+
+# Agent IDE config dirs (machine-local, not project config)
+web/.agents/
+web/.claude/
+web/.windsurf/
+web/skills-lock.json

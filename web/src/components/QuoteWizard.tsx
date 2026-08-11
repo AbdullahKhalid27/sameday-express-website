@@ -204,6 +204,13 @@ export function QuoteWizard() {
           company: s.company || "N/A",
           origin: s.origin.name,
           destination: s.dest.name,
+          // Coordinates are required by leadSchema + the Quote table (NOT NULL
+          // Float columns). Without these, /api/lead returns 400 at Zod
+          // validation and no Lead/Quote is ever persisted.
+          originLat: s.origin.lat,
+          originLng: s.origin.lng,
+          destLat: s.dest.lat,
+          destLng: s.dest.lng,
           cargoWeight: s.weight,
           cargoType: s.cargoType,
           selectedVehicle: vehicle.name,

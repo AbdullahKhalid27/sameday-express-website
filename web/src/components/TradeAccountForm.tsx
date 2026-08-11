@@ -118,15 +118,22 @@ export function TradeAccountForm() {
       if (res.ok || res.status === 202) {
         setStatus("success");
       } else if (res.status === 400) {
+        // Server returns { error: "Validation failed", details: zodError.flatten() }.
+        // The fieldErrors object has arrays of messages keyed by field name.
         const data = await res.json().catch(() => null);
+        const fe = data?.details?.fieldErrors ?? {};
         setStatus("idle");
         setErrors((prev) => ({
           ...prev,
-          company: data?.error?.includes("company") ? data.error : prev.company,
-          name: data?.error?.includes("name") ? data.error : prev.name,
-          phone: data?.error?.includes("phone") ? data.error : prev.phone,
-          email: data?.error?.includes("email") ? data.error : prev.email,
+          company: fe.companyName?.[0] || prev.company,
+          name: fe.contactName?.[0] || prev.name,
+          phone: fe.phone?.[0] || prev.phone,
+          email: fe.email?.[0] || prev.email,
         }));
+        // If no field-specific errors (e.g. Turnstile/bot failure), surface a generic error.
+        if (!fe.companyName?.[0] && !fe.contactName?.[0] && !fe.phone?.[0] && !fe.email?.[0]) {
+          setStatus("error");
+        }
       } else {
         setStatus("error");
       }

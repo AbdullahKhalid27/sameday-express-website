@@ -97,14 +97,21 @@ export function ContactForm() {
       if (res.ok || res.status === 202) {
         setStatus("success");
       } else if (res.status === 400) {
+        // Server returns { error: "Validation failed", details: zodError.flatten() }.
+        // The fieldErrors object has arrays of messages keyed by field name.
         const data = await res.json().catch(() => null);
+        const fe = data?.details?.fieldErrors ?? {};
         setStatus("idle");
         setErrors((prev) => ({
           ...prev,
-          name: data?.error?.includes("name") ? data.error : prev.name,
-          phone: data?.error?.includes("phone") ? data.error : prev.phone,
-          email: data?.error?.includes("email") ? data.error : prev.email,
+          name: fe.name?.[0] || prev.name,
+          phone: fe.phone?.[0] || prev.phone,
+          email: fe.email?.[0] || prev.email,
         }));
+        // If no field-specific errors (e.g. Turnstile/bot failure), surface a generic error.
+        if (!fe.name?.[0] && !fe.phone?.[0] && !fe.email?.[0]) {
+          setStatus("error");
+        }
       } else {
         setStatus("error");
       }
