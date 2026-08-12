@@ -13,6 +13,11 @@
 
 import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { config } from "dotenv";
+
+// Load .env.local so the seed script works when run standalone via `npm run db:seed`.
+// Next.js loads env files automatically at runtime, but tsx does not.
+config({ path: ".env.local" });
 
 async function main() {
   const connectionString = process.env.DATABASE_URL;

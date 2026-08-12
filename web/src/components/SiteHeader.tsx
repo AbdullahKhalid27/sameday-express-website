@@ -165,6 +165,17 @@ export function SiteHeader() {
                   </li>
                 );
               })}
+              {/* Admin link — subtle, separated from customer nav */}
+              <li aria-hidden className="mx-1 h-5 w-px bg-warm-stone" />
+              <li>
+                <Link
+                  href="/admin"
+                  className="flex items-center gap-1.5 rounded px-3 py-2 text-xs font-medium text-forest/50 transition-colors hover:bg-forest hover:text-ivory"
+                >
+                  <Icon.Shield width={13} height={13} aria-hidden />
+                  Admin
+                </Link>
+              </li>
             </ul>
           </nav>
 
@@ -277,6 +288,17 @@ const MobileNav = forwardRef<HTMLDivElement, MobileNavProps>(function MobileNav(
               </li>
             ))}
           </ul>
+          {/* Admin link — separated from customer nav */}
+          <div className="mt-3 border-t border-warm-stone pt-3">
+            <Link
+              href="/admin"
+              onClick={onClose}
+              className="flex min-h-[44px] items-center gap-2 rounded-md px-3 text-sm font-medium text-forest/50 hover:bg-forest hover:text-ivory"
+            >
+              <Icon.Shield width={15} height={15} aria-hidden />
+              Admin Portal
+            </Link>
+          </div>
         </nav>
 
         <div className="border-t border-warm-stone p-4">
