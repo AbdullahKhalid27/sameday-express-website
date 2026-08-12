@@ -58,7 +58,7 @@ export function CityPage({ city }: { city: CityData }) {
             onDark
             items={[
               homeCrumb(),
-              { label: "Locations", href: "/sitemap" },
+              { label: "Locations", href: "/site-map" },
               { label: `Same Day Courier ${city.cityName}` },
             ]}
           />

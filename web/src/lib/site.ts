@@ -73,5 +73,5 @@ export const LEGAL_LINKS: NavItem[] = [
   { label: "Privacy Policy", href: "/privacy-policy" },
   { label: "Terms & Carriage Conditions", href: "/terms" },
   { label: "Cookie Policy", href: "/cookie-policy" },
-  { label: "Sitemap", href: "/sitemap" },
+  { label: "Sitemap", href: "/site-map" },
 ];

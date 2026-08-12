@@ -14,7 +14,7 @@ export const metadata: Metadata = pageMetadata({
   title: "Website Sitemap",
   description:
     "Browse all pages on the Same Day Express Couriers website. Find our service pages, location coverage, and legal information.",
-  path: "/sitemap",
+  path: "/site-map",
 });
 
 const GROUPS = [
@@ -56,7 +56,7 @@ const GROUPS = [
     items: [
       { label: "Privacy Policy", href: "/privacy-policy" },
       { label: "Terms & Carriage Conditions", href: "/terms" },
-      { label: "Sitemap", href: "/sitemap" },
+      { label: "Sitemap", href: "/site-map" },
     ],
   },
 ];
