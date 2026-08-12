@@ -127,8 +127,18 @@ export type CheckoutInput = z.infer<typeof checkoutSchema>;
 // ── Shared: Turnstile verification ────────────────────────
 export async function verifyTurnstile(token: string): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET_KEY;
+
+  // ── Dev-mode bypass ──
+  // The TurnstileWidget component emits "dev-bypass" when no real site key
+  // is available (or when running on localhost where Turnstile can't render).
+  // We must accept this token in development, otherwise every form submission
+  // fails — even though the forms themselves work perfectly.
+  if (token === "dev-bypass") {
+    return process.env.NODE_ENV !== "production";
+  }
+
+  // No real key configured — skip verification entirely.
   if (!secret || secret === "0x4AAAAAAAxxxxxxxxxxxxxxxxxxxxxxxx") {
-    // No real key configured — skip verification in dev
     return true;
   }
 

@@ -312,7 +312,7 @@ export default function HomePage() {
               <Button href="#quote" variant="primary">
                 Get a Same-Day Quote
               </Button>
-              <Button href="/trade-accounts" variant="secondary" className="border-forest/25 text-forest hover:bg-forest-muted">
+              <Button href="/trade-accounts" variant="ghost" className="border border-forest/30 bg-forest/5 hover:bg-forest/10">
                 Open a Trade Account
               </Button>
             </div>

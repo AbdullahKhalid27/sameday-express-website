@@ -38,6 +38,20 @@ function isPlaceholder(key: string | undefined): boolean {
   return !key || PLACEHOLDER_PATTERN.test(key);
 }
 
+/**
+ * True when we're running on localhost in development. Cloudflare Turnstile
+ * cannot render on localhost without extra domain whitelisting, so we bypass
+ * it entirely in this case. In production (any non-localhost domain), the
+ * real widget renders.
+ *
+ * Uses a lazy initializer so `window` is only accessed client-side.
+ */
+const IS_LOCALHOST = (() => {
+  if (typeof window === "undefined") return false;
+  const host = window.location.hostname;
+  return host === "localhost" || host === "127.0.0.1" || host === "0.0.0.0";
+})();
+
 export function TurnstileWidget({
   onVerify,
   className,
@@ -47,17 +61,23 @@ export function TurnstileWidget({
 }) {
   const firedDevBypass = useRef(false);
 
+  // Determine whether to bypass the real Turnstile widget.
+  // We bypass when: (a) localhost (Cloudflare can't render here), or
+  // (b) the site key is missing/placeholder.
+  const bypassTurnstile = IS_LOCALHOST || isPlaceholder(SITE_KEY);
+
   // ── Dev-mode bypass ──
-  // When the site key is a placeholder, emit a dev-bypass token once on mount
-  // so the parent form's submit button isn't permanently disabled.
+  // Emit a dev-bypass token once on mount so the parent form's submit button
+  // isn't permanently disabled. The server's verifyTurnstile() accepts
+  // "dev-bypass" in non-production environments.
   useEffect(() => {
-    if (isPlaceholder(SITE_KEY) && !firedDevBypass.current) {
+    if (bypassTurnstile && !firedDevBypass.current) {
       firedDevBypass.current = true;
       onVerify("dev-bypass");
     }
-  }, [onVerify]);
+  }, [onVerify, bypassTurnstile]);
 
-  if (isPlaceholder(SITE_KEY)) {
+  if (bypassTurnstile) {
     return (
       <div
         className={[
@@ -68,11 +88,17 @@ export function TurnstileWidget({
           .join(" ")}
         role="status"
       >
-        Bot check disabled in dev — add a real{" "}
-        <code className="rounded bg-forest-dark px-1 py-0.5 text-[10px]">
-          NEXT_PUBLIC_TURNSTILE_SITE_KEY
-        </code>{" "}
-        to activate Turnstile.
+        {IS_LOCALHOST ? (
+          <>✓ Bot check bypassed on localhost — active on production.</>
+        ) : (
+          <>
+            Bot check disabled — add a real{" "}
+            <code className="rounded bg-forest-dark px-1 py-0.5 text-[10px]">
+              NEXT_PUBLIC_TURNSTILE_SITE_KEY
+            </code>{" "}
+            to activate Turnstile.
+          </>
+        )}
       </div>
     );
   }
