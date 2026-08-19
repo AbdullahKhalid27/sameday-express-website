@@ -145,11 +145,21 @@ export async function verifyTurnstile(token: string): Promise<boolean> {
   // We must accept this token in development, otherwise every form submission
   // fails — even though the forms themselves work perfectly.
   if (token === "dev-bypass") {
+    // Expected when the deployed bundle was built without a site key.
+    // Log loudly — this should never happen in production.
+    if (process.env.NODE_ENV === "production") {
+      console.error(
+        "[turnstile] rejected dev-bypass token in production — the browser bundle was built without NEXT_PUBLIC_TURNSTILE_SITE_KEY (redeploy needed) or the widget fell back to bypass"
+      );
+    }
     return process.env.NODE_ENV !== "production";
   }
 
   // No real key configured — skip verification entirely.
   if (!secret || secret === "0x4AAAAAAAxxxxxxxxxxxxxxxxxxxxxxxx") {
+    console.error(
+      "[turnstile] TURNSTILE_SECRET_KEY is not set — skipping verification"
+    );
     return true;
   }
 
@@ -163,8 +173,24 @@ export async function verifyTurnstile(token: string): Promise<boolean> {
       }
     );
     const data = await res.json();
+    if (data.success !== true) {
+      // Cloudflare's error-code tells us exactly what's wrong:
+      //   invalid-input-secret  → wrong TURNSTILE_SECRET_KEY value
+      //   timeout-or-duplicate  → token reused or older than 300s
+      //   invalid-input-response→ bad/expired token or hostname mismatch
+      //   bad-request           → malformed request body
+      console.error(
+        "[turnstile] siteverify failed:",
+        JSON.stringify({
+          errorCodes: data["error-codes"],
+          secretPrefix: secret.slice(0, 12) + "…",
+          tokenPrefix: String(token).slice(0, 12) + "…",
+        })
+      );
+    }
     return data.success === true;
-  } catch {
+  } catch (e) {
+    console.error("[turnstile] siteverify unreachable:", e);
     // If Turnstile is unreachable, fail open in development
     if (process.env.NODE_ENV === "development") return true;
     return false;
