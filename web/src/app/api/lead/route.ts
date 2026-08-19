@@ -54,6 +54,10 @@ export async function POST(request: NextRequest) {
   // it here (max(0)) before we ever touch the DB or pay for a Turnstile call.
   const parsed = leadSchema.safeParse(body);
   if (!parsed.success) {
+    console.error(
+      "[/api/lead] zod validation failed:",
+      JSON.stringify(parsed.error.flatten().fieldErrors)
+    );
     return NextResponse.json(
       {
         error: "Validation failed",

@@ -30,6 +30,10 @@ const VOLUME_OPTIONS = [
   { value: "15+", label: "More than 15 urgent shipments per week" },
 ];
 
+/** Human-readable message shown in the error alert. */
+const GENERIC_ERROR =
+  "Something went wrong sending your application. Please call us or try again.";
+
 // UK phone: mobiles (+44/0 7…) and landlines (+44/0 1/2/3/5/8…).
 const PHONE_RE =
   /^(?:(?:\+44\s?|0)7[0-9]\d{8}|(?:\+44\s?|0)[12358]\d{8,9})$/;
@@ -56,6 +60,7 @@ function validate(values: {
 export function TradeAccountForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Errors>({});
+  const [errorMessage, setErrorMessage] = useState(GENERIC_ERROR);
   const [values, setValues] = useState({
     company: "",
     name: "",
@@ -132,12 +137,17 @@ export function TradeAccountForm() {
         }));
         // If no field-specific errors (e.g. Turnstile/bot failure), surface a generic error.
         if (!fe.companyName?.[0] && !fe.contactName?.[0] && !fe.phone?.[0] && !fe.email?.[0]) {
+          setErrorMessage(data?.error || GENERIC_ERROR);
           setStatus("error");
         }
       } else {
+        // 429 (rate limit) or 5xx — surface the server's message when present.
+        const data = await res.json().catch(() => null);
+        setErrorMessage(data?.error || GENERIC_ERROR);
         setStatus("error");
       }
     } catch {
+      setErrorMessage(GENERIC_ERROR);
       setStatus("error");
     }
   }
@@ -270,8 +280,7 @@ export function TradeAccountForm() {
           role="alert"
           className="rounded-md bg-danger-muted p-3 text-sm font-medium text-danger"
         >
-          Something went wrong sending your application. Please call us or try
-          again.
+          {errorMessage}
         </p>
       )}
 

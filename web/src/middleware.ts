@@ -10,11 +10,11 @@ import { LRUCache } from "lru-cache";
  * Turnstile, email-only). This middleware caps requests per IP.
  *
  * ── Limits (per IP, sliding window via TTL) ─────────────────────────────
- *   - PII forms (/api/lead, /api/contact, /api/trade-account): 10 req / 10 min
+ *   - PII forms (/api/lead, /api/contact, /api/trade-account): 20 req / 10 min
  *     These are high-value and Turnstile-protected, but still capped.
- *   - Newsletter (/api/newsletter): 5 req / 10 min
+ *   - Newsletter (/api/newsletter): 10 req / 10 min
  *     No Turnstile → most abuse-prone. Strictest cap.
- *   - Quote-attempt (/api/quote-attempt): 30 req / 10 min
+ *   - Quote-attempt (/api/quote-attempt): 60 req / 10 min
  *     Debounced client-side but a malicious client could spam.
  *   - Health check (/api/health): unlimited (monitoring hits it)
  *   - Admin (/api/admin/*): handled by admin auth, not rate-limited here
@@ -37,11 +37,11 @@ interface LimitConfig {
 }
 
 const ROUTE_LIMITS: Record<string, LimitConfig> = {
-  "/api/lead": { max: 10, ttl: 10 * 60 * 1000 }, // 10 per 10 min
-  "/api/contact": { max: 10, ttl: 10 * 60 * 1000 },
-  "/api/trade-account": { max: 10, ttl: 10 * 60 * 1000 },
-  "/api/newsletter": { max: 5, ttl: 10 * 60 * 1000 }, // strictest — no Turnstile
-  "/api/quote-attempt": { max: 30, ttl: 10 * 60 * 1000 },
+  "/api/lead": { max: 20, ttl: 10 * 60 * 1000 }, // 20 per 10 min
+  "/api/contact": { max: 20, ttl: 10 * 60 * 1000 },
+  "/api/trade-account": { max: 20, ttl: 10 * 60 * 1000 },
+  "/api/newsletter": { max: 10, ttl: 10 * 60 * 1000 }, // strictest — no Turnstile
+  "/api/quote-attempt": { max: 60, ttl: 10 * 60 * 1000 },
 };
 
 // A single shared cache across all routes, keyed by `${route}:${ip}`.

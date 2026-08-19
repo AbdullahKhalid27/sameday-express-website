@@ -1,11 +1,22 @@
 import { z } from "zod";
 
-/** UK phone: starts with +44 or 07, 10-14 digits after stripping spaces/dashes */
+/**
+ * UK phone — mobiles (+44/07…) AND landlines (01/02/03/05/08…).
+ * Mirrors the client-side PHONE_RE in QuoteWizard/ContactForm/TradeAccountForm
+ * exactly, so a number the browser accepts never fails server-side.
+ * Spaces, dashes and parentheses are stripped before matching.
+ */
+const UK_PHONE_RE =
+  /^(?:(?:\+44|0)7\d{9}|(?:\+44|0)[12358]\d{8,9})$/;
+
 const ukPhone = z
   .string()
   .trim()
   .min(1, "Phone is required")
-  .regex(/^(\+44|07)[\d\s-]{8,13}$/, "Enter a valid UK phone number");
+  .refine(
+    (v) => UK_PHONE_RE.test(v.replace(/[\s()+-]/g, "")),
+    "Enter a valid UK phone number"
+  );
 
 /** Basic email check — Resend does final validation */
 const email = z.string().trim().min(1, "Email is required").email("Enter a valid email");

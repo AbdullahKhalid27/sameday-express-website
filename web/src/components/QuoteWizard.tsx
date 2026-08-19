@@ -233,7 +233,7 @@ export function QuoteWizard() {
         setWhatsappHref(buildWhatsAppLink(quote, vehicle));
         if (data?.leadId) setLeadId(data.leadId);
         set("step", 4);
-      } else if (res.status === 400) {
+      } else if (res.status === 400 || res.status === 429) {
         const data = await res.json().catch(() => null);
         setLeadError(
           data?.error || "Please check your details and try again."

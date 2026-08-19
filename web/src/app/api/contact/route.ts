@@ -51,6 +51,14 @@ export async function POST(request: NextRequest) {
   // before any Turnstile call or DB write.
   const parsed = contactSchema.safeParse(body);
   if (!parsed.success) {
+    console.error(
+      "[/api/contact] zod validation failed:",
+      JSON.stringify(parsed.error.flatten().fieldErrors),
+      "honeypot:",
+      JSON.stringify((body as Record<string, unknown>)?.honeypot),
+      "turnstileToken:",
+      JSON.stringify((body as Record<string, unknown>)?.turnstileToken)
+    );
     return NextResponse.json(
       {
         error: "Validation failed",

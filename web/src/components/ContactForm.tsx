@@ -17,6 +17,10 @@ import { TurnstileWidget, useTurnstileToken } from "./TurnstileWidget";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
+/** Human-readable message shown in the error alert. */
+const GENERIC_ERROR =
+  "Something went wrong sending your enquiry. Please call us or try again.";
+
 interface Errors {
   name?: string;
   phone?: string;
@@ -30,6 +34,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Errors>({});
+  const [errorMessage, setErrorMessage] = useState<string>(GENERIC_ERROR);
   const [values, setValues] = useState({
     name: "",
     company: "",
@@ -110,12 +115,17 @@ export function ContactForm() {
         }));
         // If no field-specific errors (e.g. Turnstile/bot failure), surface a generic error.
         if (!fe.name?.[0] && !fe.phone?.[0] && !fe.email?.[0]) {
+          setErrorMessage(data?.error || GENERIC_ERROR);
           setStatus("error");
         }
       } else {
+        // 429 (rate limit) or 5xx — surface the server's message when present.
+        const data = await res.json().catch(() => null);
+        setErrorMessage(data?.error || GENERIC_ERROR);
         setStatus("error");
       }
     } catch {
+      setErrorMessage(GENERIC_ERROR);
       setStatus("error");
     }
   }
@@ -258,7 +268,7 @@ export function ContactForm() {
           role="alert"
           className="rounded-md bg-danger-muted p-3 text-sm font-medium text-danger"
         >
-          Something went wrong sending your enquiry. Please call us or try again.
+          {errorMessage}
         </p>
       )}
 
