@@ -70,10 +70,13 @@ export async function POST(request: NextRequest) {
   const d = parsed.data;
 
   // ── 3. Turnstile verification ──
-  const turnstileOk = await verifyTurnstile(d.turnstileToken);
-  if (!turnstileOk) {
+  const turnstile = await verifyTurnstile(d.turnstileToken);
+  if (!turnstile.ok) {
     return NextResponse.json(
-      { error: "Bot verification failed. Please refresh and try again." },
+      {
+        error: "Bot verification failed. Please refresh and try again.",
+        turnstileCode: turnstile.code,
+      },
       { status: 400 }
     );
   }

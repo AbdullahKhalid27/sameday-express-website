@@ -26,7 +26,8 @@ const ukPostcode = z.string().trim().min(1, "Postcode is required");
 
 // ── Lead (Quote Wizard) ──────────────────────────────────
 export const leadSchema = z.object({
-  turnstileToken: z.string().min(1, "Bot check required"),
+  // TEMPORARILY DISABLED: Turnstile bot-check (token optional while disabled)
+  turnstileToken: z.string().optional().default(""),
   honeypot: z.string().max(0), // must be empty — bots fill it
   fullName: z.string().trim().min(1, "Name is required"),
   phone: ukPhone,
@@ -64,7 +65,8 @@ export type LeadInput = z.infer<typeof leadSchema>;
 
 // ── Contact ──────────────────────────────────────────────
 export const contactSchema = z.object({
-  turnstileToken: z.string().min(1, "Bot check required"),
+  // TEMPORARILY DISABLED: Turnstile bot-check (token optional while disabled)
+  turnstileToken: z.string().optional().default(""),
   honeypot: z.string().max(0),
   name: z.string().trim().min(1, "Name is required"),
   phone: ukPhone,
@@ -82,7 +84,8 @@ export type ContactInput = z.infer<typeof contactSchema>;
 
 // ── Trade Account ─────────────────────────────────────────
 export const tradeAccountSchema = z.object({
-  turnstileToken: z.string().min(1, "Bot check required"),
+  // TEMPORARILY DISABLED: Turnstile bot-check (token optional while disabled)
+  turnstileToken: z.string().optional().default(""),
   honeypot: z.string().max(0),
   companyName: z.string().trim().min(1, "Company name is required"),
   contactName: z.string().trim().min(1, "Contact name is required"),
@@ -136,9 +139,25 @@ export const checkoutSchema = z.object({
 export type CheckoutInput = z.infer<typeof checkoutSchema>;
 
 // ── Shared: Turnstile verification ────────────────────────
-export async function verifyTurnstile(token: string): Promise<boolean> {
-  const secret = process.env.TURNSTILE_SECRET_KEY;
+export interface TurnstileResult {
+  ok: boolean;
+  /** Cloudflare error code on failure, e.g. invalid-input-secret */
+  code?: string;
+}
 
+export async function verifyTurnstile(token: string): Promise<TurnstileResult> {
+  // ── TEMPORARILY DISABLED (2026-08-20) ──
+  // Turnstile verification is switched off across all forms (quote, contact,
+  // trade account) while we verify the database pipeline. Re-enable by
+  // restoring the original body below (remove the early return and the
+  // DISABLED flag).
+  const TURNSTILE_DISABLED = true;
+  if (TURNSTILE_DISABLED) {
+    void token;
+    return { ok: true };
+  }
+
+  const secret = process.env.TURNSTILE_SECRET_KEY;
   // ── Dev-mode bypass ──
   // The TurnstileWidget component emits "dev-bypass" when no real site key
   // is available (or when running on localhost where Turnstile can't render).
@@ -152,7 +171,7 @@ export async function verifyTurnstile(token: string): Promise<boolean> {
         "[turnstile] rejected dev-bypass token in production — the browser bundle was built without NEXT_PUBLIC_TURNSTILE_SITE_KEY (redeploy needed) or the widget fell back to bypass"
       );
     }
-    return process.env.NODE_ENV !== "production";
+    return { ok: process.env.NODE_ENV !== "production", code: "dev-bypass" };
   }
 
   // No real key configured — skip verification entirely.
@@ -160,7 +179,7 @@ export async function verifyTurnstile(token: string): Promise<boolean> {
     console.error(
       "[turnstile] TURNSTILE_SECRET_KEY is not set — skipping verification"
     );
-    return true;
+    return { ok: true };
   }
 
   try {
@@ -177,8 +196,11 @@ export async function verifyTurnstile(token: string): Promise<boolean> {
       // Cloudflare's error-code tells us exactly what's wrong:
       //   invalid-input-secret  → wrong TURNSTILE_SECRET_KEY value
       //   timeout-or-duplicate  → token reused or older than 300s
-      //   invalid-input-response→ bad/expired token or hostname mismatch
+      //   invalid-input-response→ bad/expired token or hostname/secret mismatch
       //   bad-request           → malformed request body
+      const code = Array.isArray(data["error-codes"])
+        ? data["error-codes"][0]
+        : "unknown";
       console.error(
         "[turnstile] siteverify failed:",
         JSON.stringify({
@@ -187,12 +209,13 @@ export async function verifyTurnstile(token: string): Promise<boolean> {
           tokenPrefix: String(token).slice(0, 12) + "…",
         })
       );
+      return { ok: false, code };
     }
-    return data.success === true;
+    return { ok: true };
   } catch (e) {
     console.error("[turnstile] siteverify unreachable:", e);
     // If Turnstile is unreachable, fail open in development
-    if (process.env.NODE_ENV === "development") return true;
-    return false;
+    if (process.env.NODE_ENV === "development") return { ok: true };
+    return { ok: false, code: "siteverify-unreachable" };
   }
 }

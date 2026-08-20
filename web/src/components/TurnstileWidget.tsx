@@ -64,7 +64,13 @@ export function TurnstileWidget({
   // Determine whether to bypass the real Turnstile widget.
   // We bypass when: (a) localhost (Cloudflare can't render here), or
   // (b) the site key is missing/placeholder.
-  const bypassTurnstile = IS_LOCALHOST || isPlaceholder(SITE_KEY);
+  //
+  // ── TEMPORARILY DISABLED (2026-08-20) ──
+  // Turnstile is force-bypassed on ALL environments while we verify the
+  // database pipeline. Restore by reverting to:
+  //   const bypassTurnstile = IS_LOCALHOST || isPlaceholder(SITE_KEY);
+  const TURNSTILE_DISABLED = true;
+  const bypassTurnstile = TURNSTILE_DISABLED || IS_LOCALHOST || isPlaceholder(SITE_KEY);
 
   // ── Dev-mode bypass ──
   // Emit a dev-bypass token once on mount so the parent form's submit button
