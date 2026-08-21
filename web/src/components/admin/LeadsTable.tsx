@@ -1,0 +1,382 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { formatPounds } from "@/lib/money";
+
+/**
+ * Interactive leads table for the admin dashboard.
+ *
+ * Fetches /api/admin/leads with status/type filters + pagination, renders
+ * the operational columns (date, type, customer, contact, value, status,
+ * source), and reports row selection upward via onLeadSelect.
+ */
+
+// ── Types (mirror the API's include shape) ──────────────────────────────
+
+type LeadType =
+  | "QUOTE_REQUEST"
+  | "CONTACT_ENQUIRY"
+  | "TRADE_ACCOUNT_APPLICATION"
+  | "NEWSLETTER_SIGNUP";
+
+type LeadStatus =
+  | "NEW"
+  | "CONTACTED"
+  | "QUOTE_SENT"
+  | "CONVERTED"
+  | "LOST"
+  | "SPAM";
+
+interface AdminLead {
+  id: string;
+  createdAt: string;
+  type: LeadType;
+  status: LeadStatus;
+  source: string;
+  utmSource: string | null;
+  utmMedium: string | null;
+  utmCampaign: string | null;
+  customer: {
+    name: string;
+    email: string;
+    phone: string | null;
+    company: string | null;
+  };
+  quote: { totalPence: number } | null;
+  tradeApp: { companyName: string } | null;
+}
+
+interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+// ── Display maps ────────────────────────────────────────────────────────
+
+const TYPE_BADGES: Record<LeadType, string> = {
+  QUOTE_REQUEST: "bg-[#9c805c]/20 text-[#bda685] border border-[#9c805c]/30",
+  CONTACT_ENQUIRY: "bg-[#3498db]/20 text-[#3498db]",
+  TRADE_ACCOUNT_APPLICATION: "bg-[#8e44ad]/20 text-[#8e44ad]",
+  NEWSLETTER_SIGNUP: "bg-[#52625a]/20 text-[#52625a]",
+};
+
+const STATUS_BADGES: Record<LeadStatus, string> = {
+  NEW: "bg-[#3498db]/20 text-[#3498db]",
+  CONTACTED: "bg-[#f39c12]/20 text-[#f39c12]",
+  QUOTE_SENT: "bg-[#e67e22]/20 text-[#e67e22]",
+  CONVERTED: "bg-[#27ae60]/20 text-[#27ae60]",
+  LOST: "bg-[#c0392b]/20 text-[#c0392b]",
+  SPAM: "bg-[#52625a]/20 text-[#52625a]",
+};
+
+const TYPE_OPTIONS: LeadType[] = [
+  "QUOTE_REQUEST",
+  "CONTACT_ENQUIRY",
+  "TRADE_ACCOUNT_APPLICATION",
+  "NEWSLETTER_SIGNUP",
+];
+
+const STATUS_OPTIONS: LeadStatus[] = [
+  "NEW",
+  "CONTACTED",
+  "QUOTE_SENT",
+  "CONVERTED",
+  "LOST",
+  "SPAM",
+];
+
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+// ── Component ───────────────────────────────────────────────────────────
+
+export default function LeadsTable({
+  onLeadSelect,
+}: {
+  onLeadSelect: (leadId: string) => void;
+}) {
+  const [leads, setLeads] = useState<AdminLead[]>([]);
+  const [pagination, setPagination] = useState<Pagination>({
+    page: 1,
+    limit: 20,
+    total: 0,
+    totalPages: 0,
+  });
+  const [status, setStatus] = useState<"" | LeadStatus>("");
+  const [type, setType] = useState<"" | LeadType>("");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const LIMIT = 20;
+
+  const fetchLeads = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const params = new URLSearchParams({ page: String(page), limit: String(LIMIT) });
+      if (status) params.set("status", status);
+      if (type) params.set("type", type);
+      const res = await fetch(`/api/admin/leads?${params.toString()}`);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch leads (${res.status})`);
+      }
+      const data = (await res.json()) as {
+        leads: AdminLead[];
+        pagination: Pagination;
+      };
+      setLeads(data.leads);
+      setPagination(data.pagination);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to fetch leads");
+      setLeads([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, status, type]);
+
+  useEffect(() => {
+    void fetchLeads();
+  }, [fetchLeads]);
+
+  // Reset to page 1 whenever a filter changes.
+  const handleStatusChange = (value: string) => {
+    setStatus(value as "" | LeadStatus);
+    setPage(1);
+  };
+
+  const handleTypeChange = (value: string) => {
+    setType(value as "" | LeadType);
+    setPage(1);
+  };
+
+  // Client-side search over the loaded page (name or email).
+  const visibleLeads = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return leads;
+    return leads.filter(
+      (l) =>
+        l.customer.name.toLowerCase().includes(q) ||
+        l.customer.email.toLowerCase().includes(q)
+    );
+  }, [leads, search]);
+
+  const from = pagination.total === 0 ? 0 : (pagination.page - 1) * LIMIT + 1;
+  const to = Math.min(pagination.page * LIMIT, pagination.total);
+
+  // Compact page-number window around the current page.
+  const pageNumbers = useMemo(() => {
+    const totalPages = pagination.totalPages;
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    const current = pagination.page;
+    const pages = new Set<number>([1, totalPages, current, current - 1, current + 1]);
+    if (current <= 3) [2, 3, 4].forEach((p) => pages.add(p));
+    if (current >= totalPages - 2)
+      [totalPages - 3, totalPages - 2, totalPages - 1].forEach((p) => pages.add(p));
+    return [...pages]
+      .filter((p) => p >= 1 && p <= totalPages)
+      .sort((a, b) => a - b);
+  }, [pagination.page, pagination.totalPages]);
+
+  return (
+    <div className="overflow-hidden rounded-[6px] border border-[#52625a]/40 bg-[#243028]">
+      {/* ── Filter bar ── */}
+      <div className="flex flex-wrap items-center gap-3 p-4">
+        <select
+          aria-label="Filter by status"
+          value={status}
+          onChange={(e) => handleStatusChange(e.target.value)}
+          className="rounded-[6px] border border-[#52625a]/50 bg-[#1c2821] px-3 py-1.5 text-sm text-[#faf9f6] outline-none focus:border-[#9c805c]"
+        >
+          <option value="">All statuses</option>
+          {STATUS_OPTIONS.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+
+        <select
+          aria-label="Filter by type"
+          value={type}
+          onChange={(e) => handleTypeChange(e.target.value)}
+          className="rounded-[6px] border border-[#52625a]/50 bg-[#1c2821] px-3 py-1.5 text-sm text-[#faf9f6] outline-none focus:border-[#9c805c]"
+        >
+          <option value="">All types</option>
+          {TYPE_OPTIONS.map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
+
+        <input
+          type="search"
+          placeholder="Search name or email…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="min-w-[200px] flex-1 rounded-[6px] border border-[#52625a]/50 bg-[#1c2821] px-3 py-1.5 text-sm text-[#faf9f6] placeholder:text-[#52625a] outline-none focus:border-[#9c805c]"
+        />
+
+        <span className="text-xs text-[#52625a]">
+          Showing {from}-{to} of {pagination.total} leads
+        </span>
+      </div>
+
+      {error && (
+        <div className="border-t border-[#c0392b]/30 bg-[#c0392b]/10 px-4 py-3 text-sm text-[#c0392b]">
+          {error}
+        </div>
+      )}
+
+      {/* ── Table ── */}
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead className="border-y border-[#52625a]/30 text-xs uppercase tracking-wider text-[#52625a]">
+            <tr>
+              <th className="px-4 py-3 font-medium">Date</th>
+              <th className="px-4 py-3 font-medium">Type</th>
+              <th className="px-4 py-3 font-medium">Customer</th>
+              <th className="px-4 py-3 font-medium">Company</th>
+              <th className="px-4 py-3 font-medium">Contact</th>
+              <th className="px-4 py-3 font-medium">Value</th>
+              <th className="px-4 py-3 font-medium">Status</th>
+              <th className="px-4 py-3 font-medium">Source</th>
+              <th className="px-4 py-3 font-medium">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[#52625a]/20">
+            {loading && (
+              <tr>
+                <td colSpan={9} className="px-4 py-10 text-center text-[#52625a]">
+                  Loading leads…
+                </td>
+              </tr>
+            )}
+            {!loading && visibleLeads.length === 0 && (
+              <tr>
+                <td colSpan={9} className="px-4 py-10 text-center text-[#52625a]">
+                  {search
+                    ? "No leads match your search."
+                    : "No leads found for these filters."}
+                </td>
+              </tr>
+            )}
+            {!loading &&
+              visibleLeads.map((lead) => (
+                <tr
+                  key={lead.id}
+                  onClick={() => onLeadSelect(lead.id)}
+                  className="cursor-pointer transition-colors hover:bg-[#1e2b23]"
+                >
+                  <td className="whitespace-nowrap px-4 py-3 text-[#faf9f6]/70">
+                    {formatDate(lead.createdAt)}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${TYPE_BADGES[lead.type]}`}
+                    >
+                      {lead.type
+                        .toLowerCase()
+                        .replace(/_/g, " ")
+                        .replace(/\b\w/g, (c) => c.toUpperCase())}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 font-medium text-[#faf9f6]">
+                    {lead.customer.name}
+                  </td>
+                  <td className="max-w-[160px] truncate px-4 py-3 text-[#faf9f6]/70">
+                    {lead.customer.company || lead.tradeApp?.companyName || "—"}
+                  </td>
+                  <td
+                    className="max-w-[140px] truncate px-4 py-3 text-[#faf9f6]/70"
+                    title={lead.customer.phone || ""}
+                  >
+                    {lead.customer.phone || "—"}
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3 text-[#faf9f6]/70">
+                    {lead.quote ? formatPounds(lead.quote.totalPence) : "—"}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_BADGES[lead.status]}`}
+                    >
+                      {lead.status.replace(/_/g, " ")}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="inline-block rounded-full bg-[#52625a]/20 px-2.5 py-0.5 text-xs text-[#faf9f6]/70">
+                      {lead.utmSource || lead.source || "—"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onLeadSelect(lead.id);
+                      }}
+                      className="rounded-[6px] border border-[#9c805c]/40 px-2.5 py-1 text-xs text-[#bda685] transition-colors hover:bg-[#9c805c]/20"
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* ── Pagination ── */}
+      <div className="flex items-center justify-between gap-4 border-t border-[#52625a]/30 p-4">
+        <span className="text-xs text-[#52625a]">
+          Showing {from}-{to} of {pagination.total} leads
+        </span>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            disabled={pagination.page <= 1 || loading}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            className="rounded-[6px] border border-[#52625a]/50 px-3 py-1.5 text-xs text-[#faf9f6]/80 transition-colors hover:bg-[#1e2b23] disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            ← Prev
+          </button>
+          {pageNumbers.map((p) => (
+            <button
+              key={p}
+              type="button"
+              disabled={loading}
+              onClick={() => setPage(p)}
+              className={`min-w-[32px] rounded-[6px] px-2 py-1.5 text-xs transition-colors ${
+                p === pagination.page
+                  ? "bg-[#9c805c] font-semibold text-[#1c2821]"
+                  : "border border-[#52625a]/50 text-[#faf9f6]/80 hover:bg-[#1e2b23]"
+              }`}
+            >
+              {p}
+            </button>
+          ))}
+          <button
+            type="button"
+            disabled={pagination.page >= pagination.totalPages || loading}
+            onClick={() => setPage((p) => p + 1)}
+            className="rounded-[6px] border border-[#52625a]/50 px-3 py-1.5 text-xs text-[#faf9f6]/80 transition-colors hover:bg-[#1e2b23] disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Next →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
