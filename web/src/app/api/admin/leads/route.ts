@@ -11,10 +11,13 @@ import type { LeadType, LeadStatus } from "@/generated/prisma/client";
  * summary (hasQuote, hasContact, hasTradeApp) so the UI can link to detail.
  *
  * Query params:
- *   type   — filter by LeadType (QUOTE_REQUEST | CONTACT_ENQUIRY | TRADE_ACCOUNT_APPLICATION | NEWSLETTER_SIGNUP)
- *   status — filter by LeadStatus (NEW | CONTACTED | QUOTE_SENT | CONVERTED | LOST | SPAM)
- *   page   — 1-based page number (default 1)
- *   limit  — page size, capped at 100 (default 25)
+ *   type     — filter by LeadType (QUOTE_REQUEST | CONTACT_ENQUIRY | TRADE_ACCOUNT_APPLICATION | NEWSLETTER_SIGNUP)
+ *   status   — filter by LeadStatus (NEW | CONTACTED | QUOTE_SENT | CONVERTED | LOST | SPAM)
+ *   dateFrom — ISO string, createdAt >= (inclusive)
+ *   dateTo   — ISO string, createdAt <= (inclusive)
+ *   source   — case-insensitive contains against utmSource OR source
+ *   page     — 1-based page number (default 1)
+ *   limit    — page size, capped at 100 (default 25)
  */
 
 export async function GET(request: NextRequest) {
@@ -25,17 +28,51 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const type = searchParams.get("type") as LeadType | null;
   const status = searchParams.get("status") as LeadStatus | null;
+  const dateFrom = searchParams.get("dateFrom");
+  const dateTo = searchParams.get("dateTo");
+  const source = searchParams.get("source");
   const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
   const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "25", 10)));
 
-  // Build the where clause from filters, omitting undefineds.
-  const where: Record<string, unknown> = {};
+  // Build the where clause — all filters combine with AND.
+  // Never show soft-deleted leads.
+  const where: Record<string, unknown> = { deletedAt: null };
   if (type) where.type = type;
   if (status) where.status = status;
-  // Never show soft-deleted leads.
-  where.deletedAt = null;
+  if (dateFrom || dateTo) {
+    const createdAt: Record<string, Date> = {};
+    if (dateFrom) createdAt.gte = new Date(dateFrom);
+    if (dateTo) createdAt.lte = new Date(dateTo);
+    where.createdAt = createdAt;
+  }
+  if (source) {
+    where.OR = [
+      { utmSource: { contains: source, mode: "insensitive" } },
+      { source: { contains: source, mode: "insensitive" } },
+    ];
+  }
 
   try {
+    // Distinct sources for the UI filter dropdown (utmSource wins, falls
+    // back to the raw source column). Rides along on every response — one
+    // query per page load, negligible at this scale.
+    const [utmGroups, sourceGroups] = await Promise.all([
+      prisma.lead.groupBy({
+        by: ["utmSource"],
+        where: { deletedAt: null, utmSource: { not: null } },
+        _count: true,
+      }),
+      prisma.lead.groupBy({
+        by: ["source"],
+        where: { deletedAt: null },
+        _count: true,
+      }),
+    ]);
+    const sources = [...new Set([...utmGroups, ...sourceGroups]
+      .map((g) => ("utmSource" in g ? g.utmSource : g.source))
+      .filter((s): s is string => !!s))]
+      .sort((a, b) => a.localeCompare(b));
+
     const [leads, total] = await Promise.all([
       prisma.lead.findMany({
         where,
@@ -56,6 +93,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       leads,
+      sources,
       pagination: {
         page,
         limit,

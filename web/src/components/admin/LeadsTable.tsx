@@ -96,6 +96,12 @@ function formatDate(iso: string): string {
   });
 }
 
+/** Date → yyyy-mm-dd for <input type="date"> values. */
+function formatDateInput(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
 // ── Component ───────────────────────────────────────────────────────────
 
 export default function LeadsTable({
@@ -113,6 +119,12 @@ export default function LeadsTable({
   const [status, setStatus] = useState<"" | LeadStatus>("");
   const [type, setType] = useState<"" | LeadType>("");
   const [search, setSearch] = useState("");
+  // Date range: preset ("7d" | "30d" | "90d" | "custom" | "") or explicit dates.
+  const [range, setRange] = useState<"" | "7d" | "30d" | "90d" | "custom">("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [source, setSource] = useState("");
+  const [sources, setSources] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -126,15 +138,20 @@ export default function LeadsTable({
       const params = new URLSearchParams({ page: String(page), limit: String(LIMIT) });
       if (status) params.set("status", status);
       if (type) params.set("type", type);
+      if (source) params.set("source", source);
+      if (dateFrom) params.set("dateFrom", new Date(`${dateFrom}T00:00:00`).toISOString());
+      if (dateTo) params.set("dateTo", new Date(`${dateTo}T23:59:59`).toISOString());
       const res = await fetch(`/api/admin/leads?${params.toString()}`);
       if (!res.ok) {
         throw new Error(`Failed to fetch leads (${res.status})`);
       }
       const data = (await res.json()) as {
         leads: AdminLead[];
+        sources?: string[];
         pagination: Pagination;
       };
       setLeads(data.leads);
+      if (data.sources) setSources(data.sources);
       setPagination(data.pagination);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to fetch leads");
@@ -142,7 +159,7 @@ export default function LeadsTable({
     } finally {
       setLoading(false);
     }
-  }, [page, status, type]);
+  }, [page, status, type, source, dateFrom, dateTo]);
 
   useEffect(() => {
     void fetchLeads();
@@ -156,6 +173,34 @@ export default function LeadsTable({
 
   const handleTypeChange = (value: string) => {
     setType(value as "" | LeadType);
+    setPage(1);
+  };
+
+  const handleSourceChange = (value: string) => {
+    setSource(value);
+    setPage(1);
+  };
+
+  // Preset range → set explicit dates; "custom" keeps/enables manual inputs.
+  const handleRangeChange = (value: "" | "7d" | "30d" | "90d" | "custom") => {
+    setRange(value);
+    setPage(1);
+    if (value === "custom") return;
+    if (!value) {
+      setDateFrom("");
+      setDateTo("");
+      return;
+    }
+    const days = value === "7d" ? 7 : value === "30d" ? 30 : 90;
+    const to = new Date();
+    const from = new Date(to.getTime() - days * 24 * 60 * 60 * 1000);
+    setDateFrom(formatDateInput(from));
+    setDateTo(formatDateInput(to));
+  };
+
+  const handleCustomDate = (setter: (v: string) => void, value: string) => {
+    setRange("custom");
+    setter(value);
     setPage(1);
   };
 
@@ -217,6 +262,55 @@ export default function LeadsTable({
           {TYPE_OPTIONS.map((t) => (
             <option key={t} value={t}>
               {t}
+            </option>
+          ))}
+        </select>
+
+        <select
+          aria-label="Filter by date range"
+          value={range}
+          onChange={(e) =>
+            handleRangeChange(e.target.value as "" | "7d" | "30d" | "90d" | "custom")
+          }
+          className="rounded-[6px] border border-[#52625a]/50 bg-[#1c2821] px-3 py-1.5 text-sm text-[#faf9f6] outline-none focus:border-[#9c805c]"
+        >
+          <option value="">All time</option>
+          <option value="7d">Last 7 days</option>
+          <option value="30d">Last 30 days</option>
+          <option value="90d">Last 90 days</option>
+          <option value="custom">Custom</option>
+        </select>
+
+        {range === "custom" && (
+          <>
+            <input
+              type="date"
+              aria-label="From date"
+              value={dateFrom}
+              onChange={(e) => handleCustomDate(setDateFrom, e.target.value)}
+              className="rounded-[6px] border border-[#52625a]/50 bg-[#1c2821] px-2 py-1.5 text-sm text-[#faf9f6] outline-none focus:border-[#9c805c]"
+            />
+            <span className="text-xs text-[#52625a]">→</span>
+            <input
+              type="date"
+              aria-label="To date"
+              value={dateTo}
+              onChange={(e) => handleCustomDate(setDateTo, e.target.value)}
+              className="rounded-[6px] border border-[#52625a]/50 bg-[#1c2821] px-2 py-1.5 text-sm text-[#faf9f6] outline-none focus:border-[#9c805c]"
+            />
+          </>
+        )}
+
+        <select
+          aria-label="Filter by source"
+          value={source}
+          onChange={(e) => handleSourceChange(e.target.value)}
+          className="rounded-[6px] border border-[#52625a]/50 bg-[#1c2821] px-3 py-1.5 text-sm text-[#faf9f6] outline-none focus:border-[#9c805c]"
+        >
+          <option value="">All Sources</option>
+          {sources.map((s) => (
+            <option key={s} value={s}>
+              {s}
             </option>
           ))}
         </select>
