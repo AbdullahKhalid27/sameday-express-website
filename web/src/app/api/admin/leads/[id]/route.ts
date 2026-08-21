@@ -6,11 +6,13 @@ import type { LeadStatus } from "@/generated/prisma/client";
 /**
  * GET /api/admin/leads/[id]
  *   Full lead detail: customer, quote (if any), contact enquiry (if any),
- *   trade application (if any), and the raw submission payload.
+ *   trade application (if any), the raw submission payload, admin notes,
+ *   and the lead's activity log — one response for the detail panel.
  *
  * PATCH /api/admin/leads/[id]
- *   Update a lead's status (and optionally convertedAt).
- *   Body: { status: LeadStatus }
+ *   Update a lead's status (and optionally convertedAt) and/or soft-delete
+ *   it via deletedAt.
+ *   Body: { status: LeadStatus } and/or { deletedAt: Date | null }
  *
  * Both gated by isAdminAuthorized.
  */
@@ -40,7 +42,19 @@ export async function GET(
       return NextResponse.json({ error: "Lead not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ lead });
+    // Notes + activity for the detail panel (no dedicated endpoints).
+    const [notes, activity] = await Promise.all([
+      prisma.leadNote.findMany({
+        where: { leadId: id },
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.activityLog.findMany({
+        where: { entityType: "Lead", entityId: id },
+        orderBy: { createdAt: "desc" },
+      }),
+    ]);
+
+    return NextResponse.json({ lead, notes, activity });
   } catch (error) {
     console.error("[/api/admin/leads/[id]] GET error:", error);
     return NextResponse.json({ error: "Failed to fetch lead" }, { status: 500 });
@@ -57,7 +71,7 @@ export async function PATCH(
 
   const { id } = await params;
 
-  let body: { status?: LeadStatus };
+  let body: { status?: LeadStatus; deletedAt?: string | null };
   try {
     body = await request.json();
   } catch {
@@ -72,22 +86,34 @@ export async function PATCH(
     "LOST",
     "SPAM",
   ];
-  if (!body.status || !validStatuses.includes(body.status)) {
+  const status = body.status;
+  const hasStatus = !!status;
+  if (hasStatus && !validStatuses.includes(status)) {
     return NextResponse.json(
       { error: "Invalid status. Valid: " + validStatuses.join(", ") },
+      { status: 400 }
+    );
+  }
+  if (!hasStatus && body.deletedAt === undefined) {
+    return NextResponse.json(
+      { error: "Nothing to update — provide status and/or deletedAt" },
       { status: 400 }
     );
   }
 
   try {
     // If converting, stamp the convertedAt timestamp; otherwise clear it.
-    const data: { status: LeadStatus; convertedAt?: Date | null } = {
-      status: body.status,
-    };
-    if (body.status === "CONVERTED") {
-      data.convertedAt = new Date();
-    } else {
-      data.convertedAt = null;
+    const data: {
+      status?: LeadStatus;
+      convertedAt?: Date | null;
+      deletedAt?: Date | null;
+    } = {};
+    if (hasStatus) {
+      data.status = status;
+      data.convertedAt = status === "CONVERTED" ? new Date() : null;
+    }
+    if (body.deletedAt !== undefined) {
+      data.deletedAt = body.deletedAt ? new Date(body.deletedAt) : null;
     }
 
     const updated = await prisma.lead.update({
@@ -100,9 +126,11 @@ export async function PATCH(
       data: {
         entityType: "Lead",
         entityId: id,
-        action: "status_changed",
+        action: body.deletedAt ? "deleted" : "status_changed",
         actor: "admin",
-        newValues: { status: body.status },
+        newValues: body.deletedAt
+          ? { deletedAt: body.deletedAt }
+          : { status: body.status },
       },
     });
 

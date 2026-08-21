@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import LeadsTable from "@/components/admin/LeadsTable";
+import LeadDetailPanel from "@/components/admin/LeadDetailPanel";
 
 /**
  * /admin — the operational dashboard (client layout).
@@ -23,6 +24,7 @@ export default function AdminDashboard() {
   const [authState, setAuthState] = useState<"checking" | "authed" | "denied">(
     "checking"
   );
+  const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -74,7 +76,14 @@ export default function AdminDashboard() {
         )}
 
         {authState === "authed" && (
-          <LeadsTable onLeadSelect={(leadId) => console.log("[admin] lead selected:", leadId)} />
+          <LeadsTable onLeadSelect={(leadId) => setSelectedLeadId(leadId)} />
+        )}
+
+        {authState === "authed" && selectedLeadId && (
+          <LeadDetailPanel
+            leadId={selectedLeadId}
+            onClose={() => setSelectedLeadId(null)}
+          />
         )}
       </main>
     </div>
