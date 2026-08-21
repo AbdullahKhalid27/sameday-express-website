@@ -23,6 +23,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/",
     "/about",
     "/fleet",
+    "/services",
+    "/locations",
     "/contact",
     "/faq",
     "/trade-accounts",

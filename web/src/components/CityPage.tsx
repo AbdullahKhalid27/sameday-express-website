@@ -10,7 +10,7 @@ import { JsonLd } from "./JsonLd";
 import { CityLinksBar } from "./CityLinksBar";
 
 import type { CityData } from "@/lib/cities";
-import { localBusinessJsonLd, faqJsonLd, pageMetadata } from "@/lib/seo";
+import { localBusinessJsonLd, speakableJsonLd, faqJsonLd, pageMetadata } from "@/lib/seo";
 
 /**
  * City landing page template — renders any of the 6 location pages from a
@@ -22,8 +22,13 @@ import { localBusinessJsonLd, faqJsonLd, pageMetadata } from "@/lib/seo";
  */
 export function cityPageMetadata(city: CityData): Metadata {
   return pageMetadata({
-    title: city.h1,
-    description: city.answerBlock,
+    // P2-10: shorter SEO title ("Same Day Courier London" + template
+    // suffix = ≤60 chars total). The visible H1 is unchanged.
+    title: `Same Day Courier ${city.cityName}`,
+    // P2-9: dedicated meta description (120-160 chars) — the answerBlock
+    // is long-form page copy (244-294 chars) and was never meant to be
+    // a meta description.
+    description: city.metaDescription,
     // Flat URL at the root — e.g. /same-day-courier-london. Matches the
     // footer links and the locked "flat URL" SEO decision (FRONTEND-FIXES P0-2).
     path: `/${city.slug}`,
@@ -36,6 +41,8 @@ export function CityPage({ city }: { city: CityData }) {
       <JsonLd
         data={[
           localBusinessJsonLd(city.cityName, city.region),
+          // P2-4: voice/AEO speakable — targets the .answer-block paragraph.
+          speakableJsonLd(`/${city.slug}`),
           faqJsonLd(city.faqItems),
         ]}
       />
@@ -58,7 +65,7 @@ export function CityPage({ city }: { city: CityData }) {
             onDark
             items={[
               homeCrumb(),
-              { label: "Locations", href: "/site-map" },
+              { label: "Locations", href: "/locations" },
               { label: `Same Day Courier ${city.cityName}` },
             ]}
           />
@@ -79,7 +86,7 @@ export function CityPage({ city }: { city: CityData }) {
               </span>
             ))}
           </div>
-          <p className="mt-6 max-w-2xl rounded-lg border border-brass-border bg-brass-muted p-4 text-sm leading-relaxed text-ivory/85">
+          <p className="answer-block mt-6 max-w-2xl rounded-lg border border-brass-border bg-brass-muted p-4 text-sm leading-relaxed text-ivory/85">
             {city.answerBlock}
           </p>
         </div>

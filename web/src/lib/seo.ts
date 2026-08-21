@@ -160,8 +160,8 @@ export function localBusinessJsonLd(city: string, region: string) {
 }
 
 /**
- * Service schema. `areaServed` is a list of cities the service covers,
- * matching the static service pages which list 6 served cities.
+ * Service schema. `areaServed` lists the cities the service covers —
+ * all 8 hub cities (P2-7), passed in by the caller from CITIES.
  */
 export function serviceJsonLd(input: {
   name: string;
@@ -177,6 +177,37 @@ export function serviceJsonLd(input: {
     url: `${SITE.domain}${input.path}`,
     provider: { "@type": "Organization", name: SITE.name },
     areaServed: input.cities.map((c) => ({ "@type": "City", name: c })),
+    // P2-2: Offer with indicative price range (motorcycle base £25 →
+    // Luton base £75, excluding mileage). Matches the fleet pricing tables.
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "GBP",
+      availability: "https://schema.org/InStock",
+      url: `${SITE.domain}${input.path}`,
+      priceSpecification: {
+        "@type": "PriceSpecification",
+        priceCurrency: "GBP",
+        minPrice: 25,
+        maxPrice: 75,
+      },
+    },
+  };
+}
+
+/**
+ * Speakable specification for voice/AEO (P2-4). Targets the `.answer-block`
+ * paragraph rendered in the hero of Service and City pages — the concise
+ * "what is this / where" answer voice assistants should read aloud.
+ */
+export function speakableJsonLd(path: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    url: `${SITE.domain}${path}`,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [".answer-block"],
+    },
   };
 }
 

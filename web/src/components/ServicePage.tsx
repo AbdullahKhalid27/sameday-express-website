@@ -10,7 +10,8 @@ import { JsonLd } from "./JsonLd";
 
 import type { ServiceData, ServiceSection } from "@/lib/services";
 import { servicePath } from "@/lib/services";
-import { serviceJsonLd, faqJsonLd, pageMetadata } from "@/lib/seo";
+import { CITIES } from "@/lib/cities";
+import { serviceJsonLd, speakableJsonLd, faqJsonLd, pageMetadata } from "@/lib/seo";
 
 /**
  * Service landing page template — renders any of the 4 service pages from a
@@ -25,7 +26,10 @@ export function servicePageMetadata(service: ServiceData): Metadata {
     .flatMap((s) => s.faqItems);
 
   return pageMetadata({
-    title: service.h1,
+    // P2-10: shorter SEO title (keyword-first, ≤31 chars before the
+    // "| Same Day Express Couriers" template suffix → total ≤60).
+    // The visible H1 on the page is unchanged.
+    title: service.h1.split(" — ")[0] ?? service.h1,
     description: service.metaDescription,
     path: servicePath(service.slug),
   });
@@ -45,8 +49,11 @@ export function ServicePage({ service }: { service: ServiceData }) {
             name: service.h1.split(" — ")[0] ?? service.h1,
             description: service.metaDescription,
             path: servicePath(service.slug),
-            cities: ["London", "Manchester", "Birmingham", "Bristol", "Leeds", "Glasgow"],
+            // P2-7: all 8 hub cities from CITIES, not a hardcoded 6.
+            cities: CITIES.map((c) => c.cityName),
           }),
+          // P2-4: voice/AEO speakable — targets the .answer-block paragraph.
+          speakableJsonLd(servicePath(service.slug)),
           ...(faqs.length > 0 ? [faqJsonLd(faqs)] : []),
         ]}
       />
@@ -78,7 +85,7 @@ export function ServicePage({ service }: { service: ServiceData }) {
           <h1 className="mt-6 max-w-3xl text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
             {service.h1}
           </h1>
-          <p className="mt-6 max-w-2xl rounded-lg border border-brass-border bg-brass-muted p-4 text-sm leading-relaxed text-ivory/85">
+          <p className="answer-block mt-6 max-w-2xl rounded-lg border border-brass-border bg-brass-muted p-4 text-sm leading-relaxed text-ivory/85">
             {service.answerBlock}
           </p>
         </div>

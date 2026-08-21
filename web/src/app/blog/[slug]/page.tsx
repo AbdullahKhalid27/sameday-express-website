@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 import { SectionShell } from "@/components/SectionShell";
 import { Breadcrumbs, homeCrumb } from "@/components/Breadcrumbs";
 import { CTASection } from "@/components/CTASection";
+import { JsonLd } from "@/components/JsonLd";
 import { POSTS, getPost } from "@/lib/posts";
+import { SITE } from "@/lib/site";
 import { pageMetadata } from "@/lib/seo";
 
 /**
@@ -46,6 +48,29 @@ export default async function BlogPostPage({
 
   return (
     <>
+      {/* P2-3: Article JSON-LD — author/publisher are the organization until
+          a named author writes posts; switch to Person then. */}
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: post.title,
+          description: post.metaDescription,
+          datePublished: post.date,
+          dateModified: post.date,
+          author: { "@type": "Organization", name: SITE.name, url: SITE.domain },
+          publisher: {
+            "@type": "Organization",
+            name: SITE.name,
+            logo: {
+              "@type": "ImageObject",
+              url: `${SITE.domain}/og-image.jpg`,
+            },
+          },
+          mainEntityOfPage: `${SITE.domain}/blog/${post.slug}`,
+        }}
+      />
+
       {/* Hero */}
       <section className="bg-forest-dark py-14 text-ivory md:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">

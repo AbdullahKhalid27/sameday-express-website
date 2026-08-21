@@ -49,7 +49,7 @@ export const SERVICES: ServiceData[] = [
     slug: "same-day-courier",
     h1: "Same Day Courier UK — Collect in 60 Minutes",
     metaDescription:
-      "Book a same day courier anywhere in the UK. Collection within 60 minutes. Dedicated vehicle, DBS vetted driver, £20k insured, signed proof of delivery. Call 020 4568 4675.",
+      "Book a same day courier anywhere in the UK. Collection in 60 minutes, dedicated vehicle, DBS-vetted driver, £20k insured, signed POD. Call 020 4568 4675.",
     answerBlock:
       "A same-day courier collects your consignment within 60 minutes of booking and drives it direct to the delivery point — no hubs, no multi-drop sorting, no overnight delays. Same Day Express Couriers runs a nationwide fleet from motorcycles to Luton vans, 24/7, with DBS-vetted drivers and £20,000 goods-in-transit insurance as standard.",
     breadcrumb: ["Home", "Services", "Same Day Courier"],

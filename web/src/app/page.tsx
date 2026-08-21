@@ -11,6 +11,7 @@ import { QuoteWizard } from "@/components/QuoteWizard";
 import { TradeAccountForm } from "@/components/TradeAccountForm";
 import { DispatchMap } from "@/components/DispatchMap";
 import { FleetGrid } from "@/components/FleetGrid";
+import { HeroStats } from "@/components/HeroStats";
 
 import { SITE } from "@/lib/site";
 import {
@@ -88,24 +89,7 @@ export default function HomePage() {
               completion. No hubs, no multi-drop delays.
             </p>
 
-            <div className="mt-8 grid max-w-lg grid-cols-2 gap-3 sm:grid-cols-4">
-              {[
-                { n: "60m", l: "Response Time" },
-                { n: "£20k", l: "GIT Insurance" },
-                { n: "24/7", l: "Dispatch Desk" },
-                { n: "100%", l: "Direct Fleet" },
-              ].map((s) => (
-                <div
-                  key={s.l}
-                  className="rounded-md border border-forest-highlight bg-forest/30 p-3 text-center"
-                >
-                  <div className="font-heading text-2xl font-bold text-brass-bright">
-                    {s.n}
-                  </div>
-                  <div className="mt-0.5 text-xs text-ivory/60">{s.l}</div>
-                </div>
-              ))}
-            </div>
+            <HeroStats />
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Button

@@ -36,6 +36,8 @@ export interface CityData {
   cityName: string;
   /** UK region for LocalBusiness JSON-LD addressRegion. */
   region: string;
+  /** P2-9: dedicated 120-160 char meta description (answerBlock is long-form copy). */
+  metaDescription: string;
   h1: string;
   routeChips: string[];
   answerBlock: string;
@@ -63,6 +65,8 @@ export const CITIES: CityData[] = [
     cityName: "London",
     region: "Greater London",
     h1: "Same Day Courier London — Collection in 60 Minutes",
+    metaDescription:
+      "London same day courier — 60-minute collection, direct dedicated delivery, DBS-vetted drivers, £20k insured, 24/7. Instant quote online.",
     routeChips: [
       "M25 orbital",
       "M1 / M40 northbound",
@@ -154,6 +158,8 @@ export const CITIES: CityData[] = [
     cityName: "Manchester",
     region: "Greater Manchester",
     h1: "Same Day Courier Manchester — Collection in 60 Minutes",
+    metaDescription:
+      "Manchester same day courier — 60-minute collection, direct dedicated delivery, DBS-vetted drivers, £20k insured, 24/7. Instant quote online.",
     routeChips: [
       "M60 ring road",
       "M62 trans-Pennine",
@@ -249,6 +255,8 @@ export const CITIES: CityData[] = [
     cityName: "Birmingham",
     region: "West Midlands",
     h1: "Same Day Courier Birmingham — Collection in 60 Minutes",
+    metaDescription:
+      "Birmingham same day courier — 60-minute collection, direct dedicated delivery, DBS-vetted drivers, £20k insured, 24/7. Instant quote online.",
     routeChips: [
       "M6 / M5 / M42",
       "Spaghetti Junction (M6 J6)",
@@ -344,6 +352,8 @@ export const CITIES: CityData[] = [
     cityName: "Bristol",
     region: "South West England",
     h1: "Same Day Courier Bristol — Collection in 60 Minutes",
+    metaDescription:
+      "Bristol same day courier — 60-minute collection, direct dedicated delivery, DBS-vetted drivers, £20k insured, 24/7. Instant quote online.",
     routeChips: [
       "M4 / M5 interchange",
       "M4 corridor to London",
@@ -439,6 +449,8 @@ export const CITIES: CityData[] = [
     cityName: "Leeds",
     region: "West Yorkshire",
     h1: "Same Day Courier Leeds — Collection in 60 Minutes",
+    metaDescription:
+      "Leeds same day courier — 60-minute collection, direct dedicated delivery, DBS-vetted drivers, £20k insured, 24/7. Instant quote online.",
     routeChips: [
       "M62 east-west corridor",
       "M1 / A1(M) link",
@@ -534,6 +546,8 @@ export const CITIES: CityData[] = [
     cityName: "Glasgow",
     region: "Scotland",
     h1: "Same Day Courier Glasgow — Collection in 60 Minutes",
+    metaDescription:
+      "Glasgow same day courier — 60-minute collection, direct dedicated delivery, DBS-vetted drivers, £20k insured, 24/7. Instant quote online.",
     routeChips: [
       "M8 Edinburgh-Glasgow",
       "M74 southbound",
@@ -629,6 +643,8 @@ export const CITIES: CityData[] = [
     cityName: "Edinburgh",
     region: "Scotland",
     h1: "Same Day Courier Edinburgh — Collection in 60 Minutes",
+    metaDescription:
+      "Edinburgh same day courier — 60-minute collection, direct dedicated delivery, DBS-vetted drivers, £20k insured, 24/7. Instant quote online.",
     routeChips: [
       "M8 to Glasgow",
       "A1 southbound to Newcastle",
@@ -724,6 +740,8 @@ export const CITIES: CityData[] = [
     cityName: "Liverpool",
     region: "Merseyside",
     h1: "Same Day Courier Liverpool — Collection in 60 Minutes",
+    metaDescription:
+      "Liverpool same day courier — 60-minute collection, direct dedicated delivery, DBS-vetted drivers, £20k insured, 24/7. Instant quote online.",
     routeChips: [
       "M62 trans-Pennine to Manchester",
       "M57 / M58 orbital",
