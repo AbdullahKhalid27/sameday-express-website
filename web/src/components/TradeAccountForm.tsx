@@ -3,7 +3,12 @@
 import { useState, useRef, useEffect, type FormEvent } from "react";
 import { Button } from "./Button";
 import { SITE } from "@/lib/site";
-import { getUtmFromUrl, type UtmParams } from "@/lib/utm";
+import {
+  getUtmFromUrl,
+  getUtmFromCookie,
+  setUtmCookie,
+  type UtmParams,
+} from "@/lib/utm";
 import { TurnstileWidget, useTurnstileToken } from "./TurnstileWidget";
 
 /**
@@ -72,9 +77,16 @@ export function TradeAccountForm() {
   const honeypotRef = useRef<HTMLInputElement>(null);
   const { tokenRef, solved, handleVerify } = useTurnstileToken();
 
-  // Capture UTM params once on mount.
+  // Capture UTM params once on mount: URL params take priority (and are
+  // persisted to cookies); otherwise fall back to the stored cookie.
   useEffect(() => {
-    utmRef.current = getUtmFromUrl();
+    const fromUrl = getUtmFromUrl();
+    if (fromUrl.utmSource || fromUrl.utmMedium || fromUrl.utmCampaign) {
+      setUtmCookie(fromUrl);
+      utmRef.current = fromUrl;
+    } else {
+      utmRef.current = getUtmFromCookie();
+    }
   }, []);
 
   const update =

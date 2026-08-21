@@ -61,3 +61,50 @@ export function getUtmFromHeaders(headers: Headers): UtmParams {
 
   return readUtm(new URLSearchParams(parsedUrl.search));
 }
+
+/** Cookie keys used to persist UTM params across page navigation. */
+const UTM_COOKIES = {
+  utmSource: "sdx_source",
+  utmMedium: "sdx_medium",
+  utmCampaign: "sdx_campaign",
+} as const;
+
+const UTM_COOKIE_MAX_AGE = 7 * 24 * 60 * 60; // 7 days, in seconds
+
+/** Store UTM params as cookies. Only sets cookies for present values. */
+export function setUtmCookie(utm: UtmParams): void {
+  if (typeof document === "undefined") return;
+
+  for (const [key, cookieName] of Object.entries(UTM_COOKIES) as [
+    keyof typeof UTM_COOKIES,
+    string,
+  ][]) {
+    const value = utm[key];
+    if (!value) continue;
+    document.cookie = `${cookieName}=${encodeURIComponent(value)}; max-age=${UTM_COOKIE_MAX_AGE}; path=/; sameSite=lax`;
+  }
+}
+
+/** Read UTM params from cookies. Returns {} if none found. */
+export function getUtmFromCookie(): UtmParams {
+  if (typeof document === "undefined") return {};
+
+  const cookies = new Map<string, string>();
+  for (const part of document.cookie.split(";")) {
+    const idx = part.indexOf("=");
+    if (idx === -1) continue;
+    const name = part.slice(0, idx).trim();
+    const value = part.slice(idx + 1);
+    if (name) cookies.set(name, decodeURIComponent(value));
+  }
+
+  const utm: UtmParams = {};
+  for (const [key, cookieName] of Object.entries(UTM_COOKIES) as [
+    keyof typeof UTM_COOKIES,
+    string,
+  ][]) {
+    const value = cookies.get(cookieName);
+    if (value) utm[key] = value;
+  }
+  return utm;
+}
