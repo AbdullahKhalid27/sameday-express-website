@@ -1,0 +1,66 @@
+name: Database Backup
+
+# Weekly pg_dump of the production database, kept as a workflow artifact.
+#
+# Setup (one-time):
+#   1. Repo → Settings → Secrets and variables → Actions → New repository secret
+#   2. Name: BACKUP_DATABASE_URL
+#      Value: the FULL production connection string, e.g.
+#      postgresql://user:pass@ep-xxx.neon.tech/dbname?sslmode=require
+#   3. (Recommended) Also flip Settings → Actions → Workflow permissions to
+#      "Read repository contents and packages permissions" is enough — the
+#      artifact stays private to the repo.
+#
+# Restoring: download the artifact from the run page, then:
+#   pg_restore --no-owner --no-privileges -d "$DATABASE_URL" backup.dump
+#
+# Limits: artifacts are retained 30 days (RETENTION_DAYS below). GitHub's
+# artifact quota is ~10-500MB depending on plan — if your dump outgrows it,
+# upload to S3/R2 instead (add aws-actions/configure-aws-credentials step).
+
+on:
+  schedule:
+    - cron: "0 3 * * 1" # every Monday 03:00 UTC
+  workflow_dispatch: {} # allow manual runs from the Actions tab
+
+jobs:
+  backup:
+    name: pg_dump → artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Install PostgreSQL client tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Dump database
+        env:
+          BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+        run: |
+          if [ -z "$BACKUP_DATABASE_URL" ]; then
+            echo "::error::BACKUP_DATABASE_URL secret is not set. See comments at the top of .github/workflows/db-backup.yml"
+            exit 1
+          fi
+          TIMESTAMP=$(date -u +%Y%m%d-%H%M%S)
+          echo "TIMESTAMP=$TIMESTAMP" >> "$GITHUB_ENV"
+          # Custom format (-Fc): compressed + restorable with pg_restore.
+          pg_dump --no-owner --no-privileges -Fc "$BACKUP_DATABASE_URL" -f "backup-$TIMESTAMP.dump"
+          ls -lh "backup-$TIMESTAMP.dump"
+
+      - name: Upload backup artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: db-backup-${{ env.TIMESTAMP }}
+          path: backup-*.dump
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: Fail loudly if dump is suspiciously small (likely an error page)
+        run: |
+          SIZE=$(stat -c%s backup-*.dump)
+          if [ "$SIZE" -lt 1024 ]; then
+            echo "::error::Backup is under 1KB — probably failed. Investigate before deleting anything."
+            exit 1
+          fi
