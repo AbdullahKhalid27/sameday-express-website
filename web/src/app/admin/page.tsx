@@ -6,6 +6,9 @@ import Link from "next/link";
 import LeadsTable from "@/components/admin/LeadsTable";
 import LeadDetailPanel from "@/components/admin/LeadDetailPanel";
 import StatCards from "@/components/admin/StatCards";
+import LeadsBySource from "@/components/admin/charts/LeadsBySource";
+import LeadsByType from "@/components/admin/charts/LeadsByType";
+import WeeklyTrend from "@/components/admin/charts/WeeklyTrend";
 
 /**
  * /admin — the operational dashboard (client layout).
@@ -79,7 +82,14 @@ export default function AdminDashboard() {
         {authState === "authed" && (
           <>
             <StatCards />
-            <LeadsTable onLeadSelect={(leadId) => setSelectedLeadId(leadId)} />
+            <div className="mt-6">
+              <LeadsTable onLeadSelect={(leadId) => setSelectedLeadId(leadId)} />
+            </div>
+            <section className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+              <LeadsBySource />
+              <LeadsByType />
+              <WeeklyTrend />
+            </section>
           </>
         )}
 
