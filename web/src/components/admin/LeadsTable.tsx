@@ -102,6 +102,14 @@ function formatDateInput(d: Date): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
+/** NEW leads untouched for >24h need chasing. */
+function isOverdue(lead: AdminLead): boolean {
+  return (
+    lead.status === "NEW" &&
+    new Date(lead.createdAt).getTime() < Date.now() - 24 * 60 * 60 * 1000
+  );
+}
+
 // ── Component ───────────────────────────────────────────────────────────
 
 export default function LeadsTable({
@@ -403,11 +411,23 @@ export default function LeadsTable({
                     {lead.quote ? formatPounds(lead.quote.totalPence) : "—"}
                   </td>
                   <td className="px-4 py-3">
-                    <span
-                      className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_BADGES[lead.status]}`}
-                    >
-                      {lead.status.replace(/_/g, " ")}
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      {isOverdue(lead) && (
+                        <span
+                          aria-label="Overdue follow-up"
+                          title="NEW and untouched for over 24 hours"
+                          className="h-2 w-2 shrink-0 rounded-full bg-[#c0392b]"
+                        />
+                      )}
+                      <span
+                        className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_BADGES[lead.status]}`}
+                      >
+                        {lead.status.replace(/_/g, " ")}
+                      </span>
+                      {isOverdue(lead) && (
+                        <span className="text-xs text-[#c0392b]/80">Overdue</span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3">
                     <span className="inline-block rounded-full bg-[#52625a]/20 px-2.5 py-0.5 text-xs text-[#faf9f6]/70">

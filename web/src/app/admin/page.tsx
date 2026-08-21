@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import LeadsTable from "@/components/admin/LeadsTable";
 import LeadDetailPanel from "@/components/admin/LeadDetailPanel";
+import StatCards from "@/components/admin/StatCards";
 
 /**
  * /admin — the operational dashboard (client layout).
@@ -76,7 +77,10 @@ export default function AdminDashboard() {
         )}
 
         {authState === "authed" && (
-          <LeadsTable onLeadSelect={(leadId) => setSelectedLeadId(leadId)} />
+          <>
+            <StatCards />
+            <LeadsTable onLeadSelect={(leadId) => setSelectedLeadId(leadId)} />
+          </>
         )}
 
         {authState === "authed" && selectedLeadId && (
