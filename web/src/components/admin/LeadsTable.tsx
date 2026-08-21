@@ -136,6 +136,8 @@ export default function LeadsTable({
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
 
   const LIMIT = 20;
 
@@ -225,6 +227,75 @@ export default function LeadsTable({
 
   const from = pagination.total === 0 ? 0 : (pagination.page - 1) * LIMIT + 1;
   const to = Math.min(pagination.page * LIMIT, pagination.total);
+
+  // ── Bulk selection helpers ──
+  const toggleSelected = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const allVisibleSelected =
+    visibleLeads.length > 0 &&
+    visibleLeads.every((l) => selected.has(l.id));
+
+  const toggleSelectAllVisible = () => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (allVisibleSelected) {
+        for (const l of visibleLeads) next.delete(l.id);
+      } else {
+        for (const l of visibleLeads) next.add(l.id);
+      }
+      return next;
+    });
+  };
+
+  const runBulk = useCallback(
+    async (method: "PATCH" | "DELETE", body: Record<string, unknown>) => {
+      setBulkBusy(true);
+      setError(null);
+      try {
+        const res = await fetch("/api/admin/leads/bulk", {
+          method,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        if (!res.ok) {
+          const payload = (await res.json().catch(() => null)) as {
+            error?: string;
+          } | null;
+          throw new Error(payload?.error || `Bulk action failed (${res.status})`);
+        }
+        setSelected(new Set());
+        await fetchLeads();
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Bulk action failed");
+      } finally {
+        setBulkBusy(false);
+      }
+    },
+    [fetchLeads]
+  );
+
+  const bulkSetStatus = (status: string) => {
+    if (selected.size === 0 || bulkBusy) return;
+    void runBulk("PATCH", { ids: [...selected], status });
+  };
+
+  const bulkDelete = () => {
+    if (selected.size === 0 || bulkBusy) return;
+    if (
+      !window.confirm(
+        `Delete ${selected.size} selected lead${selected.size === 1 ? "" : "s"}? They will be hidden from the dashboard (soft delete).`
+      )
+    )
+      return;
+    void runBulk("DELETE", { ids: [...selected] });
+  };
 
   // Compact page-number window around the current page.
   const pageNumbers = useMemo(() => {
@@ -347,6 +418,15 @@ export default function LeadsTable({
         <table className="w-full text-left text-sm">
           <thead className="border-y border-[#52625a]/30 text-xs uppercase tracking-wider text-[#52625a]">
             <tr>
+              <th className="w-10 px-4 py-3">
+                <input
+                  type="checkbox"
+                  aria-label="Select all visible leads"
+                  checked={allVisibleSelected}
+                  onChange={toggleSelectAllVisible}
+                  className="h-4 w-4 cursor-pointer accent-[#9c805c]"
+                />
+              </th>
               <th className="px-4 py-3 font-medium">Date</th>
               <th className="px-4 py-3 font-medium">Type</th>
               <th className="px-4 py-3 font-medium">Customer</th>
@@ -361,14 +441,14 @@ export default function LeadsTable({
           <tbody className="divide-y divide-[#52625a]/20">
             {loading && (
               <tr>
-                <td colSpan={9} className="px-4 py-10 text-center text-[#52625a]">
+                <td colSpan={10} className="px-4 py-10 text-center text-[#52625a]">
                   Loading leads…
                 </td>
               </tr>
             )}
             {!loading && visibleLeads.length === 0 && (
               <tr>
-                <td colSpan={9} className="px-4 py-10 text-center text-[#52625a]">
+                <td colSpan={10} className="px-4 py-10 text-center text-[#52625a]">
                   {search
                     ? "No leads match your search."
                     : "No leads found for these filters."}
@@ -382,6 +462,16 @@ export default function LeadsTable({
                   onClick={() => onLeadSelect(lead.id)}
                   className="cursor-pointer transition-colors hover:bg-[#1e2b23]"
                 >
+                  <td className="px-4 py-3">
+                    <input
+                      type="checkbox"
+                      aria-label={`Select lead from ${lead.customer.name}`}
+                      checked={selected.has(lead.id)}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={() => toggleSelected(lead.id)}
+                      className="h-4 w-4 cursor-pointer accent-[#9c805c]"
+                    />
+                  </td>
                   <td className="whitespace-nowrap px-4 py-3 text-[#faf9f6]/70">
                     {formatDate(lead.createdAt)}
                   </td>
@@ -491,6 +581,49 @@ export default function LeadsTable({
           </button>
         </div>
       </div>
+
+      {/* ── Sticky bulk action bar ── */}
+      {selected.size > 0 && (
+        <div className="fixed bottom-4 left-1/2 z-30 -translate-x-1/2">
+          <div className="flex items-center gap-2 rounded-[6px] border border-[#2e3d33] bg-[#243028] p-3 shadow-2xl">
+            <span className="px-1 text-sm text-[#faf9f6]/80">
+              {selected.size} selected
+            </span>
+            <button
+              type="button"
+              disabled={bulkBusy}
+              onClick={() => bulkSetStatus("CONTACTED")}
+              className="rounded-[4px] border border-[#f39c12]/50 px-3 py-1.5 text-xs font-medium text-[#f39c12] transition-colors hover:bg-[#f39c12]/10 disabled:cursor-default disabled:opacity-40"
+            >
+              Mark Contacted
+            </button>
+            <button
+              type="button"
+              disabled={bulkBusy}
+              onClick={() => bulkSetStatus("LOST")}
+              className="rounded-[4px] border border-[#c0392b]/50 px-3 py-1.5 text-xs font-medium text-[#c0392b] transition-colors hover:bg-[#c0392b]/10 disabled:cursor-default disabled:opacity-40"
+            >
+              Mark Lost
+            </button>
+            <button
+              type="button"
+              disabled={bulkBusy}
+              onClick={bulkDelete}
+              className="rounded-[4px] border border-[#c0392b] bg-[#c0392b]/20 px-3 py-1.5 text-xs font-medium text-[#c0392b] transition-colors hover:bg-[#c0392b]/30 disabled:cursor-default disabled:opacity-40"
+            >
+              Delete Selected
+            </button>
+            <button
+              type="button"
+              disabled={bulkBusy}
+              onClick={() => setSelected(new Set())}
+              className="rounded-[4px] px-3 py-1.5 text-xs text-[#52625a] transition-colors hover:text-[#faf9f6] disabled:cursor-default"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
