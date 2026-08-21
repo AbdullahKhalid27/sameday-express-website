@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import LeadsTable from "@/components/admin/LeadsTable";
 import LeadDetailPanel from "@/components/admin/LeadDetailPanel";
+import OrdersTable from "@/components/admin/OrdersTable";
 import StatCards from "@/components/admin/StatCards";
 import LeadsBySource from "@/components/admin/charts/LeadsBySource";
 import LeadsByType from "@/components/admin/charts/LeadsByType";
@@ -29,6 +30,7 @@ export default function AdminDashboard() {
     "checking"
   );
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"leads" | "orders">("leads");
 
   useEffect(() => {
     let cancelled = false;
@@ -82,14 +84,48 @@ export default function AdminDashboard() {
         {authState === "authed" && (
           <>
             <StatCards />
-            <div className="mt-6">
-              <LeadsTable onLeadSelect={(leadId) => setSelectedLeadId(leadId)} />
+
+            {/* ── Tab navigation ── */}
+            <div
+              role="tablist"
+              aria-label="Dashboard sections"
+              className="mt-6 flex gap-1 border-b border-[#52625a]/40"
+            >
+              {(["leads", "orders"] as const).map((tab) => (
+                <button
+                  key={tab}
+                  role="tab"
+                  aria-selected={activeTab === tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`rounded-t-[6px] px-4 py-2 text-sm font-medium capitalize transition-colors ${
+                    activeTab === tab
+                      ? "border-b-2 border-[#9c805c] bg-[#243028] text-[#faf9f6]"
+                      : "text-[#52625a] hover:text-[#faf9f6]"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
             </div>
-            <section className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-              <LeadsBySource />
-              <LeadsByType />
-              <WeeklyTrend />
-            </section>
+
+            {activeTab === "leads" && (
+              <>
+                <div className="mt-6">
+                  <LeadsTable onLeadSelect={(leadId) => setSelectedLeadId(leadId)} />
+                </div>
+                <section className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+                  <LeadsBySource />
+                  <LeadsByType />
+                  <WeeklyTrend />
+                </section>
+              </>
+            )}
+
+            {activeTab === "orders" && (
+              <div className="mt-6">
+                <OrdersTable />
+              </div>
+            )}
           </>
         )}
 
