@@ -80,6 +80,19 @@ export async function captureLeadWithResilience(params: {
   emailHtml: string;
   emailEntityType?: string;
 }) {
+  // ── Dedup guard: skip if an identical lead was captured in the last 5 minutes ──
+  const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+  const existingLead = await prisma.lead.findFirst({
+    where: {
+      customer: { email: params.customerEmail },
+      createdAt: { gte: fiveMinutesAgo },
+    },
+    include: { customer: true },
+  });
+  if (existingLead) {
+    return { success: true, leadId: existingLead.id, emailSent: false };
+  }
+
   // ── Parallel: DB transaction + Email ──
   const [dbResult, emailResult] = await Promise.allSettled([
     // DB write

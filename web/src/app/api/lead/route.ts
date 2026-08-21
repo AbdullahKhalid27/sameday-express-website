@@ -217,7 +217,7 @@ function buildLeadEmailHtml(d: {
     <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: 600;">Name</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${escapeHtml(d.fullName)}</td></tr>
     <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: 600;">Phone</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${escapeHtml(d.phone)}</td></tr>
     <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: 600;">Email</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${escapeHtml(d.email)}</td></tr>
-    ${d.company && d.company !== "N/A" ? `<tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: 600;">Company</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${escapeHtml(d.company)}</td></tr>` : ""}
+    ${d.company ? `<tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: 600;">Company</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${escapeHtml(d.company)}</td></tr>` : ""}
     ${d.whatsapp ? `<tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: 600;">WhatsApp</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${escapeHtml(d.whatsapp)}</td></tr>` : ""}
   </table>
 

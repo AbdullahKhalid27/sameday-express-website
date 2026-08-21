@@ -32,7 +32,7 @@ export const leadSchema = z.object({
   fullName: z.string().trim().min(1, "Name is required"),
   phone: ukPhone,
   email,
-  company: z.string().trim().optional().default("N/A"),
+  company: z.string().trim().optional(),
   origin: z.string().trim().min(1, "Origin postcode is required"),
   originLat: z.coerce.number(),
   originLng: z.coerce.number(),
