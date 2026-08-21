@@ -61,7 +61,10 @@ enum QuoteStatus {
 enum OrderStatus {
   PENDING
   CONFIRMED
+  DISPATCHED
+  IN_TRANSIT
   DELIVERED
+  FAILED
   CANCELLED
 }
 
@@ -334,6 +337,9 @@ model Order {
 
   specialInstructions String?
 
+  driverId String?
+  driver   Driver? @relation(fields: [driverId], references: [id])
+
   payments Payment[]
 
   createdAt DateTime  @default(now())
@@ -345,6 +351,19 @@ model Order {
   @@index([status])
   @@index([createdAt])
   @@index([stripePaymentIntentId])
+}
+
+// ── DRIVER ─────────────────────────────────────────────────
+// Courier drivers assignable to orders by the dispatch operator.
+
+model Driver {
+  id     String  @id @default(uuid())
+  name   String
+  phone  String
+  active Boolean @default(true)
+  orders Order[]
+
+  @@index([active])
 }
 
 // ── PAYMENT ────────────────────────────────────────────────
