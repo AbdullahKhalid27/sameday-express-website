@@ -149,9 +149,10 @@ export async function verifyTurnstile(token: string): Promise<TurnstileResult> {
   // ── TEMPORARILY DISABLED (2026-08-20) ──
   // Turnstile verification is switched off across all forms (quote, contact,
   // trade account) while we verify the database pipeline. Re-enable by
-  // restoring the original body below (remove the early return and the
-  // DISABLED flag).
-  const TURNSTILE_DISABLED = true;
+  // setting TURNSTILE_DISABLED=false (and the two Turnstile keys) in the
+  // environment — scripts/check-env.js hard-fails the build if you enable it
+  // without real keys.
+  const TURNSTILE_DISABLED = process.env.TURNSTILE_DISABLED !== "false";
   if (TURNSTILE_DISABLED) {
     void token;
     return { ok: true };
@@ -174,11 +175,16 @@ export async function verifyTurnstile(token: string): Promise<TurnstileResult> {
     return { ok: process.env.NODE_ENV !== "production", code: "dev-bypass" };
   }
 
-  // No real key configured — skip verification entirely.
+  // No real key configured. FAIL CLOSED in production — a missing secret must
+  // never silently disable bot protection. (scripts/check-env.js also
+  // hard-fails the build in this case; this is the runtime backstop.)
   if (!secret || secret === "0x4AAAAAAAxxxxxxxxxxxxxxxxxxxxxxxx") {
     console.error(
-      "[turnstile] TURNSTILE_SECRET_KEY is not set — skipping verification"
+      "[turnstile] TURNSTILE_SECRET_KEY is not set — rejecting submission"
     );
+    if (process.env.NODE_ENV === "production") {
+      return { ok: false, code: "missing-secret" };
+    }
     return { ok: true };
   }
 

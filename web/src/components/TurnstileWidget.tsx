@@ -67,9 +67,11 @@ export function TurnstileWidget({
   //
   // ── TEMPORARILY DISABLED (2026-08-20) ──
   // Turnstile is force-bypassed on ALL environments while we verify the
-  // database pipeline. Restore by reverting to:
-  //   const bypassTurnstile = IS_LOCALHOST || isPlaceholder(SITE_KEY);
-  const TURNSTILE_DISABLED = true;
+  // database pipeline. Re-enable by setting NEXT_PUBLIC_TURNSTILE_DISABLED=false
+  // (plus a real NEXT_PUBLIC_TURNSTILE_SITE_KEY) — scripts/check-env.js
+  // hard-fails the production build if you enable it without real keys.
+  const TURNSTILE_DISABLED =
+    process.env.NEXT_PUBLIC_TURNSTILE_DISABLED !== "false";
   const bypassTurnstile = TURNSTILE_DISABLED || IS_LOCALHOST || isPlaceholder(SITE_KEY);
 
   // ── Dev-mode bypass ──

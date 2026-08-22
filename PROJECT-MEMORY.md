@@ -5,8 +5,7 @@
 > legacy static-site era, July 2026, and wrongly says "don't touch web/" — `web/` is
 > now the entire project).
 >
-> Last updated: 2026-08-21 (after commit `e3d4659` "feat(admin): add bulk actions and
-> test data purge").
+> Last updated: 2026-08-22 (Turnstile env guard: fail-closed + build-time check).
 
 ---
 
@@ -61,8 +60,9 @@ A UK same-day courier company website for **Same Day Express Couriers Ltd**. Two
 
 **Env vars (see `web/.env.example`):** `DATABASE_URL` (pooled), `DIRECT_URL` (non-pooled,
 migrations only), `RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_TO_TEAM`,
-`GOOGLE_MAPS_API_KEY` (server-side only), `TURNSTILE_SECRET_KEY` +
-`NEXT_PUBLIC_TURNSTILE_SITE_KEY` (disabled), `AUTH_SECRET`, `ADMIN_EMAIL`,
+`GOOGLE_MAPS_API_KEY` (server-side only), `TURNSTILE_DISABLED` +
+`NEXT_PUBLIC_TURNSTILE_DISABLED` (default "true" = disabled) +
+`TURNSTILE_SECRET_KEY` + `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (disabled), `AUTH_SECRET`, `ADMIN_EMAIL`,
 `ADMIN_PASSWORD`, `ADMIN_API_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
 `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_PHONE`.
 
@@ -236,11 +236,16 @@ OrderStatus, PaymentStatus).
    localhost (`697e722`) → phone validation rejecting landlines + 429 rate-limit
    surfacing (`08a6fa1`) → siteverify rejections needed error-code diagnostics
    (`d83cdcd`) → **temporarily disabled to unblock DB testing (`a1d3e57`)**.
-   Current state: `TURNSTILE_DISABLED = true` at `web/src/lib/validation.ts:154`;
-   `turnstileToken` optional in every Zod schema; forms don't render the widget.
-   Honeypot is the ONLY bot protection. **Must be re-enabled before launch.**
-   The code path is intact (dev-bypass handling for localhost, siteverify with
-   error logging) — flip the flag once real keys work end-to-end.
+   Current state: DISABLED VIA ENV (`TURNSTILE_DISABLED` /
+   `NEXT_PUBLIC_TURNSTILE_DISABLED`, default "true") — client
+   (`TurnstileWidget.tsx`) and server (`validation.ts` verifyTurnstile) both
+   read it. `turnstileToken` optional in every Zod schema; honeypot is the
+   ONLY bot protection. **Must be re-enabled before launch.**
+   To re-enable: set both flags to "false" + add real keys —
+   `web/scripts/check-env.js` (runs in `npm run build` / CI) HARD-FAILS the
+   production build if Turnstile is enabled with missing/placeholder keys or
+   only half-enabled. Runtime backstop: enabled + missing secret now FAILS
+   CLOSED in production (previously failed open). (2026-08-22)
 2. **Google Maps API key still needs rotation + restriction** (pending since the
    static era): HTTP-referrer restriction to `samedayexpresscouriers.co.uk/*`,
    API restriction to Distance Matrix. Key was exposed in chat once — rotate it.
