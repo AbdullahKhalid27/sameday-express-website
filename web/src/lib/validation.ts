@@ -143,7 +143,6 @@ export interface TurnstileResult {
 }
 
 export async function verifyTurnstile(token: string): Promise<TurnstileResult> {
- main
   const secret = process.env.TURNSTILE_SECRET_KEY;
   // ── Dev-mode bypass ──
   // The TurnstileWidget component emits "dev-bypass" when no real site key
@@ -161,12 +160,15 @@ export async function verifyTurnstile(token: string): Promise<TurnstileResult> {
     return { ok: process.env.NODE_ENV !== "production", code: "dev-bypass" };
   }
 
- main
+  // No real secret configured.
+  if (!secret || secret === "0x4AAAAAAAxxxxxxxxxxxxxxxxxxxxxxxx") {
+    console.error(
+      "[turnstile] TURNSTILE_SECRET_KEY is not set"
     );
     if (process.env.NODE_ENV === "production") {
       return { ok: false, code: "missing-secret" };
     }
-main
+    return { ok: true, code: "missing-secret-dev-bypass" };
   }
 
   try {
