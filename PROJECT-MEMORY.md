@@ -5,8 +5,8 @@
 > legacy static-site era, July 2026, and wrongly says "don't touch web/" — `web/` is
 > now the entire project).
 >
-> Last updated: 2026-08-22 (SEO pass: blog posts written, FAQ/fleet data
-> aligned, sitemap fix, X-Robots-Tag for previews).
+> Last updated: 2026-08-22 (form-pipeline fix: lead-dedup hijack broke
+> Stripe checkout; verified all forms end-to-end).
 
 ---
 
@@ -401,3 +401,23 @@ Fixed in commit (this date):
   Organization; city pages = LocalBusiness+Speakable+FAQPage; service pages =
   Service+Offer+Speakable+FAQPage; blog = Article + Breadcrumbs everywhere.
 - **OPEN:** /about stats 15,000+/500+ awaiting client confirmation (§6 item 3).
+
+## 8. FORM-PIPELINE FIX (2026-08-22, same day)
+
+**Bug:** "Quote not found for this lead" (404 from /api/stripe/checkout) after
+filling the Quote Wizard. **Root cause:** the 5-minute dedup guard in
+`captureLeadWithResilience` (web/src/lib/leads.ts) matched on customer email
+ONLY — any prior form submission with the same email in the last 5 minutes
+(contact, trade account, or an older quote) returned the OLD lead's id and
+skipped creating the new Lead+Quote. Pay Now then loaded that old lead, found
+no Quote attached → 404. Worse: the new enquiry was silently lost (no row, no
+email, emailSent:false).
+**Fix:** dedup now matches email + leadType + identical rawData (exact
+double-submit protection only). Cross-type and changed-payload submissions
+always create fresh rows.
+**Verified end-to-end against real Neon DB + real Stripe (test mode),** via
+`next dev` + curl: contact → quote (same email, seconds apart) → Pay Now
+returns a real Checkout Session URL; trade-account + newsletter routes OK;
+exact-duplicate quote resubmission correctly returns the same leadId.
+Test rows cleaned from the DB (delete children before Lead: LeadNote,
+ContactEnquiry, TradeAccountApplication, Quote — RESTRICT FKs).
