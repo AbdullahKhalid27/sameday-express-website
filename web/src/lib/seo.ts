@@ -184,8 +184,8 @@ export function serviceJsonLd(input: {
     url: `${SITE.domain}${input.path}`,
     provider: { "@type": "Organization", name: SITE.name },
     areaServed: input.cities.map((c) => ({ "@type": "City", name: c })),
-    // P2-2: Offer with indicative price range (motorcycle base £25 →
-    // Luton base £75, excluding mileage). Matches the fleet pricing tables.
+    // P2-2: Offer with indicative price range. Matches fleet.ts base prices
+    // (motorcycle £35 → Luton £80, excluding mileage and VAT).
     offers: {
       "@type": "Offer",
       priceCurrency: "GBP",
@@ -194,8 +194,8 @@ export function serviceJsonLd(input: {
       priceSpecification: {
         "@type": "PriceSpecification",
         priceCurrency: "GBP",
-        minPrice: 25,
-        maxPrice: 75,
+        minPrice: 35,
+        maxPrice: 80,
       },
     },
   };

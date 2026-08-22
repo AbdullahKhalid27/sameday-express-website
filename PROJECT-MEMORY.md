@@ -5,8 +5,8 @@
 > legacy static-site era, July 2026, and wrongly says "don't touch web/" — `web/` is
 > now the entire project).
 >
-> Last updated: 2026-08-21 (after commit `e3d4659` "feat(admin): add bulk actions and
-> test data purge").
+> Last updated: 2026-08-22 (form-pipeline fix: lead-dedup hijack broke
+> Stripe checkout; verified all forms end-to-end).
 
 ---
 
@@ -61,8 +61,9 @@ A UK same-day courier company website for **Same Day Express Couriers Ltd**. Two
 
 **Env vars (see `web/.env.example`):** `DATABASE_URL` (pooled), `DIRECT_URL` (non-pooled,
 migrations only), `RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_TO_TEAM`,
-`GOOGLE_MAPS_API_KEY` (server-side only), `TURNSTILE_SECRET_KEY` +
-`NEXT_PUBLIC_TURNSTILE_SITE_KEY` (disabled), `AUTH_SECRET`, `ADMIN_EMAIL`,
+`GOOGLE_MAPS_API_KEY` (server-side only), `TURNSTILE_DISABLED` +
+`NEXT_PUBLIC_TURNSTILE_DISABLED` (default "true" = disabled) +
+`TURNSTILE_SECRET_KEY` + `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (disabled), `AUTH_SECRET`, `ADMIN_EMAIL`,
 `ADMIN_PASSWORD`, `ADMIN_API_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
 `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_PHONE`.
 
@@ -232,14 +233,18 @@ OrderStatus, PaymentStatus).
 ## 6. WHERE WE GOT STUCK (unresolved items first)
 
 ### 🔴 OPEN BLOCKERS
-1. **Turnstile needs real production key verification.** It has now been
-   re-enabled in code (widget active outside localhost, token required in Zod
-   schemas, server verification active again). Remaining launch task: verify
-   real site/secret keys end-to-end on preview + production domains.
+ main
 2. **Google Maps API key still needs rotation + restriction** (pending since the
    static era): HTTP-referrer restriction to `samedayexpresscouriers.co.uk/*`,
    API restriction to Distance Matrix. Key was exposed in chat once — rotate it.
-3. **UNCOMMITTED work (as of 2026-08-21):** `.github/workflows/ci.yml` (type-check +
+3. **⚠️ UNVERIFIED STATS on /about (2026-08-22 external review):** the stats
+   strip claims "15,000+ Deliveries Completed" and "500+ Corporate Clients"
+   (`web/src/app/about/page.tsx` ~line 109). If these are placeholder/
+   aspirational numbers they carry the same UK Consumer Protection exposure as
+   fake reviews. AWAITING CLIENT CONFIRMATION of real figures — replace or
+   pull them. Also `organizationJsonLd()` in seo.ts claims foundingDate
+   "2020"; company number 15548532 suggests ~2024 incorporation — confirm.
+4. **UNCOMMITTED work (as of 2026-08-21):** `.github/workflows/ci.yml` (type-check +
    build on push/PR), `.github/workflows/db-backup.yml` (weekly Monday 03:00 UTC
    pg_dump → 90-day artifact; needs `BACKUP_DATABASE_URL` secret), and
    `web/scripts/backup-db.sh` (local backup). Commit them; add the secret.
@@ -350,3 +355,54 @@ nearest hub city page, not as a thin page.
 ---
 
 *End of PROJECT-MEMORY.md. Maintained alongside the codebase.*
+
+
+---
+
+## 7. SEO PASS (2026-08-22, external review round 2)
+
+Fixed in commit (this date):
+- **Blog stubs → full articles.** All 3 posts in `web/src/lib/posts.ts` now
+  have real bodies (typed block model: h2/p/ul/table rendered by `PostBody` in
+  `blog/[slug]/page.tsx`). Pricing post grounded in the live fleet.ts rate
+  card (£35/£1.00 moto → £80/£2.20 Luton), CCZ £18, VAT 20%. RULE: if fleet
+  pricing changes, update the pricing post in the same commit.
+- **FAQ/fleet contradictions fixed** (`web/src/app/faq/page.tsx`): small van
+  600→700kg, LWB 1,200→1,000kg (XLWB is the 1,200kg one), Luton 1,000→1,200kg;
+  pricing answer £25/£35/£75 → £35/£45/£80 (+£1.00/£1.20/£2.20 per mile).
+- **Service schema price range fixed** (`seo.ts` serviceJsonLd): min 25/max 75
+  → 35/80 to match fleet.ts base prices.
+- **Sitemap bug fixed** (`sitemap.ts`): listed non-existent `/sitemap`; the
+  route is `/site-map` (renamed e3d4659-era). Sitemap now: 28 URLs = 13 static
+  + 4 service + 8 city + 3 blog. robots.txt verified clean (allows all but
+  /api/ + thank-you; AI bots explicitly allowed).
+- **X-Robots-Tag: noindex, nofollow** added in `next.config.ts` headers() for
+  non-production deployments (VERCEL_ENV=preview/development or
+  NEXT_OUTPUT_EXPORT=true GitHub Pages). Self-hosted prod + Vercel prod stay
+  indexable. Verified via local `next start` + curl.
+- **Structured data was ALREADY comprehensive** (review's "no schema" claim was
+  a detection failure — verified in built HTML): homepage = Organization+
+  LocalBusiness+WebSite+FAQPage; /faq = FAQPage (20 items); /about =
+  Organization; city pages = LocalBusiness+Speakable+FAQPage; service pages =
+  Service+Offer+Speakable+FAQPage; blog = Article + Breadcrumbs everywhere.
+- **OPEN:** /about stats 15,000+/500+ awaiting client confirmation (§6 item 3).
+
+## 8. FORM-PIPELINE FIX (2026-08-22, same day)
+
+**Bug:** "Quote not found for this lead" (404 from /api/stripe/checkout) after
+filling the Quote Wizard. **Root cause:** the 5-minute dedup guard in
+`captureLeadWithResilience` (web/src/lib/leads.ts) matched on customer email
+ONLY — any prior form submission with the same email in the last 5 minutes
+(contact, trade account, or an older quote) returned the OLD lead's id and
+skipped creating the new Lead+Quote. Pay Now then loaded that old lead, found
+no Quote attached → 404. Worse: the new enquiry was silently lost (no row, no
+email, emailSent:false).
+**Fix:** dedup now matches email + leadType + identical rawData (exact
+double-submit protection only). Cross-type and changed-payload submissions
+always create fresh rows.
+**Verified end-to-end against real Neon DB + real Stripe (test mode),** via
+`next dev` + curl: contact → quote (same email, seconds apart) → Pay Now
+returns a real Checkout Session URL; trade-account + newsletter routes OK;
+exact-duplicate quote resubmission correctly returns the same leadId.
+Test rows cleaned from the DB (delete children before Lead: LeadNote,
+ContactEnquiry, TradeAccountApplication, Quote — RESTRICT FKs).

@@ -80,11 +80,18 @@ export async function captureLeadWithResilience(params: {
   emailHtml: string;
   emailEntityType?: string;
 }) {
-  // ── Dedup guard: skip if an identical lead was captured in the last 5 minutes ──
+  // ── Dedup guard: skip only EXACT duplicate submissions in the last 5 min ──
+  // Matches same customer email + same lead type + identical payload. A form
+  // of one type must never hijack another: without the type/rawData filters
+  // this guard used to return an old CONTACT lead's id for a new QUOTE_REQUEST
+  // (same email, <5 min apart) — then /api/stripe/checkout failed with
+  // "Quote not found for this lead" and the new enquiry was silently lost.
   const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
   const existingLead = await prisma.lead.findFirst({
     where: {
       customer: { email: params.customerEmail },
+      type: params.leadType,
+      rawData: { equals: params.leadRawData },
       createdAt: { gte: fiveMinutesAgo },
     },
     include: { customer: true },
