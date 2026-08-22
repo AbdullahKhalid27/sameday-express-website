@@ -26,7 +26,7 @@ const FAQ_CATEGORIES: { title: string; items: { question: string; answer: string
       { question: "How quickly can you collect my parcel?", answer: "We collect within 60 minutes of your confirmed booking, nationwide. Our drivers are positioned across the UK at all times, ready for immediate dispatch. For most major UK cities, collection is typically within 30-45 minutes." },
       { question: "How do I book a same day courier?", answer: "You can book instantly via our online quote form, by calling 020 4568 4675, or by WhatsApp. Our dispatch desk operates 24/7. Once booked, you'll receive driver and vehicle details within minutes." },
       { question: "Can I book a same day courier at night or on weekends?", answer: "Yes. We operate 24 hours a day, 7 days a week, 365 days a year — including bank holidays. Urgent deliveries don't follow business hours, and neither do we." },
-      { question: "How much does a same day courier cost in the UK?", answer: "Pricing depends on distance, vehicle type, and cargo. As a guide: motorcycle starts from £25 + £1.00/mile, small vans from £35 + £1.20/mile, up to Luton vans from £75 + £2.10/mile. Use our online quote calculator for an instant price." },
+      { question: "How much does a same day courier cost in the UK?", answer: "Pricing depends on distance, vehicle type, and cargo. As a guide: motorcycle starts from £35 + £1.00/mile, small vans from £45 + £1.20/mile, up to Luton vans from £80 + £2.20/mile. Use our online quote calculator for an instant price." },
       { question: "Do I need to package my goods before collection?", answer: "Yes. Items should be adequately packaged for transit. Our drivers cannot be held responsible for damage caused by inadequate packaging. For fragile or specialist cargo, contact us and we'll advise on appropriate packaging requirements." },
     ],
   },
@@ -35,7 +35,7 @@ const FAQ_CATEGORIES: { title: string; items: { question: string; answer: string
     items: [
       { question: "What goods-in-transit insurance do you carry?", answer: "Every driver in our network carries £20,000 goods-in-transit (GIT) insurance as standard. This covers your consignment from collection to delivery. For higher-value items, please inform us at the time of booking." },
       { question: "Are your drivers DBS checked?", answer: "Yes. All drivers in our network are DBS (Disclosure and Barring Service) background-checked. This is mandatory for all drivers — particularly important for medical, legal, and sensitive document deliveries." },
-      { question: "How do I know my delivery has been completed?", answer: "Yes. Every job includes signed proof of delivery. You will receive driver and vehicle details on dispatch, plus a signed digital proof of delivery on completion." },
+      { question: "How do I know my delivery has been completed?", answer: "Every job includes signed proof of delivery. You will receive driver and vehicle details on dispatch, plus a signed digital proof of delivery on completion." },
       { question: "Do you provide proof of delivery?", answer: "Yes. A digital proof of delivery (POD) with timestamp and recipient signature is provided for every job. This is sent to your email address upon completion." },
     ],
   },
@@ -52,7 +52,7 @@ const FAQ_CATEGORIES: { title: string; items: { question: string; answer: string
   {
     title: "Vehicles & Capacity",
     items: [
-      { question: "What vehicles do you have available?", answer: "Our fleet includes motorcycles (up to 20kg), small vans (up to 600kg), medium vans (up to 900kg), large vans LWB (up to 1,200kg), and Luton vans with tail lifts (up to 1,000kg with 4m load space). Select the right vehicle using our online quote form." },
+      { question: "What vehicles do you have available?", answer: "Our fleet includes motorcycles (up to 20kg), small vans (up to 700kg), medium wheelbase vans (up to 1,100kg), long wheelbase vans (up to 1,000kg, or 1,200kg extra-long), and Luton vans with tail lifts (up to 1,200kg with 4m+ load space). Select the right vehicle using our online quote form." },
       { question: "Can you carry pallets?", answer: "Yes. Our large vans carry 2-3 standard pallets and our Luton vans with powered tail lifts handle heavy pallet loads. For bulk pallet freight, use our commercial freight booking option." },
     ],
   },

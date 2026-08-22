@@ -18,22 +18,40 @@ const nextConfig: NextConfig = {
   // ── Security headers ──────────────────────────────────────────────────
   // Standard production hardening. Applies to all routes (pages + API).
   async headers() {
+    // Non-production deployments (Vercel previews, the GitHub Pages static
+    // export) must never appear in search results alongside the production
+    // domain. Canonical tags are the first layer; this header is the second.
+    // Indexable: Vercel production builds and self-hosted `next build && next
+    // start` (no VERCEL_ENV set). Evaluated at build time, matching where the
+    // deployment runs.
+    const isNonProductionDeployment =
+      (process.env.VERCEL_ENV !== undefined &&
+        process.env.VERCEL_ENV !== "production") ||
+      process.env.NEXT_OUTPUT_EXPORT === "true";
+
+    const securityHeaders = [
+      { key: "X-Frame-Options", value: "DENY" },
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      {
+        key: "Permissions-Policy",
+        value: "camera=(), microphone=(), geolocation=()",
+      },
+      {
+        key: "Strict-Transport-Security",
+        value: "max-age=63072000; includeSubDomains; preload",
+      },
+    ];
+
     return [
       {
         source: "/:path*",
-        headers: [
-          { key: "X-Frame-Options", value: "DENY" },
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          {
-            key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
-          },
-          {
-            key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload",
-          },
-        ],
+        headers: isNonProductionDeployment
+          ? [
+              ...securityHeaders,
+              { key: "X-Robots-Tag", value: "noindex, nofollow" },
+            ]
+          : securityHeaders,
       },
     ];
   },

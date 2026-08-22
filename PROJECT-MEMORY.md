@@ -5,7 +5,8 @@
 > legacy static-site era, July 2026, and wrongly says "don't touch web/" — `web/` is
 > now the entire project).
 >
-> Last updated: 2026-08-22 (Turnstile env guard: fail-closed + build-time check).
+> Last updated: 2026-08-22 (SEO pass: blog posts written, FAQ/fleet data
+> aligned, sitemap fix, X-Robots-Tag for previews).
 
 ---
 
@@ -249,7 +250,14 @@ OrderStatus, PaymentStatus).
 2. **Google Maps API key still needs rotation + restriction** (pending since the
    static era): HTTP-referrer restriction to `samedayexpresscouriers.co.uk/*`,
    API restriction to Distance Matrix. Key was exposed in chat once — rotate it.
-3. **UNCOMMITTED work (as of 2026-08-21):** `.github/workflows/ci.yml` (type-check +
+3. **⚠️ UNVERIFIED STATS on /about (2026-08-22 external review):** the stats
+   strip claims "15,000+ Deliveries Completed" and "500+ Corporate Clients"
+   (`web/src/app/about/page.tsx` ~line 109). If these are placeholder/
+   aspirational numbers they carry the same UK Consumer Protection exposure as
+   fake reviews. AWAITING CLIENT CONFIRMATION of real figures — replace or
+   pull them. Also `organizationJsonLd()` in seo.ts claims foundingDate
+   "2020"; company number 15548532 suggests ~2024 incorporation — confirm.
+4. **UNCOMMITTED work (as of 2026-08-21):** `.github/workflows/ci.yml` (type-check +
    build on push/PR), `.github/workflows/db-backup.yml` (weekly Monday 03:00 UTC
    pg_dump → 90-day artifact; needs `BACKUP_DATABASE_URL` secret), and
    `web/scripts/backup-db.sh` (local backup). Commit them; add the secret.
@@ -362,3 +370,34 @@ nearest hub city page, not as a thin page.
 ---
 
 *End of PROJECT-MEMORY.md. Maintained alongside the codebase.*
+
+
+---
+
+## 7. SEO PASS (2026-08-22, external review round 2)
+
+Fixed in commit (this date):
+- **Blog stubs → full articles.** All 3 posts in `web/src/lib/posts.ts` now
+  have real bodies (typed block model: h2/p/ul/table rendered by `PostBody` in
+  `blog/[slug]/page.tsx`). Pricing post grounded in the live fleet.ts rate
+  card (£35/£1.00 moto → £80/£2.20 Luton), CCZ £18, VAT 20%. RULE: if fleet
+  pricing changes, update the pricing post in the same commit.
+- **FAQ/fleet contradictions fixed** (`web/src/app/faq/page.tsx`): small van
+  600→700kg, LWB 1,200→1,000kg (XLWB is the 1,200kg one), Luton 1,000→1,200kg;
+  pricing answer £25/£35/£75 → £35/£45/£80 (+£1.00/£1.20/£2.20 per mile).
+- **Service schema price range fixed** (`seo.ts` serviceJsonLd): min 25/max 75
+  → 35/80 to match fleet.ts base prices.
+- **Sitemap bug fixed** (`sitemap.ts`): listed non-existent `/sitemap`; the
+  route is `/site-map` (renamed e3d4659-era). Sitemap now: 28 URLs = 13 static
+  + 4 service + 8 city + 3 blog. robots.txt verified clean (allows all but
+  /api/ + thank-you; AI bots explicitly allowed).
+- **X-Robots-Tag: noindex, nofollow** added in `next.config.ts` headers() for
+  non-production deployments (VERCEL_ENV=preview/development or
+  NEXT_OUTPUT_EXPORT=true GitHub Pages). Self-hosted prod + Vercel prod stay
+  indexable. Verified via local `next start` + curl.
+- **Structured data was ALREADY comprehensive** (review's "no schema" claim was
+  a detection failure — verified in built HTML): homepage = Organization+
+  LocalBusiness+WebSite+FAQPage; /faq = FAQPage (20 items); /about =
+  Organization; city pages = LocalBusiness+Speakable+FAQPage; service pages =
+  Service+Offer+Speakable+FAQPage; blog = Article + Breadcrumbs everywhere.
+- **OPEN:** /about stats 15,000+/500+ awaiting client confirmation (§6 item 3).
