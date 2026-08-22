@@ -80,6 +80,13 @@ export function organizationJsonLd() {
     "@id": `${SITE.domain}/#organization`,
     name: SITE.name,
     legalName: SITE.legalName,
+    // P4-1: real registration numbers — taxID (VAT) + Companies House identifier.
+    taxID: SITE.vatNo,
+    identifier: {
+      "@type": "PropertyValue",
+      name: "Companies House Company Number",
+      value: SITE.companyRegNo,
+    },
     url: SITE.domain,
     logo: DEFAULT_OG_IMAGE,
     image: DEFAULT_OG_IMAGE,

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Outfit, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -49,6 +49,17 @@ const dmSans = DM_Sans({
   ],
   adjustFontFallback: true,
 });
+
+/**
+ * P3-4: explicit viewport + theme-color. Next 15 injects the viewport meta
+ * automatically, but the theme-color (mobile browser chrome tint) must be
+ * declared here — forest green matches the header/hero on every route.
+ */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#1c2821",
+};
 
 export const metadata: Metadata = {
   title: {

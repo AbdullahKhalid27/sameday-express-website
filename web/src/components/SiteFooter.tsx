@@ -105,32 +105,28 @@ export function SiteFooter() {
           </div>
         </div>
 
-        {/* Legal disclosure — placeholder until client provides real numbers */}
-        <div className="mt-10 grid gap-px overflow-hidden rounded-md border border-ivory/10 bg-ivory/10 text-sm text-ivory/60 sm:grid-cols-3">
+        {/* Legal disclosure — real numbers (P4-1). ICO registration not yet
+            held; add a third cell when the client registers with the ICO. */}
+        <div className="mt-10 grid gap-px overflow-hidden rounded-md border border-ivory/10 bg-ivory/10 text-sm text-ivory/60 sm:grid-cols-2">
           <div className="bg-forest-dark px-4 py-3">
             <p className="font-heading text-xs font-bold uppercase tracking-widest text-brass-bright">
               Company Reg. No.
             </p>
-            <p className="mt-1">[Company details pending]</p>
+            <p className="mt-1">{SITE.companyRegNo}</p>
           </div>
           <div className="bg-forest-dark px-4 py-3">
             <p className="font-heading text-xs font-bold uppercase tracking-widest text-brass-bright">
               VAT No.
             </p>
-            <p className="mt-1">[Company details pending]</p>
-          </div>
-          <div className="bg-forest-dark px-4 py-3">
-            <p className="font-heading text-xs font-bold uppercase tracking-widest text-brass-bright">
-              ICO Registration
-            </p>
-            <p className="mt-1">[Company details pending]</p>
+            <p className="mt-1">{SITE.vatNo}</p>
           </div>
         </div>
 
         {/* Legal row */}
         <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-ivory/10 pt-6 text-xs text-ivory/55 sm:flex-row">
           <p>
-            © {year} {SITE.legalName}. All rights reserved.
+            © {year} {SITE.legalName}. Registered in England &amp; Wales,
+            Company No. {SITE.companyRegNo}.
           </p>
           <nav aria-label="Legal">
             <ul className="flex flex-wrap items-center gap-x-4 gap-y-2">

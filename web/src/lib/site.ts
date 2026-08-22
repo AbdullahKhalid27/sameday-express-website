@@ -6,6 +6,10 @@
 export const SITE = {
   name: "Same Day Express Couriers",
   legalName: "Same Day Express Couriers Ltd",
+  /** Companies House registration number (P4-1). */
+  companyRegNo: "15548532",
+  /** VAT registration number (P4-1). ICO registration: not yet held. */
+  vatNo: "GB468246168",
   domain: "https://samedayexpresscouriers.co.uk",
   phoneDisplay: "020 4568 4675",
   phoneHref: "+442045684675",

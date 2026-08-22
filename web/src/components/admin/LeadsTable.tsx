@@ -552,7 +552,7 @@ export default function LeadsTable({
             type="button"
             disabled={pagination.page <= 1 || loading}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="rounded-[6px] border border-[#52625a]/50 px-3 py-1.5 text-xs text-[#faf9f6]/80 transition-colors hover:bg-[#1e2b23] disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-[6px] border border-[#52625a]/50 min-h-[40px] px-4 text-xs text-[#faf9f6]/80 transition-colors hover:bg-[#1e2b23] disabled:cursor-not-allowed disabled:opacity-40"
           >
             ← Prev
           </button>
@@ -562,7 +562,7 @@ export default function LeadsTable({
               type="button"
               disabled={loading}
               onClick={() => setPage(p)}
-              className={`min-w-[32px] rounded-[6px] px-2 py-1.5 text-xs transition-colors ${
+              className={`min-h-[40px] min-w-[40px] rounded-[6px] px-2 text-xs transition-colors ${
                 p === pagination.page
                   ? "bg-[#9c805c] font-semibold text-[#1c2821]"
                   : "border border-[#52625a]/50 text-[#faf9f6]/80 hover:bg-[#1e2b23]"
@@ -575,7 +575,7 @@ export default function LeadsTable({
             type="button"
             disabled={pagination.page >= pagination.totalPages || loading}
             onClick={() => setPage((p) => p + 1)}
-            className="rounded-[6px] border border-[#52625a]/50 px-3 py-1.5 text-xs text-[#faf9f6]/80 transition-colors hover:bg-[#1e2b23] disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-[6px] border border-[#52625a]/50 min-h-[40px] px-4 text-xs text-[#faf9f6]/80 transition-colors hover:bg-[#1e2b23] disabled:cursor-not-allowed disabled:opacity-40"
           >
             Next →
           </button>

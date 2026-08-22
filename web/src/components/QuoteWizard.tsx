@@ -402,7 +402,7 @@ export function QuoteWizard() {
             <button
               type="button"
               onClick={goBack}
-              className="rounded-md px-4 py-2.5 text-sm font-medium text-ivory/70 hover:bg-forest-light hover:text-ivory"
+              className="min-h-[44px] rounded-md px-4 text-sm font-medium text-ivory/70 hover:bg-forest-light hover:text-ivory"
             >
               ← Back
             </button>

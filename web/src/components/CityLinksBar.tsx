@@ -42,7 +42,7 @@ export function CityLinksBar({ currentSlug }: { currentSlug: string }) {
             <li key={c.slug}>
               <Link
                 href={`/${c.slug}`}
-                className="inline-flex items-center rounded-full border border-brass-border bg-white px-4 py-2 text-sm font-medium text-forest transition-colors hover:border-brass hover:bg-brass-muted hover:text-forest"
+                className="inline-flex min-h-[44px] items-center rounded-full border border-brass-border bg-white px-4 text-sm font-medium text-forest transition-colors hover:border-brass hover:bg-brass-muted hover:text-forest"
               >
                 {c.label}
               </Link>

@@ -50,3 +50,6 @@ web/.agents/
 web/.claude/
 web/.windsurf/
 web/skills-lock.json
+
+# gui test screenshots
+gui-test-screenshots/

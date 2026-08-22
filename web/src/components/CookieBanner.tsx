@@ -54,7 +54,7 @@ export function CookieBanner() {
             type="button"
             aria-label="Dismiss cookie notice"
             onClick={() => handleChoice("declined")}
-            className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded text-ivory/70 transition-colors hover:bg-forest-light hover:text-ivory"
+            className="absolute right-2 top-2 grid h-11 w-11 place-items-center rounded text-ivory/70 transition-colors hover:bg-forest-light hover:text-ivory"
           >
             <Icon.Close aria-hidden />
           </button>

@@ -415,7 +415,7 @@ export default function OrdersTable() {
             type="button"
             disabled={pagination.page <= 1 || loading}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="rounded-[6px] border border-[#52625a]/50 px-3 py-1.5 text-xs text-[#faf9f6]/80 transition-colors hover:bg-[#1e2b23] disabled:cursor-not-allowed disabled:opacity-40"
+            className="min-h-[40px] rounded-[6px] border border-[#52625a]/50 px-4 text-xs text-[#faf9f6]/80 transition-colors hover:bg-[#1e2b23] disabled:cursor-not-allowed disabled:opacity-40"
           >
             ← Prev
           </button>
@@ -423,7 +423,7 @@ export default function OrdersTable() {
             type="button"
             disabled={pagination.page >= pagination.totalPages || loading}
             onClick={() => setPage((p) => p + 1)}
-            className="rounded-[6px] border border-[#52625a]/50 px-3 py-1.5 text-xs text-[#faf9f6]/80 transition-colors hover:bg-[#1e2b23] disabled:cursor-not-allowed disabled:opacity-40"
+            className="min-h-[40px] rounded-[6px] border border-[#52625a]/50 px-4 text-xs text-[#faf9f6]/80 transition-colors hover:bg-[#1e2b23] disabled:cursor-not-allowed disabled:opacity-40"
           >
             Next →
           </button>
