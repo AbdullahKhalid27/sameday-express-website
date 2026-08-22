@@ -14,7 +14,7 @@ import WeeklyTrend from "@/components/admin/charts/WeeklyTrend";
 /**
  * /admin — the operational dashboard (client layout).
  *
- * Auth: the admin_token cookie is verified indirectly — on mount we ping
+ * Auth: the admin_session cookie is verified indirectly — on mount we ping
  * /api/admin/stats, which returns 401 when the cookie is missing/expired,
  * and redirect to /admin/login. (Server-side redirect would require a
  * server wrapper; this keeps the interactive table + detail panel wiring

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { isAdminAuthorized } from "@/lib/admin-auth";
+import { validateAdminAccess } from "@/lib/admin-auth";
 import type { LeadStatus } from "@/generated/prisma/client";
 
 /**
@@ -32,8 +32,9 @@ function extractIds(ids: unknown): string[] {
 }
 
 export async function PATCH(request: NextRequest) {
-  if (!isAdminAuthorized(request)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const authError = validateAdminAccess(request);
+  if (authError) {
+    return NextResponse.json({ error: authError.error }, { status: authError.status });
   }
 
   let body: { ids?: unknown; status?: LeadStatus };
@@ -97,8 +98,9 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  if (!isAdminAuthorized(request)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const authError = validateAdminAccess(request);
+  if (authError) {
+    return NextResponse.json({ error: authError.error }, { status: authError.status });
   }
 
   let body: { ids?: unknown };

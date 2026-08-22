@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { isAdminAuthorized } from "@/lib/admin-auth";
+import { validateAdminAccess } from "@/lib/admin-auth";
 
 /**
  * PATCH /api/admin/orders/[id]
@@ -27,8 +27,9 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  if (!isAdminAuthorized(request)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const authError = validateAdminAccess(request);
+  if (authError) {
+    return NextResponse.json({ error: authError.error }, { status: authError.status });
   }
 
   const { id } = await params;

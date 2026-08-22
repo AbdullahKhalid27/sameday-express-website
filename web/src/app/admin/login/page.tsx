@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
  * /admin/login — the admin entry point.
  *
  * Single password field. POSTs to /api/admin/login, which sets the
- * admin_token httpOnly cookie on success. Then redirects to /admin.
+ * admin_session httpOnly cookie on success. Then redirects to /admin.
  *
  * This page is intentionally NOT styled with the SDX brand — it's a
  * stripped-down operational tool, not a marketing surface.

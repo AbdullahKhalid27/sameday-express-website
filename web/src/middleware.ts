@@ -17,7 +17,8 @@ import { LRUCache } from "lru-cache";
  *   - Quote-attempt (/api/quote-attempt): 60 req / 10 min
  *     Debounced client-side but a malicious client could spam.
  *   - Health check (/api/health): unlimited (monitoring hits it)
- *   - Admin (/api/admin/*): handled by admin auth, not rate-limited here
+ *   - Admin login (/api/admin/login): 10 req / 10 min (first-layer brute-force cap)
+ *   - Other admin routes (/api/admin/*): handled by admin auth
  *
  * ── Caveat ──────────────────────────────────────────────────────────────
  * lru-cache is in-memory. On Vercel serverless, each instance has its own
@@ -42,6 +43,7 @@ const ROUTE_LIMITS: Record<string, LimitConfig> = {
   "/api/trade-account": { max: 20, ttl: 10 * 60 * 1000 },
   "/api/newsletter": { max: 10, ttl: 10 * 60 * 1000 }, // strictest — no Turnstile
   "/api/quote-attempt": { max: 60, ttl: 10 * 60 * 1000 },
+  "/api/admin/login": { max: 10, ttl: 10 * 60 * 1000 },
 };
 
 // A single shared cache across all routes, keyed by `${route}:${ip}`.
@@ -63,8 +65,8 @@ function getClientIp(req: NextRequest): string {
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Only rate-limit the configured routes. /api/health and /api/admin/* are
-  // excluded (health is for monitoring; admin has its own auth gate).
+  // Only rate-limit the configured routes. /api/health and most /api/admin/*
+  // paths are excluded (health is for monitoring; admin has its own auth gate).
   const config = ROUTE_LIMITS[pathname];
   if (!config) {
     return NextResponse.next();

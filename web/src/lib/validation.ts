@@ -26,8 +26,7 @@ const ukPostcode = z.string().trim().min(1, "Postcode is required");
 
 // ── Lead (Quote Wizard) ──────────────────────────────────
 export const leadSchema = z.object({
-  // TEMPORARILY DISABLED: Turnstile bot-check (token optional while disabled)
-  turnstileToken: z.string().optional().default(""),
+  turnstileToken: z.string().trim().min(1, "Bot verification is required"),
   honeypot: z.string().max(0), // must be empty — bots fill it
   fullName: z.string().trim().min(1, "Name is required"),
   phone: ukPhone,
@@ -65,8 +64,7 @@ export type LeadInput = z.infer<typeof leadSchema>;
 
 // ── Contact ──────────────────────────────────────────────
 export const contactSchema = z.object({
-  // TEMPORARILY DISABLED: Turnstile bot-check (token optional while disabled)
-  turnstileToken: z.string().optional().default(""),
+  turnstileToken: z.string().trim().min(1, "Bot verification is required"),
   honeypot: z.string().max(0),
   name: z.string().trim().min(1, "Name is required"),
   phone: ukPhone,
@@ -84,8 +82,7 @@ export type ContactInput = z.infer<typeof contactSchema>;
 
 // ── Trade Account ─────────────────────────────────────────
 export const tradeAccountSchema = z.object({
-  // TEMPORARILY DISABLED: Turnstile bot-check (token optional while disabled)
-  turnstileToken: z.string().optional().default(""),
+  turnstileToken: z.string().trim().min(1, "Bot verification is required"),
   honeypot: z.string().max(0),
   companyName: z.string().trim().min(1, "Company name is required"),
   contactName: z.string().trim().min(1, "Contact name is required"),
@@ -146,17 +143,6 @@ export interface TurnstileResult {
 }
 
 export async function verifyTurnstile(token: string): Promise<TurnstileResult> {
-  // ── TEMPORARILY DISABLED (2026-08-20) ──
-  // Turnstile verification is switched off across all forms (quote, contact,
-  // trade account) while we verify the database pipeline. Re-enable by
-  // restoring the original body below (remove the early return and the
-  // DISABLED flag).
-  const TURNSTILE_DISABLED = true;
-  if (TURNSTILE_DISABLED) {
-    void token;
-    return { ok: true };
-  }
-
   const secret = process.env.TURNSTILE_SECRET_KEY;
   // ── Dev-mode bypass ──
   // The TurnstileWidget component emits "dev-bypass" when no real site key
@@ -174,12 +160,15 @@ export async function verifyTurnstile(token: string): Promise<TurnstileResult> {
     return { ok: process.env.NODE_ENV !== "production", code: "dev-bypass" };
   }
 
-  // No real key configured — skip verification entirely.
+  // No real secret configured.
   if (!secret || secret === "0x4AAAAAAAxxxxxxxxxxxxxxxxxxxxxxxx") {
     console.error(
-      "[turnstile] TURNSTILE_SECRET_KEY is not set — skipping verification"
+      "[turnstile] TURNSTILE_SECRET_KEY is not set"
     );
-    return { ok: true };
+    if (process.env.NODE_ENV === "production") {
+      return { ok: false, code: "missing-secret" };
+    }
+    return { ok: true, code: "missing-secret-dev-bypass" };
   }
 
   try {

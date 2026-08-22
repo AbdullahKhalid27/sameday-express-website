@@ -232,15 +232,10 @@ OrderStatus, PaymentStatus).
 ## 6. WHERE WE GOT STUCK (unresolved items first)
 
 ### 🔴 OPEN BLOCKERS
-1. **Turnstile is DISABLED.** The saga: Turnstile broke all form submissions on
-   localhost (`697e722`) → phone validation rejecting landlines + 429 rate-limit
-   surfacing (`08a6fa1`) → siteverify rejections needed error-code diagnostics
-   (`d83cdcd`) → **temporarily disabled to unblock DB testing (`a1d3e57`)**.
-   Current state: `TURNSTILE_DISABLED = true` at `web/src/lib/validation.ts:154`;
-   `turnstileToken` optional in every Zod schema; forms don't render the widget.
-   Honeypot is the ONLY bot protection. **Must be re-enabled before launch.**
-   The code path is intact (dev-bypass handling for localhost, siteverify with
-   error logging) — flip the flag once real keys work end-to-end.
+1. **Turnstile needs real production key verification.** It has now been
+   re-enabled in code (widget active outside localhost, token required in Zod
+   schemas, server verification active again). Remaining launch task: verify
+   real site/secret keys end-to-end on preview + production domains.
 2. **Google Maps API key still needs rotation + restriction** (pending since the
    static era): HTTP-referrer restriction to `samedayexpresscouriers.co.uk/*`,
    API restriction to Distance Matrix. Key was exposed in chat once — rotate it.
@@ -272,7 +267,7 @@ persistence across forms. Dedup guard. Quote price-freezing (snapshot at request
 Admin CRM: leads table (filters, pagination, bulk actions), detail panel (notes, status
 stepper), stale-lead alerts, stat cards, analytics charts (source/type/weekly trend),
 orders with driver assignment, test-data purge.
-**Missing:** real traffic (domain), GA, Turnstile re-enable, admin settings tab.
+**Missing:** real traffic (domain), GA, Turnstile key validation on live domains, admin settings tab.
 
 ### 🟡 SEO — fully hardened, pointing at an unlaunched domain
 Titles 50–65 chars keyword-first · JSON-LD everywhere (Organization, LocalBusiness,
@@ -311,9 +306,7 @@ nearest hub city page, not as a thin page.
 ## 8. THE PLAN — WHAT'S NEXT (in order)
 
 1. **Commit the CI + backup workflows** + add `BACKUP_DATABASE_URL` repo secret
-2. **Re-enable Turnstile** — test real keys end-to-end (localhost via dev-bypass),
-   then flip `TURNSTILE_DISABLED = false` in `web/src/lib/validation.ts` and make
-   `turnstileToken` required again in all schemas
+2. **Validate Turnstile keys end-to-end** on preview + production domains
 3. **Rotate + restrict the Google Maps API key** (referrer + API restriction)
 4. **Deploy** — Vercel, connect `samedayexpresscouriers.co.uk`, HTTPS
    (`db:deploy` + `postinstall` already wired)
@@ -349,7 +342,7 @@ nearest hub city page, not as a thin page.
 2. **Read `git log --oneline`** — commit-per-part with descriptive messages is the convention
 3. **Never claim live GPS tracking** (ASA/CMA)
 4. **Money = integer pence**, one conversion point (`poundsToPence()`)
-5. **Turnstile is disabled** — don't be surprised; see §6 before launch
+5. **Turnstile is enabled in code** — ensure real keys are tested on live domains
 6. **Run locally:** `cd web && npm run dev` (Turbopack); DB via `npm run db:studio`
 7. **Test data:** seed with `npm run db:seed`; purge via the admin purge endpoint
 8. **Update this file** whenever significant work is done

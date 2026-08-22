@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { isAdminAuthorized } from "@/lib/admin-auth";
+import { validateAdminAccess } from "@/lib/admin-auth";
 
 /**
  * POST /api/admin/leads/purge-test
@@ -49,8 +49,9 @@ function buildTestLeadWhere() {
 }
 
 export async function POST(request: NextRequest) {
-  if (!isAdminAuthorized(request)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const authError = validateAdminAccess(request);
+  if (authError) {
+    return NextResponse.json({ error: authError.error }, { status: authError.status });
   }
 
   const confirm = new URL(request.url).searchParams.get("confirm") === "true";
